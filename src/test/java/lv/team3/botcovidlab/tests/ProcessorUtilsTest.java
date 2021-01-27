@@ -39,40 +39,39 @@ class ProcessorUtilsTest {
 
     @Test // Writen
     void testisDateAfter() {
-        String testDate = "2020-01-20T00:00:00Z";
-        String dateBase = "2020-01-20T00:00:00Z";
+        ProcessorUtils.DateStructure testDate = new ProcessorUtils.DateStructure("2020-01-20T00:00:00Z");
+        ProcessorUtils.DateStructure dateBase = new ProcessorUtils.DateStructure("2020-01-20T00:00:00Z");
         assertTrue(ProcessorUtils.isDateAfter(testDate, dateBase, true), "Invalid date test 1");
         assertFalse(ProcessorUtils.isDateAfter(testDate, dateBase, false), "Invalid date test 2");
-        testDate = "2020-01-19T00:00:00Z";
+        testDate = new ProcessorUtils.DateStructure("2020-01-19T00:00:00Z");
         assertFalse(ProcessorUtils.isDateAfter(testDate, dateBase, true), "Invalid date test 3");
         assertFalse(ProcessorUtils.isDateAfter(testDate, dateBase, false), "Invalid date test 4");
-        testDate = "2020-01-21T00:00:00Z";
+        testDate = new ProcessorUtils.DateStructure("2020-01-21T00:00:00Z");
         assertTrue(ProcessorUtils.isDateAfter(testDate, dateBase, true), "Invalid date test 3");
         assertTrue(ProcessorUtils.isDateAfter(testDate, dateBase, false), "Invalid date test 4");
     }
 
     @Test // Writen
     void testIsDateBefore() {
-        String testDate = "2020-01-20T00:00:00Z";
-        String dateBase = "2020-01-20T00:00:00Z";
+        ProcessorUtils.DateStructure testDate = new ProcessorUtils.DateStructure("2020-01-20T00:00:00Z");
+        ProcessorUtils.DateStructure dateBase = new ProcessorUtils.DateStructure("2020-01-20T00:00:00Z");
         assertTrue(ProcessorUtils.isDateBefore(testDate, dateBase, true), "Invalid date test 1");
         assertFalse(ProcessorUtils.isDateBefore(testDate, dateBase, false), "Invalid date test 2");
-        testDate = "2020-01-19T00:00:00Z";
+        testDate = new ProcessorUtils.DateStructure("2020-01-19T00:00:00Z");
         assertTrue(ProcessorUtils.isDateBefore(testDate, dateBase, true), "Invalid date test 3");
         assertTrue(ProcessorUtils.isDateBefore(testDate, dateBase, false), "Invalid date test 4");
-        testDate = "2020-01-21T00:00:00Z";
+        testDate = new ProcessorUtils.DateStructure("2020-01-21T00:00:00Z");
         assertFalse(ProcessorUtils.isDateBefore(testDate, dateBase, true), "Invalid date test 3");
         assertFalse(ProcessorUtils.isDateBefore(testDate, dateBase, false), "Invalid date test 4");
     }
 
     @Test // Writen
     void testIsDateInRange() {
-        String fromDate = "2020-02-10T00:00:00Z";
-        String toDate = "2020-02-20T00:00:00Z";
-        ProcessorUtils.DateStructure struct = new ProcessorUtils.DateStructure("2020-02-10T00:00:00Z");
+        ProcessorUtils.DateStructure fromDate = new ProcessorUtils.DateStructure("2020-02-10T00:00:00Z");
+        ProcessorUtils.DateStructure toDate = new ProcessorUtils.DateStructure("2020-02-20T00:00:00Z");
+        ProcessorUtils.DateStructure test = new ProcessorUtils.DateStructure("2020-02-10T00:00:00Z");
         for(int i = 5; i < 25; i++) {
-            struct.setDay(i);
-            String test = struct.toString();
+            test.setDay(i);
             if(i >= 10 && i <= 20) {
                 assertTrue(ProcessorUtils.isDateInRange(test, fromDate, toDate, true), "Invalid date test 1");
             } else {
@@ -80,8 +79,7 @@ class ProcessorUtilsTest {
             }
         }
         for(int i = 5; i < 25; i++) {
-            struct.setDay(i);
-            String test = struct.toString();
+            test.setDay(i);
             if(i >= 10 && i < 20) {
                 assertTrue(ProcessorUtils.isDateInRange(test, fromDate, toDate, true, false), "Invalid date test 2");
             } else {
@@ -89,8 +87,7 @@ class ProcessorUtilsTest {
             }
         }
         for(int i = 5; i < 25; i++) {
-            struct.setDay(i);
-            String test = struct.toString();
+            test.setDay(i);
             if(i > 10 && i <= 20) {
                 assertTrue(ProcessorUtils.isDateInRange(test, fromDate, toDate, false, true), "Invalid date test 3");
             } else {
@@ -98,8 +95,7 @@ class ProcessorUtilsTest {
             }
         }
         for(int i = 5; i < 25; i++) {
-            struct.setDay(i);
-            String test = struct.toString();
+            test.setDay(i);
             if(i > 10 && i < 20) {
                 assertTrue(ProcessorUtils.isDateInRange(test, fromDate, toDate, false), "Invalid date test 1");
             } else {
