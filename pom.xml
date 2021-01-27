@@ -20,21 +20,8 @@
     </properties>
 
     <dependencies>
-        <!-- Added by Janis Valentinovics -->
-        <!-- https://mvnrepository.com/artifact/org.glassfish/javax.json -->
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1.4</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
-        <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>1.1.4</version>
-        </dependency>
-        <!-- Added by Janis Valentinovics -->
              
+        <!-- Added by Vladislavs Kras -->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
@@ -46,6 +33,7 @@
             <artifactId>telegrambotsextensions</artifactId>
             <version>${telegram.version}</version>
         </dependency>
+        <!-- Added by Vladislavs Kras -->
 
 
         <!-- Added by Janis Valentinovics -->
