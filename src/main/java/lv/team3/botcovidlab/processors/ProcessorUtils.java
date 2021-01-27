@@ -15,17 +15,13 @@ public class ProcessorUtils {
 
     // TODO Have to check this file for errors / exceptions
 
+    // TODO Implement this better
     public static class DateStructure {
-        private int year;
-        private int month;
-        private int day;
-        private int h;
-        private int m;
-        private int s;
-        private Calendar.Builder builder;
+        private Calendar calendar;
 
         public DateStructure(String date) {
-            this.builder = new Calendar.Builder();
+            this.calendar = new Calendar.Builder().build();
+            this.calendar.setLenient(true);
             String[] split = date.split("-");
             this.setYear(Integer.parseInt(split[0]));
             this.setMonth(Integer.parseInt(split[1]));
@@ -36,61 +32,78 @@ public class ProcessorUtils {
             this.setSecond(Integer.parseInt(split[2].substring(0, 2)));
         }
 
-        public int getYear() { return year; }
+        public int getYear() {
+            return this.calendar.get(Calendar.YEAR);
+        }
+
         public void setYear(int year) {
-            this.year = Math.max(1700, year);
-            this.builder.set(Calendar.YEAR, year);
+            this.calendar.set(Calendar.YEAR, year);
         }
 
-        public int getMonth() { return month; }
+        public int getMonth() {
+            return this.calendar.get(Calendar.MONTH) + 1;
+        }
+
         public void setMonth(int month) {
-            this.month = Math.min(12, Math.max(1, month));
-            this.builder.set(Calendar.MONTH, month - 1);
+            this.calendar.set(Calendar.MONTH, month - 1);
         }
 
-        public int getDay() { return day; }
-        public void setDay(int day) {
-            this.day = Math.min(31, Math.max(1, day));
-            this.builder.set(Calendar.DAY_OF_MONTH, day);
+        public int getDay() {
+            return this.calendar.get(Calendar.DAY_OF_MONTH);
         }
 
-        public int getHour() { return h; }
+        public void setDay(int d) {
+            this.calendar.set(Calendar.DAY_OF_MONTH, d);
+        }
+
+        public int getHour() {
+            return this.calendar.get(Calendar.HOUR_OF_DAY);
+        }
+
         public void setHour(int h) {
-            this.h = Math.min(23, Math.max(0, h));
-            this.builder.set(Calendar.HOUR_OF_DAY, h);
+            this.calendar.set(Calendar.HOUR_OF_DAY, h);
         }
 
-        public int getMinute() { return m; }
+        public int getMinute() {
+            return this.calendar.get(Calendar.MINUTE);
+        }
+
         public void setMinute(int m) {
-            this.m = Math.min(59, Math.max(0, m));
-            this.builder.set(Calendar.MINUTE, m);
+            this.calendar.set(Calendar.MINUTE, m);
         }
 
-        public int getSecond() { return s; }
+        public int getSecond() {
+            return this.calendar.get(Calendar.SECOND);
+        }
+
         public void setSecond(int s) {
-            this.s = Math.min(59,Math.max(0, s));
-            this.builder.set(Calendar.SECOND, s);
+            this.calendar.set(Calendar.SECOND, s);
         }
 
         public Date toDate() {
-            return this.builder.build().getTime();
+            return this.calendar.getTime();
         }
 
         @Override
         public String toString() {
-            return String.format("%04d-%02d-%02dT%02d:%02d:%02dZ", year, month, day, h, m, s);
+            return String.format("%04d-%02d-%02dT%02d:%02d:%02dZ",
+                    this.getYear(), this.getMonth(), this.getDay(),
+                    this.getHour(), this.getMinute(), this.getSecond()
+            );
         }
     }
 
-    /* @param url URL returning json string
-     * @author Janis Valentinovics */
+    /**
+     * @param url URL returning json string
+     * @author Janis Valentinovics
+     */
     public static String stringFromURL(URL url) {
         String ret = null;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             StringWriter writer = new StringWriter();
             String line = "";
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 writer.write(line);
             }
             reader.close();
@@ -102,8 +115,10 @@ public class ProcessorUtils {
         return ret != null ? ret : "[]";
     }
 
-    /* @param string Json string to be parsed into json array
-     * @author Janis Valentinovics */
+    /**
+     * @param string Json string to be parsed into json array
+     * @author Janis Valentinovics
+     */
     public static JsonArray jsonArrayFromString(String string) {
         // TODO Catch invalid string exceptions
         JsonReader reader = Json.createReader(new StringReader(string));
@@ -113,34 +128,30 @@ public class ProcessorUtils {
     }
 
     public static boolean isValidDateString(String testableDate) {
-        if(testableDate.matches("^((202[\\d])-[\\d]{2}-[\\d]{2}T[\\d]{2}:[\\d]{2}:[\\d]{2}Z)$")) {
+        if (testableDate.matches("^((202[\\d])-[\\d]{2}-[\\d]{2}T[\\d]{2}:[\\d]{2}:[\\d]{2}Z)$")) {
+            String s = new DateStructure(testableDate).toString();
             return testableDate.equals(new DateStructure(testableDate).toString());
         }
         return false;
     }
 
-    public static boolean isDateAfter(String testableDate, String baseDate, boolean including) {
-        DateStructure test = new DateStructure(testableDate);
-        DateStructure base = new DateStructure(baseDate);
-        return  base.getYear() <= test.getYear() &&
+    public static boolean isDateAfter(DateStructure test, DateStructure base, boolean including) {
+        return base.getYear() <= test.getYear() &&
                 base.getMonth() <= test.getMonth() &&
                 (including ? base.getDay() <= test.getDay() : base.getDay() < test.getDay());
     }
 
-    public static boolean isDateBefore(String testableDate, String baseDate, boolean including) {
-        DateStructure test = new DateStructure(testableDate);
-        DateStructure base = new DateStructure(baseDate);
-        return  base.getYear() >= test.getYear() &&
+    public static boolean isDateBefore(DateStructure test, DateStructure base, boolean including) {
+        return base.getYear() >= test.getYear() &&
                 base.getMonth() >= test.getMonth() &&
                 (including ? base.getDay() >= test.getDay() : base.getDay() > test.getDay());
     }
 
-    public static boolean isDateInRange(String testableDate, String fromDate, String toDate, boolean including) {
-        System.out.println(fromDate + " < " + testableDate + " < " + toDate);
+    public static boolean isDateInRange(DateStructure testableDate, DateStructure fromDate, DateStructure toDate, boolean including) {
         return isDateInRange(testableDate, fromDate, toDate, including, including);
     }
 
-    public static boolean isDateInRange(String testableDate, String fromDate, String toDate, boolean fromIncluding, boolean toIncluding) {
+    public static boolean isDateInRange(DateStructure testableDate, DateStructure fromDate, DateStructure toDate, boolean fromIncluding, boolean toIncluding) {
         boolean test = isDateAfter(testableDate, fromDate, fromIncluding) && isDateBefore(testableDate, toDate, toIncluding);
         return test;
     }
