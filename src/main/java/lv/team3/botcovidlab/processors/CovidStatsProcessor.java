@@ -71,7 +71,7 @@ public class CovidStatsProcessor {
 
     // TODO Remove this when testing processes are done
     public static void main(String[] arg) {
-        List<CovidStats> stats = getStats(DataSource.CORONA_LMAO_NINJA_API, "latvia", "2020-04-20", "2020-04-25");
+        List<CovidStats> stats = getStats(DataSource.CORONA_LMAO_NINJA_API, "latvia", "2021-01-20", "2021-01-27");
         stats.forEach(entry -> {
             System.out.println("Date: " + entry.getDate());
             System.out.println("Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
