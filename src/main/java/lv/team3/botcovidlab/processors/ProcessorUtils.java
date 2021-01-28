@@ -32,6 +32,11 @@ public class ProcessorUtils {
             this.setSecond(Integer.parseInt(split[2].substring(0, 2)));
         }
 
+        public DateStructure(Date date) {
+            this.calendar = new Calendar.Builder().build();
+            this.calendar.setTime(date);
+        }
+
         public int getYear() {
             return this.calendar.get(Calendar.YEAR);
         }
