@@ -1,78 +1,50 @@
 package lv.team3.botcovidlab;
 
 import java.util.Date;
-import java.lang.System.Logger.Level;
 
 public class CovidStats {
 
     private String country;
-    private int infectedYesterday;
-    private int deathsYesterday;
-    private int recoveredYesterday;
-    private int activeYesterday;
+    private int infected;
+    private int deaths;
+    private int recovered;
     private int infectedTotal;
     private int deathsTotal;
     private int recoveredTotal;
     private int activeTotal;
     private Date date;
+    private boolean missingData;
 
+    public boolean isMissingData() {
+        return missingData;
+    }
+
+    public void setMissingData(boolean missingData) {
+        this.missingData = missingData;
+    }
+
+    @Deprecated
+    /**
+     * Use getActive()
+     */
     public int getActiveTotal() {
+        return this.getActive();
+    }
+
+    @Deprecated
+    /**
+     * Use setActive()
+     */
+    public void setActiveTotal(int activeTotal) {
+        this.setActive(activeTotal);
+    }
+
+    public int getActive() {
         return activeTotal;
     }
 
-    public void setActiveTotal(int activeTotal) {
+    public void setActive(int activeTotal) {
         this.activeTotal = activeTotal;
-    }
-
-    @Deprecated
-    /*
-     * Use getInfectedTotal / getinfectedYesterday
-     */
-    public void setInfected(int t) {
-        System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
-        this.setInfectedTotal(t);
-    }
-    @Deprecated
-    /*
-     * Use setInfectedTotal / setinfectedYesterday
-     */
-    public int getInfected() {
-        System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
-        return this.getInfectedTotal();
-    }
-
-    @Deprecated
-    /*
-     * Use getDeathsTotal / getdeathsYesterday
-     */
-    public void setDeaths(int t) {
-        System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
-        this.setDeathsTotal(t);
-    }
-    @Deprecated
-    /*
-     * Use setDeathsTotal / setdeathsYesterday
-     */
-    public int getDeaths() {
-        System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
-        return this.getDeathsTotal();
-    }
-
-    @Deprecated
-    /*
-     * Use getRecoveredTotal / getrecoveredYesterday
-     */
-    public void setRecovered(int t) {
-        System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
-        this.setRecoveredTotal(t);
-    }
-    @Deprecated
-    /*
-     * Use setRecoveredTotal / setrecoveredYesterday
-     */
-    public int getRecovered() {
-        System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
-        return this.getRecoveredTotal();
     }
 
     public String getCountry() {
@@ -83,28 +55,28 @@ public class CovidStats {
         this.country = country;
     }
 
-    public int getInfectedYesterday() {
-        return infectedYesterday;
+    public int getInfected() {
+        return infected;
     }
 
-    public void setInfectedYesterday(int infectedYesterday) {
-        this.infectedYesterday = infectedYesterday;
+    public void setInfected(int infected) {
+        this.infected = infected;
     }
 
-    public int getDeathsYesterday() {
-        return deathsYesterday;
+    public int getDeaths() {
+        return deaths;
     }
 
-    public void setDeathsYesterday(int deathsYesterday) {
-        this.deathsYesterday = deathsYesterday;
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
     }
 
-    public int getRecoveredYesterday() {
-        return recoveredYesterday;
+    public int getRecovered() {
+        return recovered;
     }
 
-    public void setRecoveredYesterday(int recoveredYesterday) {
-        this.recoveredYesterday = recoveredYesterday;
+    public void setRecovered(int recovered) {
+        this.recovered = recovered;
     }
 
     public int getInfectedTotal() {
