@@ -96,9 +96,9 @@ public class CovidStatsProcessor {
         return array;
     }
 
-    public static void main(String[] arg) {
-        getStats("latvia", "2021-11-01", "2021-20-01", "00:00:00", "00:00:00");
-        getStats("latvia", "2020-01-01");
-        getStats("latvia", "2021-01-01", "2020-01-01");
-    }
+//    public static void main(String[] arg) {
+//        getStats("latvia", "2021-11-01", "2021-20-01", "00:00:00", "00:00:00");
+//        getStats("latvia", "2020-01-01");
+//        getStats("latvia", "2021-01-01", "2020-01-01");
+//    }
 }
