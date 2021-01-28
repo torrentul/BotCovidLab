@@ -22,69 +22,58 @@ public class CovidStatsProcessor {
      */
     public static List<CovidStats> getStats(String country, String date) {
         // TODO Getting object from the list
-        return getStats(country, date, date, "00:00:00", "23:59:59");
-    }
-
-    /**
-     * @param country  Requested country
-     * @param fromDate Starting date with formatting "YYYY-MM-DD"
-     * @param toDate   Ending date with formatting "YYYY-MM-DD"
-     * @return List of CovidStats objects, that are in range [including] fromDate and (excluding) toDate
-     * @author Janis Valentinovics
-     */
-    public static List<CovidStats> getStats(String country, String fromDate, String toDate) {
-        return getStats(country, fromDate, toDate, "00:00:00", "23:59:59");
+        return getStats(country, date, date);
     }
 
     /**
      * @param country  Requested country
      * @param fromDate Starting date with formatting "YYYY-MM-DD"
      * @param toDate   Starting time with formatting "YYYY-MM-DD"
-     * @param fromTime Starting date with formatting "HH:MM:SS"
-     * @param toTime   Starting time with formatting "HH:MM:SS"
      * @return List of CovidStats objects, that are in range [including] fromDate and [including] toDate
      * @author Janis Valentinovics
      */
-    public static List<CovidStats> getStats(String country, String fromDate, String toDate, String fromTime, String toTime) {
-        return getStats(DataSource.COVID_19_API, country, fromDate, toDate, fromTime, toTime);
+    public static List<CovidStats> getStats(String country, String fromDate, String toDate) {
+        return getStats(DataSource.CORONA_LMAO_NINJA_API, country, fromDate, toDate);
     }
 
-    public static List<CovidStats> getStats(DataSource source, String country, String fromDate, String toDate, String fromTime, String toTime) {
+    // TODO Documentation
+    public static List<CovidStats> getStats(DataSource source, String country, String fromDate, String toDate) {
         List<CovidStats> list = new ArrayList<>();
-        String from = String.format("%sT%sZ", fromDate, fromTime);
-        String to = String.format("%sT%sZ", toDate, toTime);
+        String from = String.format("%sT00:00:00Z", fromDate);
+        String to = String.format("%sT23:59:59Z", toDate);
         if (isValidDateString(from) && isValidDateString(to)) {
             JsonArray array = HTMLRequestUtils.jsonFromSource(source, country, new DateStructure(from), new DateStructure(to));
             array.forEach(object -> {
-                JsonObject jsonObject = object.asJsonObject();
-                String date = jsonObject.getString("Date");
-                // TODO This is wrong
-                list.add(covidStatsOfJsonObject(jsonObject));
+                System.out.println(object.toString());
+                CovidStats stats = covidStatsOfJsonObject(object.asJsonObject());
+                // TODO
+                list.add(stats);
             });
         }
         return list;
     }
 
+    // TODO Documentation
     private static CovidStats covidStatsOfJsonObject(JsonObject object) {
         CovidStats stats = new CovidStats();
-        stats.setDate(new DateStructure(object.getString("Date")).toDate());
-        stats.setDeathsTotal(object.getInt("Deaths"));
-        stats.setInfectedTotal(object.getInt("Confirmed"));
-        stats.setRecoveredTotal(object.getInt("Recovered"));
-        stats.setActiveTotal(object.getInt("Active"));
+        stats.setDate(new DateStructure(object.getString("date")).toDate());
+        stats.setCountry(object.getString("country"));
+        stats.setDeathsTotal(object.getInt("totalDeaths"));
+        stats.setInfectedTotal(object.getInt("totalCases"));
+        stats.setRecoveredTotal(object.getInt("totalRecoveries"));
+        stats.setDeathsYesterday(object.getInt("yesterdayDeaths"));
+        stats.setInfectedYesterday(object.getInt("yesterdayCases"));
+        stats.setRecoveredYesterday(object.getInt("yesterdayRecoveries"));
         return stats;
     }
 
+    // TODO Method which adds missing entries for time periods
+
     // TODO Remove this when testing processes are done
     public static void main(String[] arg) {
-        List<CovidStats> stats = getStats("latvia", "2021-01-16", "2021-01-20");
+        List<CovidStats> stats = getStats(DataSource.CORONA_LMAO_NINJA_API, "latvia", "2020-04-20", "2020-04-25");
         stats.forEach(entry -> {
-            System.out.println("Date: " + entry.getDate().toString());
-            System.out.println("Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
-        });
-        stats = getStats(DataSource.CORONA_LMAO_NINJA_API, "italy", "2020-01-16", "2021-01-20", "00:00:00", "00:00:00");
-        stats.forEach(entry -> {
-            System.out.println("Date: " + entry.getDate().toString());
+            System.out.println("Date: " + entry.getDate());
             System.out.println("Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
         });
     }
