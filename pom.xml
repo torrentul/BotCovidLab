@@ -21,7 +21,22 @@
 
     <dependencies>
 
+
+        <!-- Added by Valters Melderis -->
+        <dependency>
+            <groupId>org.twitter4j</groupId>
+            <artifactId>twitter4j-core</artifactId>
+            <version>[4.0,)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>7.1.0</version>
+        </dependency>
              
+
+        <!-- Added by Vladislavs Kras -->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
@@ -38,6 +53,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <!-- Added by Vladislavs Kras -->
 
 
         <!-- Added by Janis Valentinovics -->
@@ -53,7 +69,7 @@
             <artifactId>javax.json-api</artifactId>
             <version>1.1.4</version>
         </dependency>
-        <!-- Added by Janis Valentinovics -->
+<!--         Added by Janis Valentinovics -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -95,8 +111,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-
+        <dependency>
+            <groupId>com.github.messenger4j</groupId>
+            <artifactId>messenger4j</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
     </dependencies>
 
