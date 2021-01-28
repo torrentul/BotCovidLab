@@ -58,8 +58,8 @@ import static com.github.messenger4j.Messenger.*;
 import static com.github.messenger4j.send.message.richmedia.RichMediaAsset.Type.*;
 import static java.util.Optional.*;
 import static lv.team3.botcovidlab.adapter.facebook.DateUtility.*;
-import static lv.team3.botcovidlab.adapter.facebook.TotalStatUtil.countTotal;
-import static lv.team3.botcovidlab.processors.CovidStatsProcessor.getStats;
+import static lv.team3.botcovidlab.adapter.facebook.TotalStatUtil.*;
+import static lv.team3.botcovidlab.processors.CovidStatsProcessor.*;
 
 
 @RestController
@@ -68,7 +68,7 @@ public class MessengerPlatformCallbackHandler {
 
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
-    private static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
+    public static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
 
     private final Messenger messenger;
 
@@ -123,9 +123,7 @@ public class MessengerPlatformCallbackHandler {
         }
     }
 
-
-
-    private void handleTextMessageEvent(TextMessageEvent event) {
+    public void handleTextMessageEvent(TextMessageEvent event) {
         logger.debug("Received TextMessageEvent: {}", event);
 
         final String messageId = event.messageId();
@@ -139,13 +137,6 @@ public class MessengerPlatformCallbackHandler {
             switch (messageText.toLowerCase()) {
                 case "covid Latvia":
 
-                    break;
-                case "covid latvia":
-                    List<CovidStats> stats = getStats("latvia", getYesterdayDate(), getYesterdayDate());
-                    stats.forEach(entry -> {
-                        sendTextMessage(senderId, " " + "Date: " + getYesterdayDate() +
-                                "Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
-                    });
                     break;
 
                 default:
@@ -215,7 +206,6 @@ public class MessengerPlatformCallbackHandler {
         quickReplies.add(TextQuickReply.create("Yesterday", "lvYesterday"));
         quickReplies.add(TextQuickReply.create("Last 7 days", "lvSevenDays"));
         quickReplies.add(TextQuickReply.create("Last 30 days", "lvThirtyDays"));
-        quickReplies.add(TextQuickReply.create("For all period", "lvAll"));
 
         TextMessage message = TextMessage.create("Choose the period", of(quickReplies), empty());
         messenger.send(MessagePayload.create(recipientId, MessagingType.RESPONSE, message));
@@ -227,7 +217,6 @@ public class MessengerPlatformCallbackHandler {
         quickReplies.add(TextQuickReply.create("Yesterday", "wwYesterday"));
         quickReplies.add(TextQuickReply.create("Last 7 days", "wwSevenDays"));
         quickReplies.add(TextQuickReply.create("Last 30 days", "wwThirtyDays"));
-        quickReplies.add(TextQuickReply.create("For all period", "wwAll"));
 
         TextMessage message = TextMessage.create("Choose the period", of(quickReplies), empty());
         messenger.send(MessagePayload.create(recipientId, MessagingType.RESPONSE, message));
@@ -249,7 +238,6 @@ public class MessengerPlatformCallbackHandler {
             if (payload.equals("Worldwide")) {
                 sendQuickReplyWwButtons(senderId);
             }
-
             if (payload.equals("Country")) {
                 sendTextMessage(senderId,"Type the country");
             }
@@ -271,29 +259,24 @@ public class MessengerPlatformCallbackHandler {
         logger.info("Received quick reply for message '{}' with payload '{}'", messageId, payload);
 
         if (payload.equals("lvYesterday")) {
-            List<CovidStats> stats = getStats("latvia", getYesterdayDate(), getYesterdayDate());
-            stats.forEach(entry -> {
-                sendTextMessage(senderId, "\uD83C\uDDF1\uD83C\uDDFB " + "Date: " + getYesterdayDate() + '\n' +
-                        " Died: " + entry.getDeathsTotal() + '\n' + " Active: " + entry.getActiveTotal() + '\n' + " Recovered: " + entry.getRecoveredTotal());
-            });
+            sendTextMessage(senderId, countTotalYesterday("latvia"));
         }
         if (payload.equals("lvSevenDays")) {
-                sendTextMessage(senderId, countTotal("latvia", getSevenDaysAgoDate(), getYesterdayDate()));
+                sendTextMessage(senderId, countTotalSevenDays("latvia"));
         }
         if (payload.equals("lvThirtyDays")) {
-            List<CovidStats> stats = getStats("latvia", getThirtyDaysAgoDate(), getYesterdayDate());
-            stats.forEach(entry -> {
-                sendTextMessage(senderId, "\uD83C\uDDF1\uD83C\uDDFB " + "Date: " + getYesterdayDate() + '\n' +
-                        " Died: " + entry.getDeathsTotal() + '\n' + " Active: " + entry.getActiveTotal() + '\n' + " Recovered: " + entry.getRecoveredTotal());
-            });
+            sendTextMessage(senderId, countTotalThirtyDays("latvia"));
         }
-        if (payload.equals("lvAll")) {
-            List<CovidStats> stats = getStats("latvia","2020-04-01", getYesterdayDate());
-            stats.forEach(entry -> {
-                sendTextMessage(senderId, "\uD83C\uDDF1\uD83C\uDDFB " + "Date: " + getYesterdayDate() + '\n' +
-                        " Died: " + entry.getDeathsTotal() + '\n' + " Active: " + entry.getActiveTotal() + '\n' + " Recovered: " + entry.getRecoveredTotal());
-            });
+        if (payload.equals("wwYesterday")) {
+            sendTextMessage(senderId, countTotalYesterday("world"));
         }
+        if (payload.equals("wwSevenDays")) {
+            sendTextMessage(senderId, countTotalSevenDays("world"));
+        }
+        if (payload.equals("wwThirtyDays")) {
+            sendTextMessage(senderId, countTotalThirtyDays("world"));
+        }
+
     }
 
     private void handleFallbackEvent(Event event) {
