@@ -57,24 +57,22 @@ public class HTMLRequestUtils {
     }
 
     // TODO Documentation
-    public static JsonArray jsonFromSource(DataSource source, String country, DateStructure from, DateStructure to) {
-        switch (source) {
-            case CORONA_LMAO_NINJA_API:
-                return getCoronaLmaoNinjaApiResponse(country, from, to);
-            default:
-                return Json.createArrayBuilder().build();
+    public static JsonObject jsonFromSource(String country, DateStructure from, DateStructure to) {
+        if(country == null || "world".equalsIgnoreCase(country)) {
+            return getCoronaWorldwide(from, to);
+        } else {
+            return getCoronaSpecific(country, from, to);
         }
     }
 
     // TODO Documentation
-    private static JsonArray getCoronaLmaoNinjaApiResponse(String country, DateStructure from, DateStructure to) {
-        String template = DataSource.CORONA_LMAO_NINJA_API.getTemplate();
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+    private static JsonObject getCoronaSpecific(String country, DateStructure from, DateStructure to) {
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
         try {
             DateStructure currentDate = new DateStructure(new Date());
             long mils = Math.abs(from.toDate().getTime() - currentDate.toDate().getTime());
             long days = TimeUnit.DAYS.convert(mils, TimeUnit.MILLISECONDS) + 2;
-            String request = String.format(template, country, days);
+            String request = String.format(DataSource.CORONA_SPECIFIC.getTemplate(), country, days);
             JsonObject jsonObject = jsonObjectFromURL(new URL(request));
             for (String key : jsonObject.getJsonObject("timeline").getJsonObject("cases").keySet()) {
                 int[] parts = new int[3];
@@ -88,11 +86,46 @@ public class HTMLRequestUtils {
                     struct2.setDay(struct2.getDay() - 1);
                     String previousKey = String.format("%d/%d/%d", struct2.getMonth(), struct2.getDay(), struct2.getYear() % 100);
                     if (ProcessorUtils.isDateInRange(struct, from, to, true)) {
-                        arrayBuilder.add(HTMLResponseUtils.jsonObjectFromCoronaLmaoNinjaApi(jsonObject, key, previousKey, struct));
+                        objectBuilder.add(
+                                struct.toString(),
+                                HTMLResponseUtils.jsonObjectForSpecific(jsonObject, key, previousKey)
+                        );
                     }
                 }
             }
         } catch (Exception e) { /* TODO Exception */}
-        return arrayBuilder.build();
+        return objectBuilder.build();
+    }
+
+    // TODO Documentation
+    private static JsonObject getCoronaWorldwide(DateStructure from, DateStructure to) {
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        try {
+            DateStructure currentDate = new DateStructure(new Date());
+            long mils = Math.abs(from.toDate().getTime() - currentDate.toDate().getTime());
+            long days = TimeUnit.DAYS.convert(mils, TimeUnit.MILLISECONDS) + 2;
+            String request = String.format(DataSource.CORONA_WORLDWIDE.getTemplate(), days);
+            JsonObject jsonObject = jsonObjectFromURL(new URL(request));
+            for (String key : jsonObject.getJsonObject("cases").keySet()) {
+                int[] parts = new int[3];
+                for (int i = 0; i < 3; i++) {
+                    parts[i] = Integer.parseInt(key.split("/")[i]);
+                }
+                String dateString = String.format("20%02d-%02d-%02dT00:00:00Z", parts[2], parts[0], parts[1]);
+                if (ProcessorUtils.isValidDateString(dateString)) {
+                    DateStructure struct = new DateStructure(dateString);
+                    DateStructure struct2 = new DateStructure(struct.toDate());
+                    struct2.setDay(struct2.getDay() - 1);
+                    String previousKey = String.format("%d/%d/%d", struct2.getMonth(), struct2.getDay(), struct2.getYear() % 100);
+                    if (ProcessorUtils.isDateInRange(struct, from, to, true)) {
+                        objectBuilder.add(
+                                struct.toString(),
+                                HTMLResponseUtils.jsonObjectForWorldwide(jsonObject, key, previousKey)
+                        );
+                    }
+                }
+            }
+        } catch (Exception e) { /* TODO Exception */}
+        return objectBuilder.build();
     }
 }

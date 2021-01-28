@@ -17,7 +17,7 @@ public class ProcessorUtils {
 
     // TODO Implement this better
     public static class DateStructure {
-        private Calendar calendar;
+        private final Calendar calendar;
 
         public DateStructure(String date) {
             this.calendar = new Calendar.Builder().build();
