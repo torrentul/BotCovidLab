@@ -12,8 +12,8 @@ public class FirebaseController {
     FirebaseService firebaseService;
 
     @GetMapping("/getPatientDetails")
-    public Patient getPatient(@RequestParam String name ) throws InterruptedException, ExecutionException{
-        return firebaseService.getPatientDetails(name);
+    public Patient getPatient(@RequestParam String personalCode ) throws InterruptedException, ExecutionException{
+        return firebaseService.getPatientDetails(personalCode);
     }
 
     @PostMapping("/createPatient")
