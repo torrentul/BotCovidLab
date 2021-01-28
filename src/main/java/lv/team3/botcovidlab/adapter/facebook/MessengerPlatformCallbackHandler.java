@@ -100,23 +100,9 @@ public class MessengerPlatformCallbackHandler {
             this.messenger.onReceiveEvents(payload, of(signature), event -> {
                 if (event.isTextMessageEvent()) {
                     handleTextMessageEvent(event.asTextMessageEvent());
-                } else if (event.isAttachmentMessageEvent()) {
-                    handleAttachmentMessageEvent(event.asAttachmentMessageEvent());
-                } else if (event.isQuickReplyMessageEvent()) {
-                    handleQuickReplyMessageEvent(event.asQuickReplyMessageEvent());
                 } else if (event.isPostbackEvent()) {
                     handlePostbackEvent(event.asPostbackEvent());
-                } else if (event.isAccountLinkingEvent()) {
-                    handleAccountLinkingEvent(event.asAccountLinkingEvent());
-                } else if (event.isOptInEvent()) {
-                    handleOptInEvent(event.asOptInEvent());
-                } else if (event.isMessageEchoEvent()) {
-                    handleMessageEchoEvent(event.asMessageEchoEvent());
-                } else if (event.isMessageDeliveredEvent()) {
-                    handleMessageDeliveredEvent(event.asMessageDeliveredEvent());
-                } else if (event.isMessageReadEvent()) {
-                    handleMessageReadEvent(event.asMessageReadEvent());
-                } else {
+                }  else {
                     handleFallbackEvent(event);
                 }
             });
@@ -225,43 +211,6 @@ public class MessengerPlatformCallbackHandler {
         this.messenger.send(messagePayload);
     }
 
-
-
-    private void handleAttachmentMessageEvent(AttachmentMessageEvent event) {
-        logger.debug("Handling QuickReplyMessageEvent");
-        final String senderId = event.senderId();
-        logger.debug("senderId: {}", senderId);
-        for (Attachment attachment : event.attachments()) {
-            if (attachment.isRichMediaAttachment()) {
-                final RichMediaAttachment richMediaAttachment = attachment.asRichMediaAttachment();
-                final RichMediaAttachment.Type type = richMediaAttachment.type();
-                final URL url = richMediaAttachment.url();
-                logger.debug("Received rich media attachment of type '{}' with url: {}", type, url);
-                final String text = String.format("Media %s received (url: %s)", type.name(), url);
-                sendTextMessage(senderId, text);
-            } else if (attachment.isLocationAttachment()) {
-                final LocationAttachment locationAttachment = attachment.asLocationAttachment();
-                final double longitude = locationAttachment.longitude();
-                final double latitude = locationAttachment.latitude();
-                logger.debug("Received location information (long: {}, lat: {})", longitude, latitude);
-                final String text = String.format("Location received (long: %s, lat: %s)", String.valueOf(longitude), String.valueOf(latitude));
-                sendTextMessage(senderId, text);
-            }
-        }
-    }
-
-    private void handleQuickReplyMessageEvent(QuickReplyMessageEvent event) {
-        logger.debug("Handling QuickReplyMessageEvent");
-        final String payload = event.payload();
-        logger.debug("payload: {}", payload);
-        final String senderId = event.senderId();
-        logger.debug("senderId: {}", senderId);
-        final String messageId = event.messageId();
-        logger.debug("messageId: {}", messageId);
-        logger.info("Received quick reply for message '{}' with payload '{}'", messageId, payload);
-        sendTextMessage(senderId, "Quick reply tapped");
-    }
-
     private void handlePostbackEvent(PostbackEvent event) {
         logger.debug("Handling PostbackEvent");
         final String payload = event.payload().orElse("empty payload");
@@ -275,85 +224,46 @@ public class MessengerPlatformCallbackHandler {
             if (payload.equals("Latvia")) {
                 sendLatviaButtonMessage(senderId);
             }
-            if (payload.equals("LvToday")) {
+            if (payload.equals("LvYesterday")) {
                 List<CovidStats> stats = getStats("latvia", "2021-01-27", "2021-01-27");
                 stats.forEach(entry -> {
                     sendTextMessage(senderId, "Date: " + entry.getDate().toString() +
                             "Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
                 });
             }
+            if (payload.equals("LvLastSeven")) {
+                sendTextMessage(senderId,"LvLastSeven");
+            }
+            if (payload.equals("LvLastThirty")) {
+                sendTextMessage(senderId,"LvLastThirty");
+            }
+            if (payload.equals("Worldwide")) {
+                sendWorldwideButtonMessage(senderId);
+            }
+
+            if (payload.equals("WwYesterday")) {
+                sendTextMessage(senderId,"WwYesterday");
+            }
+            if (payload.equals("WwLastSeven")) {
+                sendTextMessage(senderId,"WwLastSeven");
+            }
+            if (payload.equals("WwLastThirty")) {
+                sendTextMessage(senderId,"WwLastThirty");
+            }
+
+            if (payload.equals("Country")) {
+                sendTextMessage(senderId,"WwLastThirty");
+
+            }
+
+
+
+
+
         }
         catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
             e.printStackTrace();
         }
-    }
-
-    private void handleAccountLinkingEvent(AccountLinkingEvent event) {
-        logger.debug("Handling AccountLinkingEvent");
-        final String senderId = event.senderId();
-        logger.debug("senderId: {}", senderId);
-        final AccountLinkingEvent.Status accountLinkingStatus = event.status();
-        logger.debug("accountLinkingStatus: {}", accountLinkingStatus);
-        final String authorizationCode = event.authorizationCode().orElse("Empty authorization code!!!"); //You can throw an Exception
-        logger.debug("authorizationCode: {}", authorizationCode);
-        logger.info("Received account linking event for user '{}' with status '{}' and auth code '{}'", senderId, accountLinkingStatus, authorizationCode);
-        sendTextMessage(senderId, "AccountLinking event tapped");
-    }
-
-    private void handleOptInEvent(OptInEvent event) {
-        logger.debug("Handling OptInEvent");
-        final String senderId = event.senderId();
-        logger.debug("senderId: {}", senderId);
-        final String recipientId = event.recipientId();
-        logger.debug("recipientId: {}", recipientId);
-        final String passThroughParam = event.refPayload().orElse("empty payload");
-        logger.debug("passThroughParam: {}", passThroughParam);
-        final Instant timestamp = event.timestamp();
-        logger.debug("timestamp: {}", timestamp);
-
-        logger.info("Received authentication for user '{}' and page '{}' with pass through param '{}' at '{}'", senderId, recipientId, passThroughParam,
-                timestamp);
-        sendTextMessage(senderId, "Authentication successful");
-    }
-
-    private void handleMessageEchoEvent(MessageEchoEvent event) {
-        logger.debug("Handling MessageEchoEvent");
-        final String senderId = event.senderId();
-        logger.debug("senderId: {}", senderId);
-        final String recipientId = event.recipientId();
-        logger.debug("recipientId: {}", recipientId);
-        final String messageId = event.messageId();
-        logger.debug("messageId: {}", messageId);
-        final Instant timestamp = event.timestamp();
-        logger.debug("timestamp: {}", timestamp);
-
-        logger.info("Received echo for message '{}' that has been sent to recipient '{}' by sender '{}' at '{}'", messageId, recipientId, senderId, timestamp);
-        sendTextMessage(senderId, "MessageEchoEvent tapped");
-    }
-
-    private void handleMessageDeliveredEvent(MessageDeliveredEvent event) {
-        logger.debug("Handling MessageDeliveredEvent");
-        final String senderId = event.senderId();
-        logger.debug("senderId: {}", senderId);
-        final List<String> messageIds = event.messageIds().orElse(Collections.emptyList());
-        final Instant watermark = event.watermark();
-        logger.debug("watermark: {}", watermark);
-
-        messageIds.forEach(messageId -> {
-            logger.info("Received delivery confirmation for message '{}'", messageId);
-        });
-
-        logger.info("All messages before '{}' were delivered to user '{}'", watermark, senderId);
-    }
-
-    private void handleMessageReadEvent(MessageReadEvent event) {
-        logger.debug("Handling MessageReadEvent");
-        final String senderId = event.senderId();
-        logger.debug("senderId: {}", senderId);
-        final Instant watermark = event.watermark();
-        logger.debug("watermark: {}", watermark);
-
-        logger.info("All messages before '{}' were read by user '{}'", watermark, senderId);
     }
 
     private void handleFallbackEvent(Event event) {
