@@ -75,7 +75,7 @@ public class CovidStatsProcessor {
 
     // TODO Remove this when testing processes are done
     public static void main(String[] arg) {
-        List<CovidStats> stats = getStats("russia", "2021-01-16", "2021-01-16");
+        List<CovidStats> stats = getStats("latvia", "2021-01-16", "2021-01-20");
         stats.forEach(entry -> {
             System.out.println("Date: " + entry.getDate().toString());
             System.out.println("Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
