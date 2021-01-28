@@ -20,7 +20,7 @@
     </properties>
 
     <dependencies>
-             
+
         <!-- Added by Vladislavs Kras -->
         <dependency>
             <groupId>org.telegram</groupId>
