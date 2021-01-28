@@ -8,9 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Period;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -76,10 +74,10 @@ public class HTMLRequestUtils {
         String template = DataSource.COVID_19_API.getTemplate();
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         try {
-            from.setDay(from.getDay() - 1);
+            from.setDay(from.getDay() - 2);
             String request = String.format(template, country, from.toString(), to.toString());
             JsonArray jsonArray = jsonArrayFromURL(new URL(request));
-            for (int i = 0; i < jsonArray.size(); i++) {
+            for (int i = 1; i < jsonArray.size(); i++) {
                 String dateString = jsonArray.getJsonObject(i).getString("Date");
                 if (ProcessorUtils.isValidDateString(dateString)) {
                     DateStructure struct = new DateStructure(dateString);
@@ -88,10 +86,8 @@ public class HTMLRequestUtils {
                     }
                 }
             }
-        } catch (Exception e) {}
-        JsonArray ret = arrayBuilder.build();
-        System.out.println(ret);
-        return ret;
+        } catch (Exception e) {/* TODO Exception */}
+        return arrayBuilder.build();
     }
 
     // TODO Documentation
@@ -101,35 +97,47 @@ public class HTMLRequestUtils {
         try {
             DateStructure currentDate = new DateStructure(new Date());
             long mils = Math.abs(from.toDate().getTime() - currentDate.toDate().getTime());
-            long days = TimeUnit.DAYS.convert(mils, TimeUnit.MILLISECONDS);
+            long days = TimeUnit.DAYS.convert(mils, TimeUnit.MILLISECONDS) + 1;
             String request = String.format(template, country, days);
-            JsonObject jsonObject = jsonObjectFromURL(new URL(request)).getJsonObject("timeline");
-            JsonObject cases = jsonObject.getJsonObject("cases");
-            JsonObject recoveries = jsonObject.getJsonObject("recovered");
-            JsonObject deaths = jsonObject.getJsonObject("deaths");
-            Set<String> keys = cases.keySet();
-            for(String key : keys) {
-                String dateString = String.format("%sT00:00:00Z", key.replaceAll("/", "-"));
-                if(ProcessorUtils.isValidDateString(dateString)) {
+            JsonObject jsonObject = jsonObjectFromURL(new URL(request));
+            JsonObject cases = jsonObject.getJsonObject("timeline").getJsonObject("cases");
+            JsonObject recoveries = jsonObject.getJsonObject("timeline").getJsonObject("recovered");
+            JsonObject deaths = jsonObject.getJsonObject("timeline").getJsonObject("deaths");
+            for (String key : cases.keySet()) {
+                int[] parts = new int[3];
+                for (int i = 0; i < 3; i++) {
+                    parts[i] = Integer.parseInt(key.split("/")[i]);
+                }
+                String dateString = String.format("20%02d-%02d-%02dT00:00:00Z", parts[2], parts[0], parts[1]);
+                if (ProcessorUtils.isValidDateString(dateString)) {
                     DateStructure struct = new DateStructure(dateString);
-                    if(ProcessorUtils.isDateInRange(struct, from, to, true)) {
-
+                    DateStructure struct2 = new DateStructure(struct.toDate());
+                    struct2.setDay(struct2.getDay() - 1);
+                    String previousKey = String.format("%d/%d/%d", struct2.getMonth(), struct2.getDay(), struct2.getYear() % 100);
+                    if (ProcessorUtils.isDateInRange(struct, from, to, true)) {
+                        JsonObjectBuilder builder = Json.createObjectBuilder();
+                        builder.add("country", jsonObject.getString("country"));
+                        builder.add("date", struct.toString());
+                        builder.add("totalCases", cases.getInt(key));
+                        builder.add("totalDeaths", deaths.getInt(key));
+                        builder.add("totalRecoveries", recoveries.getInt(key));
+                        int pc = 0, pd = 0, pr = 0;
+                        try {
+                            pc = cases.getInt(key) - cases.getInt(previousKey);
+                            pd = deaths.getInt(key) - deaths.getInt(previousKey);
+                            pr = recoveries.getInt(key) - recoveries.getInt(previousKey);
+                            builder.add("missing", false);
+                        } catch (Exception e) {
+                            builder.add("missing", true);
+                        }
+                        builder.add("yesterdayCases", pc);
+                        builder.add("yesterdayDeaths",  pd);
+                        builder.add("yesterdayRecoveries", pr);
+                        arrayBuilder.add(builder.build());
                     }
                 }
-                System.out.println(key);
             }
-//            for (int i = 0; i < jsonArray.size(); i++) {
-//                String dateString = jsonArray.getJsonObject(i).getString("Date");
-//                if (ProcessorUtils.isValidDateString(dateString)) {
-//                    DateStructure struct = new DateStructure(dateString);
-//                    if (ProcessorUtils.isDateInRange(struct, from, to, true)) {
-//                        arrayBuilder.add(jsonArray.getJsonObject(i));
-//                    }
-//                }
-//            }
-        } catch (Exception e) {}
-        JsonArray ret = arrayBuilder.build();
-        System.out.println(ret);
-        return ret;
+        } catch (Exception e) { /* TODO Exception */}
+        return arrayBuilder.build();
     }
 }
