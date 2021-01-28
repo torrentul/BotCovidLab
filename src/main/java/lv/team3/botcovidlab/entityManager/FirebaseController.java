@@ -27,8 +27,8 @@ public class FirebaseController {
     }
 
     @DeleteMapping("/deletePatient")
-    public String deletePatient(@RequestParam String name){
-        return firebaseService.deletePatient(name);
+    public String deletePatient(@RequestParam String personalCode){
+        return firebaseService.deletePatient(personalCode);
     }
 
 

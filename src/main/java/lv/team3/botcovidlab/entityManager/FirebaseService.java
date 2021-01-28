@@ -23,17 +23,18 @@ public class FirebaseService {
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
-    public static Patient createPatient(Long chatId, String name, String lastName,
+    public static Patient createPatient(Integer id, Long chatId, String name, String lastName,
                                         String personalCode, Double temperature, boolean isContactPerson,
                                         boolean hasCough, boolean hasTroubleBreathing,
                                         boolean hasHeadache, String phoneNumber) throws ExecutionException, InterruptedException {
         Patient patient = new Patient();
+        patient.setId(id);
         patient.setChatId(chatId);
         patient.setName(name);
         patient.setLastName(lastName);
         patient.setPersonalCode(personalCode);
         patient.setTemperature(temperature);
-        patient.setIsContactPerson(isContactPerson);
+        patient.setContactPerson(isContactPerson);
         patient.setHasCough(hasCough);
         patient.setHasTroubleBreathing(hasTroubleBreathing);
         patient.setHasHeadache(hasHeadache);

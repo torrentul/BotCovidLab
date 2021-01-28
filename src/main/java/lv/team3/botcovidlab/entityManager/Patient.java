@@ -6,6 +6,7 @@ import javax.persistence.Id;
 @Entity
 public class Patient {
     @Id
+    private Integer id;
     private Long chatId;
     private String name;
     private String lastName;
@@ -20,9 +21,16 @@ public class Patient {
     public Patient() {
 
     }
-
-
     @Id
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+
     public Long getChatId() {
         return chatId;
     }
@@ -62,11 +70,11 @@ public class Patient {
         this.temperature = temperature;
     }
 
-    public boolean getIsContactPerson() {
+    public boolean isContactPerson() {
         return isContactPerson;
     }
 
-    public void setIsContactPerson(boolean contactPerson) {
+    public void setContactPerson(boolean contactPerson) {
         isContactPerson = contactPerson;
     }
 
