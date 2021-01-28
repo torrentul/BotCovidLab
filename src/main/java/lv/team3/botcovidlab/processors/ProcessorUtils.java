@@ -140,15 +140,25 @@ public class ProcessorUtils {
     }
 
     public static boolean isDateAfter(DateStructure test, DateStructure base, boolean including) {
-        return base.getYear() <= test.getYear() &&
-                base.getMonth() <= test.getMonth() &&
-                (including ? base.getDay() <= test.getDay() : base.getDay() < test.getDay());
+        if(base.getYear() < test.getYear()) return true;
+        else if(base.getYear() == test.getYear()) {
+            if(base.getMonth() < test.getMonth()) return true;
+            else if(base.getMonth() == test.getMonth()) {
+                return (including ? base.getDay() <= test.getDay() : base.getDay() < test.getDay());
+            }
+        }
+        return false;
     }
 
     public static boolean isDateBefore(DateStructure test, DateStructure base, boolean including) {
-        return base.getYear() >= test.getYear() &&
-                base.getMonth() >= test.getMonth() &&
-                (including ? base.getDay() >= test.getDay() : base.getDay() > test.getDay());
+        if(base.getYear() > test.getYear()) return true;
+        else if(base.getYear() == test.getYear()) {
+            if(base.getMonth() > test.getMonth()) return true;
+            else if(base.getMonth() == test.getMonth()) {
+                return (including ? base.getDay() >= test.getDay() : base.getDay() > test.getDay());
+            }
+        }
+        return false;
     }
 
     public static boolean isDateInRange(DateStructure testableDate, DateStructure fromDate, DateStructure toDate, boolean including) {
@@ -156,8 +166,7 @@ public class ProcessorUtils {
     }
 
     public static boolean isDateInRange(DateStructure testableDate, DateStructure fromDate, DateStructure toDate, boolean fromIncluding, boolean toIncluding) {
-        boolean test = isDateAfter(testableDate, fromDate, fromIncluding) && isDateBefore(testableDate, toDate, toIncluding);
-        return test;
+        return isDateAfter(testableDate, fromDate, fromIncluding) && isDateBefore(testableDate, toDate, toIncluding);
     }
 
 }
