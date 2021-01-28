@@ -1,104 +1,80 @@
 package lv.team3.botcovidlab.processors;
 
 import lv.team3.botcovidlab.CovidStats;
+import lv.team3.botcovidlab.processors.html.DataSource;
+import lv.team3.botcovidlab.processors.html.HTMLRequestUtils;
 
-import javax.json.Json;
 import javax.json.JsonArray;
-import javax.json.JsonReader;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.Date;
+import javax.json.JsonObject;
+import java.util.ArrayList;
+import java.util.List;
+
+import static lv.team3.botcovidlab.processors.ProcessorUtils.DateStructure;
+import static lv.team3.botcovidlab.processors.ProcessorUtils.isValidDateString;
+
 
 public class CovidStatsProcessor {
-    static String requestTemplate = "https://api.covid19api.com/country/%s/status/confirmed?from=%s&to=%s";
-    static String requestTemplate2 = "https://api.covid19api.com/live/country/south-africa/status/confirmed/date/2020-03-21T13:13:30Z";
 
-    /*
+    /**
      * @param country Requested country
-     * @param fromDate Test date with formatting "YYYY-MM-DD"
+     * @param date    Test date with formatting "YYYY-MM-DD"
      * @author Janis Valentinovics
      */
-    public static CovidStats getStats(String country, String date) {
-        return getStats(country, date, date, "00:00:00", "23:59:59");
+    public static List<CovidStats> getStats(String country, String date) {
+        // TODO Getting object from the list
+        return getStats(country, date, date);
     }
 
-    /*
-     * @param country Requested country
+    /**
+     * @param country  Requested country
      * @param fromDate Starting date with formatting "YYYY-MM-DD"
-     * @param toDate Ending date with formatting "YYYY-MM-DD"
+     * @param toDate   Starting time with formatting "YYYY-MM-DD"
+     * @return List of CovidStats objects, that are in range [including] fromDate and [including] toDate
      * @author Janis Valentinovics
      */
-    public static CovidStats getStats(String country, String fromDate, String toDate) {
-        return getStats(country, fromDate, toDate, "00:00:00", "00:00:00");
+    public static List<CovidStats> getStats(String country, String fromDate, String toDate) {
+        return getStats(DataSource.CORONA_LMAO_NINJA_API, country, fromDate, toDate);
     }
 
-    /*
-     * @param country Requested country
-     * @param fromDate Starting date with formatting "YYYY-MM-DD"
-     * @param toDate Starting time with formatting "YYYY-MM-DD"
-     * @param fromTime Starting date with formatting "HH:MM:SS"
-     * @param toTime Starting time with formatting "HH:MM:SS"
-     * @author Janis Valentinovics
-     */
-    public static CovidStats getStats(String country, String fromDate, String toDate, String fromTime, String toTime) {
-        String from = String.format("%sT%sZ", fromDate, fromTime);
-        String to = String.format("%sT%sZ", toDate, toTime);
-        String request = String.format(requestTemplate, country, from, to);
-        System.out.println(request);
-        try {
-            URL url = new URL(request);
-            String jsonString = stringFromURL(url);
-            System.out.println(jsonString);
-            JsonArray array = jsonArrayFromString(jsonString);
-            // TODO Parse array data into CovidStats object
-        } catch (Exception e) {
-            e.printStackTrace();
+    // TODO Documentation
+    public static List<CovidStats> getStats(DataSource source, String country, String fromDate, String toDate) {
+        List<CovidStats> list = new ArrayList<>();
+        String from = String.format("%sT00:00:00Z", fromDate);
+        String to = String.format("%sT23:59:59Z", toDate);
+        if (isValidDateString(from) && isValidDateString(to)) {
+            JsonArray array = HTMLRequestUtils.jsonFromSource(source, country, new DateStructure(from), new DateStructure(to));
+            array.forEach(object -> {
+                System.out.println(object.toString());
+                CovidStats stats = covidStatsOfJsonObject(object.asJsonObject());
+                // TODO
+                list.add(stats);
+            });
         }
-        // FIXME This is just wrong...
-        return new CovidStats("Latvija", 100, 200, 1000, new Date());
+        return list;
     }
 
-    /*
-     * @param url URL returning json string
-     * @author Janis Valentinovics
-     */
-    private static String stringFromURL(URL url) {
-        String ret = null;
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringWriter writer = new StringWriter();
-            String line = "";
-            while((line = reader.readLine()) != null) {
-                writer.write(line);
-            }
-            reader.close();
-            ret = writer.toString();
-
-            writer.flush();
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ret != null ? ret : "[]";
+    // TODO Documentation
+    private static CovidStats covidStatsOfJsonObject(JsonObject object) {
+        CovidStats stats = new CovidStats();
+        stats.setDate(new DateStructure(object.getString("date")).toDate());
+        stats.setCountry(object.getString("country"));
+        stats.setDeathsTotal(object.getInt("totalDeaths"));
+        stats.setInfectedTotal(object.getInt("totalCases"));
+        stats.setRecoveredTotal(object.getInt("totalRecoveries"));
+        stats.setDeathsYesterday(object.getInt("yesterdayDeaths"));
+        stats.setInfectedYesterday(object.getInt("yesterdayCases"));
+        stats.setRecoveredYesterday(object.getInt("yesterdayRecoveries"));
+        return stats;
     }
 
-    /*
-     * @param string Json string to be parsed into json array
-     * @author Janis Valentinovics
-     */
-    private static JsonArray jsonArrayFromString(String string) {
-        JsonReader reader = Json.createReader(new StringReader(string));
-        JsonArray array = reader.readArray();
-        reader.close();
-        return array;
-    }
+    // TODO Method which adds missing entries for time periods
 
+    // TODO Remove this when testing processes are done
     public static void main(String[] arg) {
-        getStats("latvia", "2021-11-01", "2021-20-01", "00:00:00", "00:00:00");
-        getStats("latvia", "2020-01-01");
-        getStats("latvia", "2021-01-01", "2020-01-01");
+        List<CovidStats> stats = getStats(DataSource.CORONA_LMAO_NINJA_API, "latvia", "2020-04-20", "2020-04-25");
+        stats.forEach(entry -> {
+            System.out.println("Date: " + entry.getDate());
+            System.out.println("Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
+        });
     }
 }
