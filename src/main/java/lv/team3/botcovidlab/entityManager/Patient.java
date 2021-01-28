@@ -7,32 +7,35 @@ import javax.persistence.Id;
 public class Patient {
     @Id
     private Integer id;
+    private Long chatId;
     private String name;
     private String lastName;
     private String personalCode;
     private Double temperature;
     private boolean isContactPerson;
+    private boolean hasCough;
+    private boolean hasTroubleBreathing;
+    private boolean hasHeadache;
     private String phoneNumber;
+
     public Patient() {
 
     }
-    public Patient(String name, String lastName, String personalCode, Double temperature, boolean isContactPerson, String phoneNumber) {
-        this.name = name;
-        this.lastName = lastName;
-        this.personalCode = personalCode;
-        this.temperature = temperature;
-        this.isContactPerson = isContactPerson;
-        this.phoneNumber = phoneNumber;
+    @Id
+    public Integer getId() {
+        return id;
     }
-
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    @Id
-    public Integer getId() {
-        return id;
+
+    public Long getChatId() {
+        return chatId;
+    }
+    public void setChatId(Long id) {
+        this.chatId = id;
     }
 
     public String getName() {
@@ -67,12 +70,36 @@ public class Patient {
         this.temperature = temperature;
     }
 
-    public boolean getIsContactPerson() {
+    public boolean isContactPerson() {
         return isContactPerson;
     }
 
-    public void setIsContactPerson(boolean contactPerson) {
+    public void setContactPerson(boolean contactPerson) {
         isContactPerson = contactPerson;
+    }
+
+    public boolean isHasCough() {
+        return hasCough;
+    }
+
+    public void setHasCough(boolean hasCough) {
+        this.hasCough = hasCough;
+    }
+
+    public boolean isHasTroubleBreathing() {
+        return hasTroubleBreathing;
+    }
+
+    public void setHasTroubleBreathing(boolean hasTroubleBreathing) {
+        this.hasTroubleBreathing = hasTroubleBreathing;
+    }
+
+    public boolean isHasHeadache() {
+        return hasHeadache;
+    }
+
+    public void setHasHeadache(boolean hasHeadache) {
+        this.hasHeadache = hasHeadache;
     }
 
     public String getPhoneNumber() {
@@ -86,12 +113,15 @@ public class Patient {
     @Override
     public String toString() {
         return "Patient{" +
-                "id=" + id +
+                "chatId=" + chatId +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", personalCode='" + personalCode + '\'' +
                 ", temperature=" + temperature +
                 ", isContactPerson=" + isContactPerson +
+                ", hasCough=" + hasCough +
+                ", hasTroubleBreathing=" + hasTroubleBreathing +
+                ", hasHeadache=" + hasHeadache +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
