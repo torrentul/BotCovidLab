@@ -21,7 +21,6 @@ public class ProcessorUtils {
 
         public DateStructure(String date) {
             this.calendar = new Calendar.Builder().build();
-            this.calendar.setLenient(true);
             String[] split = date.split("-");
             this.setYear(Integer.parseInt(split[0]));
             this.setMonth(Integer.parseInt(split[1]));

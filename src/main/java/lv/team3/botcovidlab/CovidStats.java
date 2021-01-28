@@ -6,9 +6,10 @@ import java.lang.System.Logger.Level;
 public class CovidStats {
 
     private String country;
-    private int infectedToday;
-    private int deathsToday;
-    private int recoveredToday;
+    private int infectedYesterday;
+    private int deathsYesterday;
+    private int recoveredYesterday;
+    private int activeYesterday;
     private int infectedTotal;
     private int deathsTotal;
     private int recoveredTotal;
@@ -25,7 +26,7 @@ public class CovidStats {
 
     @Deprecated
     /*
-     * Use getInfectedTotal / getInfectedToday
+     * Use getInfectedTotal / getinfectedYesterday
      */
     public void setInfected(int t) {
         System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
@@ -33,7 +34,7 @@ public class CovidStats {
     }
     @Deprecated
     /*
-     * Use setInfectedTotal / setInfectedToday
+     * Use setInfectedTotal / setinfectedYesterday
      */
     public int getInfected() {
         System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
@@ -42,7 +43,7 @@ public class CovidStats {
 
     @Deprecated
     /*
-     * Use getDeathsTotal / getDeathsToday
+     * Use getDeathsTotal / getdeathsYesterday
      */
     public void setDeaths(int t) {
         System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
@@ -50,7 +51,7 @@ public class CovidStats {
     }
     @Deprecated
     /*
-     * Use setDeathsTotal / setDeathsToday
+     * Use setDeathsTotal / setdeathsYesterday
      */
     public int getDeaths() {
         System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
@@ -59,7 +60,7 @@ public class CovidStats {
 
     @Deprecated
     /*
-     * Use getRecoveredTotal / getRecoveredToday
+     * Use getRecoveredTotal / getrecoveredYesterday
      */
     public void setRecovered(int t) {
         System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
@@ -67,7 +68,7 @@ public class CovidStats {
     }
     @Deprecated
     /*
-     * Use setRecoveredTotal / setRecoveredToday
+     * Use setRecoveredTotal / setrecoveredYesterday
      */
     public int getRecovered() {
         System.getLogger("CovidStats").log(Level.WARNING, "Using deprecated method");
@@ -82,28 +83,28 @@ public class CovidStats {
         this.country = country;
     }
 
-    public int getInfectedToday() {
-        return infectedToday;
+    public int getInfectedYesterday() {
+        return infectedYesterday;
     }
 
-    public void setInfectedToday(int infectedToday) {
-        this.infectedToday = infectedToday;
+    public void setInfectedYesterday(int infectedYesterday) {
+        this.infectedYesterday = infectedYesterday;
     }
 
-    public int getDeathsToday() {
-        return deathsToday;
+    public int getDeathsYesterday() {
+        return deathsYesterday;
     }
 
-    public void setDeathsToday(int deathsToday) {
-        this.deathsToday = deathsToday;
+    public void setDeathsYesterday(int deathsYesterday) {
+        this.deathsYesterday = deathsYesterday;
     }
 
-    public int getRecoveredToday() {
-        return recoveredToday;
+    public int getRecoveredYesterday() {
+        return recoveredYesterday;
     }
 
-    public void setRecoveredToday(int recoveredToday) {
-        this.recoveredToday = recoveredToday;
+    public void setRecoveredYesterday(int recoveredYesterday) {
+        this.recoveredYesterday = recoveredYesterday;
     }
 
     public int getInfectedTotal() {
