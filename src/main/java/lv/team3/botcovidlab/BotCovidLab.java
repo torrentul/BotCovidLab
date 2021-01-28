@@ -18,7 +18,4 @@ public class BotCovidLab {
     public static void main(String[] args) {
     SpringApplication.run(BotCovidLab.class, args);
     TGBotLauncher.init();
-
-
-
 }}

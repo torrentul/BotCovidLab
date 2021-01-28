@@ -7,8 +7,6 @@ import lv.team3.botcovidlab.processors.html.HTMLRequestUtils;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static lv.team3.botcovidlab.processors.ProcessorUtils.DateStructure;
@@ -22,9 +20,9 @@ public class CovidStatsProcessor {
      * @param date    Test date with formatting "YYYY-MM-DD"
      * @author Janis Valentinovics
      */
-    public static CovidStats getStats(String country, String date) {
+    public static List<CovidStats> getStats(String country, String date) {
         // TODO Getting object from the list
-        return getStats(country, date, date, "00:00:00", "23:59:59").get(0);
+        return getStats(country, date, date, "00:00:00", "23:59:59");
     }
 
     /**
@@ -48,11 +46,15 @@ public class CovidStatsProcessor {
      * @author Janis Valentinovics
      */
     public static List<CovidStats> getStats(String country, String fromDate, String toDate, String fromTime, String toTime) {
+        return getStats(DataSource.COVID_19_API, country, fromDate, toDate, fromTime, toTime);
+    }
+
+    public static List<CovidStats> getStats(DataSource source, String country, String fromDate, String toDate, String fromTime, String toTime) {
         List<CovidStats> list = new ArrayList<>();
         String from = String.format("%sT%sZ", fromDate, fromTime);
         String to = String.format("%sT%sZ", toDate, toTime);
         if (isValidDateString(from) && isValidDateString(to)) {
-            JsonArray array = HTMLRequestUtils.jsonFromSource(DataSource.COVID_19_API, country, new DateStructure(from), new DateStructure(to));
+            JsonArray array = HTMLRequestUtils.jsonFromSource(source, country, new DateStructure(from), new DateStructure(to));
             array.forEach(object -> {
                 JsonObject jsonObject = object.asJsonObject();
                 String date = jsonObject.getString("Date");
@@ -76,6 +78,11 @@ public class CovidStatsProcessor {
     // TODO Remove this when testing processes are done
     public static void main(String[] arg) {
         List<CovidStats> stats = getStats("latvia", "2021-01-16", "2021-01-20");
+        stats.forEach(entry -> {
+            System.out.println("Date: " + entry.getDate().toString());
+            System.out.println("Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
+        });
+        stats = getStats(DataSource.CORONA_LMAO_NINJA_API, "italy", "2020-01-16", "2021-01-20", "00:00:00", "00:00:00");
         stats.forEach(entry -> {
             System.out.println("Date: " + entry.getDate().toString());
             System.out.println("Died: " + entry.getDeathsTotal() + " Active: " + entry.getActiveTotal() + " Recovered: " + entry.getRecoveredTotal());
