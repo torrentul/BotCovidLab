@@ -10,8 +10,21 @@ public class Patient {
     private String name;
     private String lastName;
     private String personalCode;
-    private Integer temperature;
+    private Double temperature;
     private boolean isContactPerson;
+    private String phoneNumber;
+    public Patient() {
+
+    }
+    public Patient(String name, String lastName, String personalCode, Double temperature, boolean isContactPerson, String phoneNumber) {
+        this.name = name;
+        this.lastName = lastName;
+        this.personalCode = personalCode;
+        this.temperature = temperature;
+        this.isContactPerson = isContactPerson;
+        this.phoneNumber = phoneNumber;
+    }
+
 
     public void setId(Integer id) {
         this.id = id;
@@ -46,11 +59,11 @@ public class Patient {
         this.personalCode = personalCode;
     }
 
-    public Integer getTemperature() {
+    public Double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Integer temperature) {
+    public void setTemperature(Double temperature) {
         this.temperature = temperature;
     }
 
@@ -62,6 +75,14 @@ public class Patient {
         isContactPerson = contactPerson;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public String toString() {
         return "Patient{" +
@@ -71,6 +92,7 @@ public class Patient {
                 ", personalCode='" + personalCode + '\'' +
                 ", temperature=" + temperature +
                 ", isContactPerson=" + isContactPerson +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }
