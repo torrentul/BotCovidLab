@@ -1,36 +1,38 @@
 package lv.team3.botcovidlab.entityManager;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class FirebaseService {
 
     public static final String COL_NAME = "patients";
+    private static DocumentReference documentReference;
+    private static ApiFuture<DocumentSnapshot> future;
 
     public static boolean isPatientFound(String personalCode) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(personalCode);
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
+        documentReference = dbFirestore.collection(COL_NAME).document(personalCode);
+        future = documentReference.get();
         DocumentSnapshot document = future.get();
         return document.exists();
     }
 
     public static String savePatientDetails(Patient patient) throws InterruptedException, ExecutionException {
-        if (isPatientFound(patient.getPersonalCode())) {
-            return "Patient with personal code " + patient.getPersonalCode() + " already exists in the database";
+        String personalCode = patient.getPersonalCode();
+        if (isPatientFound(personalCode)) {
+            return "Patient with personal code " + personalCode + " already exists in the database";
         } else {
             Firestore dbFirestore = FirestoreClient.getFirestore();
             ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection("patients")
-                    .document(patient.getPersonalCode())
+                    .document(personalCode)
                     .set(patient);
+            System.out.println("Patient with personal code " + personalCode + " added to database");
             return collectionsApiFuture.get().getUpdateTime().toString();
         }
     }
@@ -69,8 +71,8 @@ public class FirebaseService {
         Patient patient = null;
         if (isPatientFound(personalCode)) {
             Firestore dbFirestore = FirestoreClient.getFirestore();
-            DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(personalCode);
-            ApiFuture<DocumentSnapshot> future = documentReference.get();
+            documentReference = dbFirestore.collection(COL_NAME).document(personalCode);
+            future = documentReference.get();
             DocumentSnapshot document = future.get();
             patient = document.toObject(Patient.class);
         } else {
@@ -80,21 +82,41 @@ public class FirebaseService {
     }
 
     public static String updatePatientDetails(Patient patient) throws InterruptedException, ExecutionException {
-
-        if (isPatientFound(patient.getPersonalCode())) {
-            FirestoreClient.getFirestore().collection(COL_NAME).document(patient.getPersonalCode()).set(patient);
-        }
-        return FirestoreClient.getFirestore().collection(COL_NAME).document(patient.getPersonalCode()).set(patient).get().getUpdateTime().toString();
-    }
-
-    public static String deletePatient(String personalCode) throws ExecutionException, InterruptedException {
+        String personalCode = patient.getPersonalCode();
         if (isPatientFound(personalCode)) {
-            FirestoreClient.getFirestore().collection(COL_NAME).document(personalCode).delete();
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            documentReference = dbFirestore.collection(COL_NAME).document(personalCode);
+            documentReference.set(patient);
+            return documentReference.set(patient).get().getUpdateTime().toString();
         } else {
             System.out.println("Patient with personal code " + personalCode + " not found");
             return null;
         }
+    }
 
-        return "Document with Patient ID " + personalCode + " has been deleted";
+    public static String deletePatient(String personalCode) throws ExecutionException, InterruptedException {
+        if (isPatientFound(personalCode)) {
+            Firestore dbFirestore = FirestoreClient.getFirestore();
+            documentReference = dbFirestore.collection(COL_NAME).document(personalCode);
+            documentReference.delete();
+            return "Document with Patient ID " + personalCode + " has been deleted";
+        } else {
+            System.out.println("Patient with personal code " + personalCode + " not found");
+            return null;
+        }
+    }
+
+    public static Patient findByChatId(Long chatId) throws ExecutionException, InterruptedException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> patientQuery = dbFirestore.collection(COL_NAME).whereEqualTo("chatId", chatId).get();
+        List<QueryDocumentSnapshot> entry = patientQuery.get().getDocuments();
+        if(entry.isEmpty()) {
+            System.out.println("Patient with chatId " + chatId + " not found");
+            return null;
+        } else {
+            System.out.println("Patient with chatId "+ chatId + " found!");
+            return entry.get(0).toObject(Patient.class);
+        }
+
     }
 }
