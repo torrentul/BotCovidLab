@@ -34,7 +34,7 @@
             <artifactId>firebase-admin</artifactId>
             <version>7.1.0</version>
         </dependency>
-             
+
 
         <!-- Added by Vladislavs Kras -->
         <dependency>
@@ -53,6 +53,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.vdurmont/emoji-java -->
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+
         <!-- Added by Vladislavs Kras -->
 
 
@@ -98,8 +105,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.16</version>
+            <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

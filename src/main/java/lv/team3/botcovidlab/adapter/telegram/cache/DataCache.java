@@ -1,14 +1,15 @@
 package lv.team3.botcovidlab.adapter.telegram.cache;
 
 
-import lv.team3.botcovidlab.adapter.telegram.BotStates;
+import lv.team3.botcovidlab.adapter.telegram.handlers.BotStates;
+import lv.team3.botcovidlab.entityManager.Patient;
 
 public interface DataCache {
-    void setUsersCurrentBotState(int userId, BotStates botState);
+    void setPatiensCurrentBotState(int userId, BotStates botState);
 
-    BotStates getUsersCurrentBotState(int userId);
+    BotStates getPatientsCurrentBotState(int userId);
 
-    UserProfileData getUserProfileData(int userId);
+    Patient getPatientData(int userId);
 
-    void saveUserProfileData(int userId, UserProfileData userProfileData);
+    void savePatientsProfileData(int userId, Patient patient);
 }

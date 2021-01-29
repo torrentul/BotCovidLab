@@ -1,5 +1,6 @@
-package lv.team3.botcovidlab.adapter.telegram;
+package lv.team3.botcovidlab.adapter.telegram.launcher;
 
+import lv.team3.botcovidlab.adapter.telegram.TelegramBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;

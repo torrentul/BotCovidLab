@@ -6,6 +6,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.cloud.FirestoreClient;
+
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutionException;
@@ -23,12 +24,13 @@ public class FirebaseService {
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
-    public static Patient createPatient(Long chatId, String name, String lastName,
+    public static Patient createPatient(Integer id, Long chatId, String name, String lastName,
                                         String personalCode, Double temperature, boolean isContactPerson,
                                         boolean hasCough, boolean hasTroubleBreathing,
                                         boolean hasHeadache, String phoneNumber) throws ExecutionException, InterruptedException {
         Patient patient = new Patient();
-        patient.setChatId(chatId);
+        patient.setId(id);
+        patient.setChatid(chatId);
         patient.setName(name);
         patient.setLastName(lastName);
         patient.setPersonalCode(personalCode);

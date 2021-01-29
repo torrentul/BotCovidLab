@@ -7,6 +7,8 @@ import javax.persistence.Id;
 public class Patient {
     @Id
     private Long chatId;
+    private Integer id;
+    private long chatid;
     private String name;
     private String lastName;
     private String personalCode;
@@ -16,18 +18,35 @@ public class Patient {
     private boolean hasTroubleBreathing;
     private boolean hasHeadache;
     private String phoneNumber;
-
     public Patient() {
 
     }
 
+    public long getChatid() {
+        return chatid;
+    }
+
+    public void setChatid(long chatid) {
+        this.chatid = chatid;
+    }
+
+    public Patient(String name, String lastName, String personalCode, Double temperature, boolean isContactPerson, String phoneNumber) {
+        this.name = name;
+        this.lastName = lastName;
+        this.personalCode = personalCode;
+        this.temperature = temperature;
+        this.isContactPerson = isContactPerson;
+        this.phoneNumber = phoneNumber;
+    }
+
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     @Id
-    public Long getChatId() {
-        return chatId;
-    }
-    public void setChatId(Long id) {
-        this.chatId = id;
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
@@ -105,7 +124,7 @@ public class Patient {
     @Override
     public String toString() {
         return "Patient{" +
-                "chatId=" + chatId +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", personalCode='" + personalCode + '\'' +
