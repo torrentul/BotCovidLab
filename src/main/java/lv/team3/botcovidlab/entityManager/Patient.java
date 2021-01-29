@@ -6,7 +6,7 @@ public class Patient {
     private String name;
     private String lastName;
     private String personalCode;
-    private Double temperature;
+    private String temperature;
     private boolean isContactPerson;
     private boolean hasCough;
     private boolean hasTroubleBreathing;
@@ -15,20 +15,6 @@ public class Patient {
 
     public Patient() {
 
-    }
-    public Patient(Long chatId, String name, String lastName, String personalCode,
-                   String temperature, boolean isContactPerson, boolean hasCough,
-                   boolean hasTroubleBreathing, boolean hasHeadache, String phoneNumber) {
-        this.chatId = chatId;
-        this.name = name;
-        this.lastName = lastName;
-        this.personalCode = personalCode;
-        this.temperature = Double.parseDouble(temperature);
-        this.isContactPerson = isContactPerson;
-        this.hasCough = hasCough;
-        this.hasTroubleBreathing = hasTroubleBreathing;
-        this.hasHeadache = hasHeadache;
-        this.phoneNumber = phoneNumber;
     }
 
     public Long getChatId() {
@@ -62,12 +48,12 @@ public class Patient {
         this.personalCode = personalCode;
     }
 
-    public Double getTemperature() {
+    public String getTemperature() {
         return temperature;
     }
 
     public void setTemperature(String temperature) {
-        this.temperature = Double.parseDouble(temperature);
+        this.temperature = temperature;
     }
 
     public boolean isContactPerson() {
