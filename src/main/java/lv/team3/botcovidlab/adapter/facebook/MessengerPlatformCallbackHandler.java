@@ -1,7 +1,9 @@
 package lv.team3.botcovidlab.adapter.facebook;
 
 import com.github.messenger4j.Messenger;
+import com.github.messenger4j.common.SupportedLocale;
 import com.github.messenger4j.common.WebviewHeightRatio;
+import com.github.messenger4j.common.WebviewShareButtonState;
 import com.github.messenger4j.exception.MessengerApiException;
 import com.github.messenger4j.exception.MessengerIOException;
 import com.github.messenger4j.exception.MessengerVerificationException;
@@ -9,6 +11,11 @@ import com.github.messenger4j.messengerprofile.MessengerSettings;
 import com.github.messenger4j.messengerprofile.SetupResponse;
 import com.github.messenger4j.messengerprofile.SetupResponseFactory;
 import com.github.messenger4j.messengerprofile.getstarted.StartButton;
+import com.github.messenger4j.messengerprofile.persistentmenu.LocalizedPersistentMenu;
+import com.github.messenger4j.messengerprofile.persistentmenu.PersistentMenu;
+import com.github.messenger4j.messengerprofile.persistentmenu.action.NestedCallToAction;
+import com.github.messenger4j.messengerprofile.persistentmenu.action.PostbackCallToAction;
+import com.github.messenger4j.messengerprofile.persistentmenu.action.UrlCallToAction;
 import com.github.messenger4j.send.MessagePayload;
 import com.github.messenger4j.send.MessagingType;
 import com.github.messenger4j.send.NotificationType;
@@ -66,13 +73,12 @@ import static lv.team3.botcovidlab.processors.CovidStatsProcessor.*;
 @RequestMapping("/callback")
 public class MessengerPlatformCallbackHandler {
 
-    private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
-
     public static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
 
     private final Messenger messenger;
 
     private String country;
+    private boolean isCountry;
     private String dateFrom;
     private String dateTo = getYesterdayDate();
 
@@ -99,9 +105,8 @@ public class MessengerPlatformCallbackHandler {
      * Callback endpoint responsible for processing the inbound messages and events.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> handleCallback(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) throws MessengerApiException, MessengerIOException {
+    public ResponseEntity<Void> handleCallback(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) throws MessengerApiException, MessengerIOException, MalformedURLException {
         logger.debug("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
-
 
         try {
             this.messenger.onReceiveEvents(payload, of(signature), event -> {
@@ -123,6 +128,8 @@ public class MessengerPlatformCallbackHandler {
         }
     }
 
+
+
     public void handleTextMessageEvent(TextMessageEvent event) {
         logger.debug("Received TextMessageEvent: {}", event);
 
@@ -133,40 +140,32 @@ public class MessengerPlatformCallbackHandler {
 
         logger.info("Received message '{}' with text '{}' from user '{}' at '{}'", messageId, messageText, senderId, timestamp);
 
-        try {
-            switch (messageText.toLowerCase()) {
-                case "covid Latvia":
-
-                    break;
-
-                default:
-                    sendButtonMessage(senderId);
-                    sendSecondButtonMessage(senderId);
+        if (isCountry) {
+            country = event.text().toLowerCase();
+            try {
+                sendQuickReplyCountryButtons(senderId);
+            } catch (MessengerApiException | MessengerIOException e) {
+                handleSendException(e);
             }
-        } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
-            handleSendException(e);
+        }
+
+        else {
+            try {
+                switch (messageText.toLowerCase()) {
+                    case "covid Latvia":
+
+                        break;
+
+                    default:
+                        sendButtonMessage(senderId);
+                        sendSecondButtonMessage(senderId);
+                }
+            } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
+                handleSendException(e);
+            }
         }
     }
 
-
-    private void handleTextMessageForCountryEvent(TextMessageEvent event) {
-        logger.debug("Received TextMessageForCountryEvent: {}", event);
-
-        final String messageId = event.messageId();
-        final String messageText = event.text();
-        final String senderId = event.senderId();
-        final Instant timestamp = event.timestamp();
-
-        logger.info("Received message '{}' with text '{}' from user '{}' at '{}'", messageId, messageText, senderId, timestamp);
-
-        country = messageText.toLowerCase();
-
-    }
-
-    private void sendImageMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL(RESOURCE_URL + "/assets/rift.png"));
-        sendRichMediaMessage(recipientId, richMediaAsset);
-    }
 
     private void sendRichMediaMessage(String recipientId, UrlRichMediaAsset richMediaAsset) throws MessengerApiException, MessengerIOException {
         final RichMediaMessage richMediaMessage = RichMediaMessage.create(richMediaAsset);
@@ -222,6 +221,18 @@ public class MessengerPlatformCallbackHandler {
         messenger.send(MessagePayload.create(recipientId, MessagingType.RESPONSE, message));
     }
 
+    private void sendQuickReplyCountryButtons(String recipientId) throws MessengerApiException, MessengerIOException {
+        isCountry = false;
+        List<QuickReply> quickReplies = new ArrayList<>();
+
+        quickReplies.add(TextQuickReply.create("Yesterday", "countryYesterday"));
+        quickReplies.add(TextQuickReply.create("Last 7 days", "countrySevenDays"));
+        quickReplies.add(TextQuickReply.create("Last 30 days", "countryThirtyDays"));
+
+        TextMessage message = TextMessage.create("Choose the period", of(quickReplies), empty());
+        messenger.send(MessagePayload.create(recipientId, MessagingType.RESPONSE, message));
+    }
+
     private void handlePostbackEvent(PostbackEvent event) {
         logger.debug("Handling PostbackEvent");
         final String payload = event.payload().orElse("empty payload");
@@ -240,6 +251,8 @@ public class MessengerPlatformCallbackHandler {
             }
             if (payload.equals("Country")) {
                 sendTextMessage(senderId,"Type the country");
+                isCountry = true;
+
             }
 
         }
@@ -259,23 +272,35 @@ public class MessengerPlatformCallbackHandler {
         logger.info("Received quick reply for message '{}' with payload '{}'", messageId, payload);
 
         if (payload.equals("lvYesterday")) {
-            sendTextMessage(senderId, countTotalYesterday("latvia"));
+            sendTextMessage(senderId, "\uD83C\uDDF1\uD83C\uDDFB " + "\n" +countTotalYesterday("latvia"));
         }
         if (payload.equals("lvSevenDays")) {
-                sendTextMessage(senderId, countTotalSevenDays("latvia"));
+            sendTextMessage(senderId,"\uD83C\uDDF1\uD83C\uDDFB " + "\n" + countTotalSevenDays("latvia"));
         }
         if (payload.equals("lvThirtyDays")) {
-            sendTextMessage(senderId, countTotalThirtyDays("latvia"));
+            sendTextMessage(senderId,"\uD83C\uDDF1\uD83C\uDDFB " + "\n" + countTotalThirtyDays("latvia"));
         }
         if (payload.equals("wwYesterday")) {
-            sendTextMessage(senderId, countTotalYesterday("world"));
+            sendTextMessage(senderId,"\uD83C\uDF0E" + "\n" + countTotalYesterday("world"));
+
         }
         if (payload.equals("wwSevenDays")) {
-            sendTextMessage(senderId, countTotalSevenDays("world"));
+            sendTextMessage(senderId,"\uD83C\uDF0E" + "\n" +  countTotalSevenDays("world"));
         }
         if (payload.equals("wwThirtyDays")) {
-            sendTextMessage(senderId, countTotalThirtyDays("world"));
+            sendTextMessage(senderId,"\uD83C\uDF0E" + "\n" +  countTotalThirtyDays("world"));
         }
+
+        if (payload.equals("countryYesterday")) {
+            sendTextMessage(senderId, countTotalYesterday(country));
+        }
+        if (payload.equals("countrySevenDays")) {
+            sendTextMessage(senderId, countTotalSevenDays(country));
+        }
+        if (payload.equals("countryThirtyDays")) {
+            sendTextMessage(senderId, countTotalThirtyDays(country));
+        }
+
 
     }
 
