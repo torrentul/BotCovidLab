@@ -12,7 +12,7 @@ public class FirebaseController {
     FirebaseService firebaseService;
 
     @GetMapping("/getPatientDetails")
-    public Patient getPatient(@RequestParam String personalCode ) throws InterruptedException, ExecutionException{
+    public Patient getPatient(@RequestParam String personalCode) throws InterruptedException, ExecutionException{
         return firebaseService.getPatientDetails(personalCode);
     }
 
@@ -26,10 +26,10 @@ public class FirebaseController {
         return firebaseService.updatePatientDetails(patient);
     }
 
-    @DeleteMapping("/deletePatient")
-    public String deletePatient(@RequestParam String personalCode){
-        return firebaseService.deletePatient(personalCode);
-    }
+//    @DeleteMapping("/deletePatient")
+//    public String deletePatient(@RequestParam String personalCode){
+//        return firebaseService.deletePatient(personalCode);
+//    }
 
 
 }
