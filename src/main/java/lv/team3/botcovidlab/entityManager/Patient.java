@@ -1,12 +1,7 @@
 package lv.team3.botcovidlab.entityManager;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
-@Entity
 public class Patient {
-    @Id
-    private Integer id;
     private Long chatId;
     private String name;
     private String lastName;
@@ -21,15 +16,20 @@ public class Patient {
     public Patient() {
 
     }
-    @Id
-    public Integer getId() {
-        return id;
+    public Patient(Long chatId, String name, String lastName, String personalCode,
+                   String temperature, boolean isContactPerson, boolean hasCough,
+                   boolean hasTroubleBreathing, boolean hasHeadache, String phoneNumber) {
+        this.chatId = chatId;
+        this.name = name;
+        this.lastName = lastName;
+        this.personalCode = personalCode;
+        this.temperature = Double.parseDouble(temperature);
+        this.isContactPerson = isContactPerson;
+        this.hasCough = hasCough;
+        this.hasTroubleBreathing = hasTroubleBreathing;
+        this.hasHeadache = hasHeadache;
+        this.phoneNumber = phoneNumber;
     }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
 
     public Long getChatId() {
         return chatId;
@@ -66,8 +66,8 @@ public class Patient {
         return temperature;
     }
 
-    public void setTemperature(Double temperature) {
-        this.temperature = temperature;
+    public void setTemperature(String temperature) {
+        this.temperature = Double.parseDouble(temperature);
     }
 
     public boolean isContactPerson() {
