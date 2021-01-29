@@ -7,46 +7,25 @@ import javax.persistence.Id;
 public class Patient {
     @Id
     private Long chatId;
-    private Integer id;
-    private long chatid;
     private String name;
     private String lastName;
     private String personalCode;
-    private Double temperature;
+    private String temperature;
     private boolean isContactPerson;
     private boolean hasCough;
     private boolean hasTroubleBreathing;
     private boolean hasHeadache;
     private String phoneNumber;
+
     public Patient() {
 
     }
 
-    public long getChatid() {
-        return chatid;
+    public Long getChatId() {
+        return chatId;
     }
-
-    public void setChatid(long chatid) {
-        this.chatid = chatid;
-    }
-
-    public Patient(String name, String lastName, String personalCode, Double temperature, boolean isContactPerson, String phoneNumber) {
-        this.name = name;
-        this.lastName = lastName;
-        this.personalCode = personalCode;
-        this.temperature = temperature;
-        this.isContactPerson = isContactPerson;
-        this.phoneNumber = phoneNumber;
-    }
-
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Id
-    public Integer getId() {
-        return id;
+    public void setChatId(Long id) {
+        this.chatId = id;
     }
 
     public String getName() {
@@ -73,19 +52,19 @@ public class Patient {
         this.personalCode = personalCode;
     }
 
-    public Double getTemperature() {
+    public String getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Double temperature) {
+    public void setTemperature(String temperature) {
         this.temperature = temperature;
     }
 
-    public boolean getIsContactPerson() {
+    public boolean isContactPerson() {
         return isContactPerson;
     }
 
-    public void setIsContactPerson(boolean contactPerson) {
+    public void setContactPerson(boolean contactPerson) {
         isContactPerson = contactPerson;
     }
 
@@ -124,7 +103,7 @@ public class Patient {
     @Override
     public String toString() {
         return "Patient{" +
-                "id=" + id +
+                "chatId=" + chatId +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", personalCode='" + personalCode + '\'' +

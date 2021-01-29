@@ -34,7 +34,7 @@
             <artifactId>firebase-admin</artifactId>
             <version>7.1.0</version>
         </dependency>
-
+             
 
         <!-- Added by Vladislavs Kras -->
         <dependency>
@@ -76,11 +76,13 @@
             <artifactId>javax.json-api</artifactId>
             <version>1.1.4</version>
         </dependency>
-<!--         Added by Janis Valentinovics -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--        </dependency>-->
+        <!-- Added by Janis Valentinovics -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -97,18 +99,18 @@
         </dependency>
 
 
-<!--        <dependency>-->
-<!--            <groupId>org.postgresql</groupId>-->
-<!--            <artifactId>postgresql</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -120,19 +122,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <!--         Added by Vladislavs Visnevskis -->
         <dependency>
             <groupId>com.github.messenger4j</groupId>
             <artifactId>messenger4j</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.kcthota/emoji4j -->
-        <dependency>
-            <groupId>com.kcthota</groupId>
-            <artifactId>emoji4j</artifactId>
-            <version>6.0</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
