@@ -13,56 +13,83 @@ import static lv.team3.botcovidlab.processors.ProcessorUtils.DateStructure;
 
 public class CovidStatsProcessor {
 
-    public static List<CovidStats> getStatsForLastDay(String country) {
-        DateStructure date = new DateStructure(new Date());
-        date.setDay(date.getDay() - 1);
-        return getStats(country, date);
+    /**
+     * @param location String <code>"world"</code> or any country
+     * @return List of CovidStats containing latest data
+     */
+    public static List<CovidStats> getStatsForLatest(String location) {
+        // TODO Add functionality
+        return getLatestStats(location);
     }
 
-    public static List<CovidStats> getStatsForLast7Days(String country) {
+    /**
+     * @param location String <code>"world"</code> or any country
+     * @return List of CovidStats containing data for yesterday
+     */
+    public static List<CovidStats> getStatsForLastDay(String location) {
+        DateStructure date = new DateStructure(new Date());
+        date.setDay(date.getDay() - 1);
+        return getStats(location, date, date);
+    }
+
+    /**
+     * @param location String <code>"world"</code> or any country
+     * @return List of CovidStats containing data for last 7 days
+     */
+    public static List<CovidStats> getStatsForLast7Days(String location) {
         DateStructure to = new DateStructure(new Date());
         to.setDay(to.getDay() - 1);
         DateStructure from = new DateStructure(to.toDate());
         from.setDay(from.getDay() - 6);
-        return getStats(country, from, to);
+        return getStats(location, from, to);
     }
 
-    public static List<CovidStats> getStatsForLast30Days(String country) {
+    /**
+     * @param location String <code>"world"</code> or any country
+     * @return List of CovidStats containing data for last 30 days
+     */
+    public static List<CovidStats> getStatsForLast30Days(String location) {
         DateStructure to = new DateStructure(new Date());
         to.setDay(to.getDay() - 1);
         DateStructure from = new DateStructure(to.toDate());
         from.setDay(from.getDay() - 29);
-        return getStats(country, from, to);
+        return getStats(location, from, to);
     }
 
-    public static List<CovidStats> getStatsFromBeginning(String country) {
+    /**
+     * @param location String <code>"world"</code> or any country
+     * @return List of CovidStats containing data for all covid history
+     */
+    public static List<CovidStats> getStatsFromBeginning(String location) {
         DateStructure to = new DateStructure(new Date());
         to.setDay(to.getDay() - 1);
         DateStructure from = new DateStructure("2020-01-22T00:00:00Z");
-        return getStats(country, from, to);
+        return getStats(location, from, to);
     }
 
     /**
-     * @param country Requested country
-     * @param date    Requested date
-     * @author Janis Valentinovics
-     */
-    private static List<CovidStats> getStats(String country, DateStructure date) {
-        // TODO Getting object from the list
-        return getStats(country, date, date);
-    }
-
-    /**
-     * @param country Requested country
-     * @param from    Starting from date [including]
-     * @param to      Ending with [including]
+     * @param location Requested country
+     * @param from     Starting from date [including]
+     * @param to       Ending with [including]
      * @return List of CovidStats objects, that are in range [including] fromDate and [including] toDate
      * @author Janis Valentinovics
      */
-    private static List<CovidStats> getStats(String country, DateStructure from, DateStructure to) {
-        from.setHour(0); from.setMinute(0); from.setSecond(0); // @formatter:off
-        to.setHour(23); to.setMinute(59); to.setSecond(59);    // @formatter:off
-        JsonObject object = HTMLRequestUtils.jsonFromSource(country, from, to);
+    private static List<CovidStats> getStats(String location, DateStructure from, DateStructure to) {
+        from.setHour(0); from.setMinute(0); from.setSecond(0); //@auto:off
+        to.setHour(23); to.setMinute(59); to.setSecond(59);
+        //@auto:on
+        JsonObject object = HTMLRequestUtils.getHistoricData(location, from, to);
+        List<CovidStats> list = new ArrayList<>();
+        object.keySet().forEach(key -> {
+            CovidStats stats = covidStatsFromJsonObject(object.getJsonObject(key));
+            stats.setDate(new DateStructure(key).toDate());
+            list.add(stats);
+        });
+        return list;
+    }
+
+    private static List<CovidStats> getLatestStats(String location) {
+        JsonObject object = HTMLRequestUtils.getLatestData(location);
         List<CovidStats> list = new ArrayList<>();
         object.keySet().forEach(key -> {
             CovidStats stats = covidStatsFromJsonObject(object.getJsonObject(key));
@@ -94,7 +121,7 @@ public class CovidStatsProcessor {
 
     // TODO Remove this when testing processes are done
     public static void main(String[] arg) {
-        List<CovidStats> stats = getStatsFromBeginning("world");
+        List<CovidStats> stats = getLatestStats("latvia");
         stats.forEach(entry -> {
             System.out.println("Date: " + entry.getDate());
             System.out.println("\tTotal");
