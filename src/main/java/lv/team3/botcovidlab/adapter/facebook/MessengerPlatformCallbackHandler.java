@@ -1,51 +1,27 @@
 package lv.team3.botcovidlab.adapter.facebook;
 
 import com.github.messenger4j.Messenger;
-import com.github.messenger4j.common.SupportedLocale;
 import com.github.messenger4j.common.WebviewHeightRatio;
-import com.github.messenger4j.common.WebviewShareButtonState;
 import com.github.messenger4j.exception.MessengerApiException;
 import com.github.messenger4j.exception.MessengerIOException;
 import com.github.messenger4j.exception.MessengerVerificationException;
-import com.github.messenger4j.messengerprofile.MessengerSettings;
-import com.github.messenger4j.messengerprofile.SetupResponse;
-import com.github.messenger4j.messengerprofile.SetupResponseFactory;
-import com.github.messenger4j.messengerprofile.getstarted.StartButton;
-import com.github.messenger4j.messengerprofile.persistentmenu.LocalizedPersistentMenu;
-import com.github.messenger4j.messengerprofile.persistentmenu.PersistentMenu;
-import com.github.messenger4j.messengerprofile.persistentmenu.action.NestedCallToAction;
-import com.github.messenger4j.messengerprofile.persistentmenu.action.PostbackCallToAction;
-import com.github.messenger4j.messengerprofile.persistentmenu.action.UrlCallToAction;
 import com.github.messenger4j.send.MessagePayload;
 import com.github.messenger4j.send.MessagingType;
 import com.github.messenger4j.send.NotificationType;
-import com.github.messenger4j.send.SenderActionPayload;
 import com.github.messenger4j.send.message.RichMediaMessage;
 import com.github.messenger4j.send.message.TemplateMessage;
 import com.github.messenger4j.send.message.TextMessage;
-import com.github.messenger4j.send.message.quickreply.LocationQuickReply;
 import com.github.messenger4j.send.message.quickreply.QuickReply;
 import com.github.messenger4j.send.message.quickreply.TextQuickReply;
 import com.github.messenger4j.send.message.richmedia.UrlRichMediaAsset;
 import com.github.messenger4j.send.message.template.ButtonTemplate;
-import com.github.messenger4j.send.message.template.GenericTemplate;
-import com.github.messenger4j.send.message.template.ListTemplate;
-import com.github.messenger4j.send.message.template.ReceiptTemplate;
 import com.github.messenger4j.send.message.template.button.*;
-import com.github.messenger4j.send.message.template.common.Element;
-import com.github.messenger4j.send.message.template.receipt.Address;
-import com.github.messenger4j.send.message.template.receipt.Adjustment;
-import com.github.messenger4j.send.message.template.receipt.Item;
-import com.github.messenger4j.send.message.template.receipt.Summary;
 import com.github.messenger4j.send.recipient.IdRecipient;
-import com.github.messenger4j.send.senderaction.SenderAction;
-import com.github.messenger4j.userprofile.UserProfile;
 import com.github.messenger4j.webhook.Event;
 import com.github.messenger4j.webhook.event.*;
-import com.github.messenger4j.webhook.event.attachment.Attachment;
-import com.github.messenger4j.webhook.event.attachment.LocationAttachment;
-import com.github.messenger4j.webhook.event.attachment.RichMediaAttachment;
-import lv.team3.botcovidlab.CovidStats;
+import lombok.Getter;
+import lombok.Setter;
+import lv.team3.botcovidlab.adapter.facebook.handlers.PatientApplicationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,15 +34,11 @@ import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static com.github.messenger4j.Messenger.*;
-import static com.github.messenger4j.send.message.richmedia.RichMediaAsset.Type.*;
 import static java.util.Optional.*;
-import static lv.team3.botcovidlab.adapter.facebook.DateUtility.*;
 import static lv.team3.botcovidlab.adapter.facebook.TotalStatUtil.*;
-import static lv.team3.botcovidlab.processors.CovidStatsProcessor.*;
 
 
 @RestController
@@ -76,15 +48,20 @@ public class MessengerPlatformCallbackHandler {
     public static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
 
     private final Messenger messenger;
+    private final PatientApplicationUtil patientApplicationUtil;
 
-    private String country;
-    private boolean isCountry;
-    private String dateFrom;
-    private String dateTo = getYesterdayDate();
+    @Getter
+    @Setter
+    public String country;
+    @Getter
+    @Setter
+    public boolean countryButton;
+
 
     @Autowired
-    public MessengerPlatformCallbackHandler(final Messenger messenger) {
+    public MessengerPlatformCallbackHandler(final Messenger messenger, final PatientApplicationUtil patientApplicationUtil) {
         this.messenger = messenger;
+        this.patientApplicationUtil = patientApplicationUtil;
     }
 
 
@@ -110,12 +87,16 @@ public class MessengerPlatformCallbackHandler {
 
         try {
             this.messenger.onReceiveEvents(payload, of(signature), event -> {
-                if (event.isTextMessageEvent()) {
+                if (event.isTextMessageEvent() && ! patientApplicationUtil.isApplicationPressed) {
                     handleTextMessageEvent(event.asTextMessageEvent());
+                } else if (event.isTextMessageEvent() && patientApplicationUtil.isApplicationPressed) {
+                    patientApplicationUtil.handleTestApplicationEvent(event.asTextMessageEvent());
                 } else if (event.isPostbackEvent()) {
                     handlePostbackEvent(event.asPostbackEvent());
-                } else if (event.isQuickReplyMessageEvent()) {
+                } else if (event.isQuickReplyMessageEvent()  && !patientApplicationUtil.isApplicationPressed) {
                     handleQuickReplyMessageEvent(event.asQuickReplyMessageEvent());
+                } else if (event.isQuickReplyMessageEvent()  && patientApplicationUtil.isApplicationPressed) {
+                    patientApplicationUtil.handleQuickReplyMessageApplyEvent(event.asQuickReplyMessageEvent());
                 } else {
                     handleFallbackEvent(event);
                 }
@@ -128,24 +109,35 @@ public class MessengerPlatformCallbackHandler {
         }
     }
 
-
-
     public void handleTextMessageEvent(TextMessageEvent event) {
-        logger.debug("Received TextMessageEvent: {}", event);
+        MessengerPlatformCallbackHandler.logger.debug("Received TextMessageEvent: {}", event);
 
         final String messageId = event.messageId();
         final String messageText = event.text();
         final String senderId = event.senderId();
         final Instant timestamp = event.timestamp();
 
-        logger.info("Received message '{}' with text '{}' from user '{}' at '{}'", messageId, messageText, senderId, timestamp);
+        MessengerPlatformCallbackHandler.logger.info("Received message '{}' with text '{}' from user '{}' at '{}'", messageId, messageText, senderId, timestamp);
 
-        if (isCountry) {
-            country = event.text().toLowerCase();
-            try {
-                sendQuickReplyCountryButtons(senderId);
-            } catch (MessengerApiException | MessengerIOException e) {
-                handleSendException(e);
+        if (countryButton) {
+            boolean isValidInput = false;
+            for(String list : ValidCountryList.countries){
+                if (list.toLowerCase().equals(event.text().toLowerCase())){
+                    country = event.text().toLowerCase();
+                    isValidInput = true;
+                    break;
+                }
+            }
+            if (isValidInput) {
+                try {
+                    sendQuickReplyCountryButtons(senderId);
+                } catch (MessengerApiException | MessengerIOException e) {
+                    MessengerPlatformCallbackHandler.handleSendException(e);
+                }
+            }
+            else{
+                sendTextMessage(senderId, "Incorrect input");
+                countryButton = false;
             }
         }
 
@@ -153,8 +145,6 @@ public class MessengerPlatformCallbackHandler {
             try {
                 switch (messageText.toLowerCase()) {
                     case "covid Latvia":
-
-                        break;
 
                     default:
                         sendButtonMessage(senderId);
@@ -165,6 +155,8 @@ public class MessengerPlatformCallbackHandler {
             }
         }
     }
+
+
 
 
     private void sendRichMediaMessage(String recipientId, UrlRichMediaAsset richMediaAsset) throws MessengerApiException, MessengerIOException {
@@ -222,7 +214,7 @@ public class MessengerPlatformCallbackHandler {
     }
 
     private void sendQuickReplyCountryButtons(String recipientId) throws MessengerApiException, MessengerIOException {
-        isCountry = false;
+        countryButton = false;
         List<QuickReply> quickReplies = new ArrayList<>();
 
         quickReplies.add(TextQuickReply.create("Yesterday", "countryYesterday"));
@@ -251,8 +243,11 @@ public class MessengerPlatformCallbackHandler {
             }
             if (payload.equals("Country")) {
                 sendTextMessage(senderId,"Type the country");
-                isCountry = true;
-
+                countryButton = true;
+            }
+            if (payload.equals("Apply")) {
+                sendTextMessage(senderId,"Enter your first name");
+                patientApplicationUtil.isApplicationPressed = true;
             }
 
         }
@@ -300,8 +295,6 @@ public class MessengerPlatformCallbackHandler {
         if (payload.equals("countryThirtyDays")) {
             sendTextMessage(senderId, countTotalThirtyDays(country));
         }
-
-
     }
 
     private void handleFallbackEvent(Event event) {
@@ -312,7 +305,7 @@ public class MessengerPlatformCallbackHandler {
         logger.info("Received unsupported message from user '{}'", senderId);
     }
 
-    private void sendTextMessage(String recipientId, String text) {
+    public void sendTextMessage(String recipientId, String text) {
         try {
             final IdRecipient recipient = IdRecipient.create(recipientId);
             final NotificationType notificationType = NotificationType.REGULAR;
@@ -327,7 +320,7 @@ public class MessengerPlatformCallbackHandler {
         }
     }
 
-    private void handleSendException(Exception e) {
+    public static void handleSendException(Exception e) {
         logger.error("Message could not be sent. An unexpected error occurred.", e);
     }
 }
