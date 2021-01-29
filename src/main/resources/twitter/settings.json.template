@@ -1,0 +1,7 @@
+// Remove this line, rename file to "settings.json", replace "value" with actual values
+{
+    "key" : "value",
+    "keySecret" : "value",
+    "token" : "value",
+    "tokenSecret" : "value"
+}
