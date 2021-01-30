@@ -98,7 +98,6 @@ public class QuestionarieProcessor {
             PatientDataCache.setPatiensCurrentBotState(chatId, BotStates.IN_PROGRESS);
         }
         if (botState.equals(BotStates.IN_PROGRESS)) {
-            replyToUser.setText("Thank you! We will call you back to confirm reservation!");
             patient.setPhoneNumber(usersAnswer);
             System.out.println(usersAnswer);
             try {
@@ -108,6 +107,8 @@ public class QuestionarieProcessor {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            PatientDataCache.setPatiensCurrentBotState(chatId, BotStates.PROFILE_FILLED);
+            replyToUser.setText("Thank you! We will call you back to confirm reservation!");
             System.out.println(patient.toString());
             System.out.println("Patient Saved!");
         }

@@ -12,7 +12,8 @@ public enum BotStates {
     QUESTION6("Do you have troubles in breathing?"),
     QUESTION7("Do you have a headache?"),
     QUESTION8("Have you been In contact with covid positive person?"),
-    QUESTION9("Please, enter your telephone number:");
+    QUESTION9("Please, enter your telephone number:"),
+    PROFILE_FILLED("Filled");
 
 
     BotStates(String s) {
