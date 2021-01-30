@@ -119,16 +119,16 @@ public class CovidStatsProcessor {
         return stats;
     }
 
-    // TODO Remove this when testing processes are done
-    public static void main(String[] arg) {
-        List<CovidStats> stats = getLatestStats("latvia");
-        stats.forEach(entry -> {
-            System.out.println("Date: " + entry.getDate());
-            System.out.println("\tTotal");
-            System.out.println("\t\tCases: " + entry.getInfectedTotal() + " Active: " + entry.getActive() + " Recovered: " + entry.getRecoveredTotal() + " Died: " + entry.getDeathsTotal());
-            System.out.println("\tThat Day");
-            System.out.println("\t\tCases: " + entry.getInfected() + " Recovered: " + entry.getRecovered() + " Died: " + entry.getDeaths());
-            System.out.println();
-        });
-    }
+//    // TODO Remove this when testing processes are done
+//    public static void main(String[] arg) {
+//        List<CovidStats> stats = getLatestStats("latvia");
+//        stats.forEach(entry -> {
+//            System.out.println("Date: " + entry.getDate());
+//            System.out.println("\tTotal");
+//            System.out.println("\t\tCases: " + entry.getInfectedTotal() + " Active: " + entry.getActive() + " Recovered: " + entry.getRecoveredTotal() + " Died: " + entry.getDeathsTotal());
+//            System.out.println("\tThat Day");
+//            System.out.println("\t\tCases: " + entry.getInfected() + " Recovered: " + entry.getRecovered() + " Died: " + entry.getDeaths());
+//            System.out.println();
+//        });
+//    }
 }

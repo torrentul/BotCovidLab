@@ -1,6 +1,6 @@
 package lv.team3.botcovidlab.adapter.telegram.cache;
 
-import lv.team3.botcovidlab.adapter.telegram.handlers.BotStates;
+import lv.team3.botcovidlab.adapter.telegram.state.BotStates;
 import lv.team3.botcovidlab.entityManager.Patient;
 import org.springframework.stereotype.Component;
 
@@ -14,20 +14,18 @@ import java.util.Map;
  */
 
 @Component
-public class PatientDataCache implements DataCache {
-    private Map<Integer, BotStates> patientsBotStates = new HashMap<>();
-    private Map<Integer, Patient> patientsData = new HashMap<>();
+public  class PatientDataCache  {
+    private static Map<Long, BotStates> patientsBotStates = new HashMap<>();
+    private static Map<Long, Patient> patientsData = new HashMap<>();
 
 
 
-    @Override
-    public void setPatiensCurrentBotState(int userId, BotStates botState) {
+    public static void setPatiensCurrentBotState(Long userId, BotStates botState) {
         patientsBotStates.put(userId, botState);
 
     }
 
-    @Override
-    public BotStates getPatientsCurrentBotState(int userId) {
+    public static BotStates getPatientsCurrentBotState(Long userId) {
         BotStates botState = patientsBotStates.get(userId);
         if (botState == null) {
             botState = BotStates.DEFAULT;
@@ -36,17 +34,17 @@ public class PatientDataCache implements DataCache {
         return botState;
     }
 
-    @Override
-    public Patient getPatientData(int userId) {
+    public static Patient getPatientData(Long userId) {
         Patient patient = patientsData.get(userId);
         if (patient == null) {
             patient = new Patient();
+            patient.setChatId((long) userId);
+            savePatientsProfileData(userId,patient);
         }
         return patient;
     }
 
-    @Override
-    public void savePatientsProfileData(int userId, Patient patient) {
+    public static void savePatientsProfileData(Long userId, Patient patient) {
         patientsData.put(userId,patient);
     }
 }

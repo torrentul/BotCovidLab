@@ -1,4 +1,4 @@
-package lv.team3.botcovidlab.adapter.telegram.service;
+package lv.team3.botcovidlab.adapter.telegram;
 
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -9,11 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Управляет отображением главного меню в чате.
- *
- * @author Sergei Viacheslaev
- */
+
 @Service
 public class MainMenuService {
 
@@ -25,9 +21,9 @@ public class MainMenuService {
         return mainMenuMessage;
     }
 
-    private ReplyKeyboardMarkup getMainMenuKeyboard() {
+    public ReplyKeyboardMarkup getMainMenuKeyboard() {
 
-        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
@@ -39,8 +35,8 @@ public class MainMenuService {
         KeyboardRow row3 = new KeyboardRow();
         row1.add(new KeyboardButton("Get Covid Stats of specific country"));
         row2.add(new KeyboardButton("Get Worldwide Covid-19 statistics"));
-        row2.add(new KeyboardButton("Apply For Covid-19 Test in Latvia"));
-        row3.add(new KeyboardButton("Covid-19 Symptoms"));
+        row3.add(new KeyboardButton("Apply For Covid-19 Test in Latvia"));
+
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);

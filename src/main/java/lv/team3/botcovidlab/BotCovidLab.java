@@ -1,12 +1,16 @@
 package lv.team3.botcovidlab;
 
-import lv.team3.botcovidlab.adapter.telegram.launcher.TGBotLauncher;
 import com.github.messenger4j.Messenger;
+import lv.team3.botcovidlab.adapter.telegram.TelegramBot;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.generics.LongPollingBot;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.Map;
 
@@ -29,8 +33,15 @@ public class BotCovidLab {
     private static final Map<String, String> getenv = System.getenv();
     public static void main(String[] args) {
     SpringApplication.run(BotCovidLab.class, args);
-    TGBotLauncher.init();
+        try {
+            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+            TelegramBot telegramBot = new TelegramBot();
+            botsApi.registerBot((LongPollingBot) telegramBot);
+            System.out.println("start");
+        } catch (TelegramApiException e) {
+            System.out.println("Destoyed");
+            e.printStackTrace();
+        }
 
 
-
-}}
+    }}
