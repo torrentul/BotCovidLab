@@ -45,7 +45,7 @@ Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the requ
 - if you have been in contact with a Covid-19 patient
 - your phone number.
 
-If bot will consider provided information invalid, it will ask to provide correct information. (E.g. name should be at least 3 letters long; phone should start with "*2*" or "* 6*", etc.)
+If bot will consider provided information invalid, it will ask to provide correct information. (E.g. name should be at least 3 letters long; phone should start with "*2*" or "*6*", etc.)
 Data will be saved in a database and employee of the lab will contact you to agree on the time and date of the test.
 
 ### WebAplication for database management
