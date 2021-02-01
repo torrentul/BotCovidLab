@@ -21,7 +21,8 @@ Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the requ
 - personal code
 - symptoms and temperature
 - if you have been in contact with a Covid-19 patient
-- your phone number
+- your phone number.
+
 Data will be saved in a database and employee of the lab will contact you to agree on the time and date of the test.
 
 ## Facebook - "Covid-19 Chat Bot"
@@ -33,7 +34,8 @@ Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the requ
 - personal code
 - symptoms and temperature
 - if you have been in contact with a Covid-19 patient
-- your phone number
+- your phone number.
+
 Data will be saved in a database and employee of the lab will contact you to agree on the time and date of the test.
 
 ## WebAplication for database management
