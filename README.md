@@ -8,7 +8,6 @@
 SpringBoot framework, Maven, Java, Firebase
 
 # Functionality
-
 ## Telegram - "LvKoronaTrc"
 To start the application press ***start*** or type "***/start***" in the chat window.
 ### Getting COVID-19 stats
@@ -27,7 +26,7 @@ Data will be saved in a database and employee of the lab will contact you to agr
 
 ## Facebook - "Covid-19 Chat Bot"
 ### Getting COVID-19 stats
-
+here be information how to get stats from Facebook bot
 ### Applying for COVID-19 test
 Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the required information:
 - your name and surname
@@ -39,6 +38,7 @@ Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the requ
 Data will be saved in a database and employee of the lab will contact you to agree on the time and date of the test.
 
 ## WebAplication for database management
+here be information about how to use webaplication.
 
 # Covid-19 Data
 COVID-19 data is being provided by [**Disease.sh - Open Disease data**](https://corona.lmao.ninja/)
