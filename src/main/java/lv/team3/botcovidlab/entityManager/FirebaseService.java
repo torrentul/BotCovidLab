@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+
+/**
+ * FirebaseService is responsible for CRUD operations with database
+ */
 @Service
 public class FirebaseService {
 
@@ -15,6 +19,13 @@ public class FirebaseService {
     private static DocumentReference documentReference;
     private static ApiFuture<DocumentSnapshot> future;
 
+
+    /**
+     * @param personalCode Personal code, which is used as an entry ID in database
+     * @return true, if patient is found, false - if patient does not exist in database
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public static boolean isPatientFound(String personalCode) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         documentReference = dbFirestore.collection(COL_NAME).document(personalCode);
@@ -23,6 +34,13 @@ public class FirebaseService {
         return document.exists();
     }
 
+    /**
+     * @param patient Patient object to be saved in database
+     * prints message in console about success of the method
+     * @return Timestamp of the update in string format
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
     public static String savePatientDetails(Patient patient) throws InterruptedException, ExecutionException {
         String personalCode = patient.getPersonalCode();
         if (isPatientFound(personalCode)) {
@@ -37,6 +55,22 @@ public class FirebaseService {
         }
     }
 
+    /**
+     * @param chatId Id number registered in chat with Telegram chatbot
+     * @param name name of patient
+     * @param lastName last name of patient
+     * @param personalCode Personal code, which is used as an entry ID in database
+     * @param temperature Body temperature
+     * @param isContactPerson boolean value if person has been in contact with COVID_19 patient
+     * @param hasCough symptom of illness (cough)
+     * @param hasTroubleBreathing symptom of illness (trouble breathing)
+     * @param hasHeadache symptom of illness (headache)
+     * @param phoneNumber contact telephone number
+     * Method creates and also adds patient to the database
+     * @return newly created patient object
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public static Patient createPatient(Long chatId, String name, String lastName,
                                         String personalCode, String temperature, boolean isContactPerson,
                                         boolean hasCough, boolean hasTroubleBreathing,
@@ -67,7 +101,12 @@ public class FirebaseService {
         }
     }
 
-
+    /**
+     * @param personalCode Personal code, which is used as an entry ID in database
+     * @return patient object, {@code null} & message on console if patient is not found.
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
     public static Patient getPatientDetails(String personalCode) throws InterruptedException, ExecutionException {
         Patient patient = null;
         if (isPatientFound(personalCode)) {
@@ -82,6 +121,12 @@ public class FirebaseService {
         return patient;
     }
 
+    /**
+     * @param patient Patient object, which contains details needed to update
+     * @return timestamp of updates in string format, {@code null} & message on console if patient not found
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
     public static String updatePatientDetails(Patient patient) throws InterruptedException, ExecutionException {
         String personalCode = patient.getPersonalCode();
         if (isPatientFound(personalCode)) {
@@ -95,6 +140,12 @@ public class FirebaseService {
         }
     }
 
+    /**
+     * @param personalCode Personal code, which is used as an entry ID in database
+     * @return String about success of the method, {@code null} & message on console if patient not found
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public static String deletePatient(String personalCode) throws ExecutionException, InterruptedException {
         if (isPatientFound(personalCode)) {
             Firestore dbFirestore = FirestoreClient.getFirestore();
@@ -107,6 +158,13 @@ public class FirebaseService {
         }
     }
 
+    /**
+     * @param chatId chatId which is registered while using Telegram chatbot
+     * @return Patient object, if found in database, {@code null} if patient not found
+     * Prints a message on console about success of the method
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public static Patient findByChatId(Long chatId) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> patientQuery = dbFirestore.collection(COL_NAME).whereEqualTo("chatId", chatId).get();

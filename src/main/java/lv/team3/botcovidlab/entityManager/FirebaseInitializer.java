@@ -9,6 +9,9 @@ import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 
 
+/**
+ * Creates connection with Firebase database
+ */
 @Service
 public class FirebaseInitializer {
     @PostConstruct
