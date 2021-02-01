@@ -10,11 +10,13 @@ SpringBoot framework, Maven, Java, Firebase
 # Functionality
 ### Telegram - "LvKoronaTrc"
 To start interaction with the chat-bot press ***"start"*** or type "***/start***" in the chat window.
+
 **Getting COVID-19 stats**
 - "Get Covid Stats For Latvia" - provides latest statistics about infected, recovered and deceased patients in Latvia.
 - "Get Worldwide Covid-19 statistics" - provides latest statistics about infected, recovered and deceased patients globaly.
 
 **Applying for COVID-19 test**
+
 Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the required information:
 - your name and surname
 - personal code
@@ -28,11 +30,14 @@ Data will be saved in a database and employee of the lab will contact you to agr
 ### Facebook - "Covid-19 Chat Bot"
 To start interaction with the chat-bot, type anything in the chat window. (E.g. be nice and say "*hello*" to the chat-bot).
 Further interaction happens by pressing buttons accordingly to needed information.
+
 **Getting COVID-19 stats**
 - "Covid Latvia" - provides latest statistics about infected, recovered and deceased patients in Latvia.
 - "Covid worldwide" - provides latest statistics about infected, recovered and deceased patients globaly.
 - "Covid by country" - provides latest statistics about infected, recovered and deceased patients about the country of your choice. To choose the country, type it's name in the chat window. Use country names in English (e.g. "***Lithuania***")
+
 **Applying for COVID-19 test**
+
 Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the required information:
 - your name and surname
 - personal code
