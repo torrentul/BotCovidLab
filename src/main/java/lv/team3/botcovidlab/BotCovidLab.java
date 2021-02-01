@@ -5,8 +5,11 @@ import lv.team3.botcovidlab.adapter.telegram.TelegramBot;
 import com.github.messenger4j.Messenger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
@@ -15,7 +18,9 @@ import java.util.Map;
  * Entry point of SpringBoot application
  * Janis Valentinovics
  */
-@SpringBootApplication
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan
 public class BotCovidLab {
 
     @Bean
