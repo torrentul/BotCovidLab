@@ -1,7 +1,7 @@
 package lv.team3.botcovidlab.processors.html;
 
 import lv.team3.botcovidlab.processors.ProcessorUtils;
-import lv.team3.botcovidlab.processors.ProcessorUtils.DateStructure;
+import lv.team3.botcovidlab.utils.DateUtils.DateStructure;
 
 import javax.json.*;
 import java.io.BufferedReader;
