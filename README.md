@@ -8,7 +8,7 @@
 SpringBoot framework, Maven, Java, Firebase
 
 # Functionality
-### Telegram - "LvKoronaTrc"
+## Telegram - "LvKoronaTrc"
 To start interaction with the chat-bot press ***"start"*** or type "***/start***" in the chat window.
 
 **Getting COVID-19 stats**
@@ -27,7 +27,7 @@ Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the requ
 If bot will consider provided information invalid, it will ask to provide correct information. (E.g. name should be at least 3 letters long; phone should start with "*2*" or "* 6*", etc.)
 Data will be saved in a database and employee of the lab will contact you to agree on the time and date of the test.
 
-### Facebook - "Covid-19 Chat Bot"
+## Facebook - "Covid-19 Chat Bot"
 To start interaction with the chat-bot, type anything in the chat window. (E.g. be nice and say "*hello*" to the chat-bot).
 Further interaction happens by pressing buttons accordingly to needed information.
 
@@ -48,7 +48,7 @@ Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the requ
 If bot will consider provided information invalid, it will ask to provide correct information. (E.g. name should be at least 3 letters long; phone should start with "*2*" or "*6*", etc.)
 Data will be saved in a database and employee of the lab will contact you to agree on the time and date of the test.
 
-### WebAplication for database management
+## WebAplication for database management
 here be information about how to use webaplication.
 
 # Covid-19 Data
