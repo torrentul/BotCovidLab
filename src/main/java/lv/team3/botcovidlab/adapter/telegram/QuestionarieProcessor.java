@@ -67,9 +67,6 @@ public class QuestionarieProcessor {
             System.out.println(getBooleanFromAnswer(usersAnswer));
             System.out.println(usersAnswer);
 
-
-
-
             patient.setHasCough(getBooleanFromAnswer(usersAnswer));
 
             System.out.println(usersAnswer);

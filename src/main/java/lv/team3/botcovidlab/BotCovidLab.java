@@ -1,7 +1,5 @@
 package lv.team3.botcovidlab;
 
-import lv.team3.botcovidlab.adapter.telegram.TGBotLauncher;
-import lv.team3.botcovidlab.adapter.telegram.TelegramBot;
 import com.github.messenger4j.Messenger;
 import lv.team3.botcovidlab.adapter.telegram.TelegramBot;
 import org.springframework.beans.factory.annotation.Value;
