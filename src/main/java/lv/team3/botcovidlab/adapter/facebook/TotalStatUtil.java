@@ -1,6 +1,7 @@
 package lv.team3.botcovidlab.adapter.facebook;
 
 import lv.team3.botcovidlab.CovidStats;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class TotalStatUtil {
         int casesTotal = stats.stream().reduce(0, (cases, stat) -> cases + stat.getInfected(), Integer::sum);
 
 
-        return (country + "\n" +
+        return (StringUtils.capitalize(country) + "\n" +
                 "For the last thirty days " + "\n" +
                 "Cases: " + casesTotal + "\n" +
                 "Recovered: " + recoveredTotal + "\n" +
@@ -36,7 +37,7 @@ public class TotalStatUtil {
         int casesTotal = stats.stream().reduce(0, (cases, stat) -> cases + stat.getInfected(), Integer::sum);
 
 
-        return (country + "\n" +
+        return (StringUtils.capitalize(country) + "\n" +
                 "For the last seven days " + "\n" +
                 "Cases: " + casesTotal + "\n" +
                 "Recovered: " + recoveredTotal + "\n" +
@@ -50,7 +51,7 @@ public class TotalStatUtil {
 
     public static String countTotalYesterday(String country) {
         List<CovidStats> stats = getStatsForLastDay(country);
-        return (country + "\n" +
+        return (StringUtils.capitalize(country) + "\n" +
                 "Date: " + getYesterdayDate() + "\n" +
                 "Cases: " + stats.get(0).getInfected() + "\n" +
                 "Recovered: " + stats.get(0).getRecovered() + "\n" +
