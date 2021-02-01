@@ -1,6 +1,6 @@
 # BotCovidLab
 **BotCovidLab** is an application, that powers chat-bots on several social network platforms. It serves 2 main purposes:
-- Provides users with latest COVID-19 stats (reference to data source)
+- Provides users with latest [COVID-19 stats](#covid-19-data)
 - Makes procedure of applying for a COVID test easier. Data of patients who apply for COVID-19 tests are stored on Firebase Cloud Firestore database.
 
 # Prerequisites
