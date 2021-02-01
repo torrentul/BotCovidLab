@@ -1,7 +1,7 @@
 package lv.team3.botcovidlab;
 
-import lv.team3.botcovidlab.adapter.telegram.TGBotLauncher;
-import lv.team3.botcovidlab.adapter.telegram.TelegramBot;
+//import lv.team3.botcovidlab.adapter.telegram.TGBotLauncher;
+//import lv.team3.botcovidlab.adapter.telegram.TelegramBot;
 import com.github.messenger4j.Messenger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -28,6 +28,6 @@ public class BotCovidLab {
     private static final Map<String, String> getenv = System.getenv();
     public static void main(String[] args) {
     SpringApplication.run(BotCovidLab.class, args);
-    TGBotLauncher.init();
+    //TGBotLauncher.init();
 
 }}
