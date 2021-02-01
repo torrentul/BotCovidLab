@@ -1,11 +1,7 @@
 package lv.team3.botcovidlab.entityManager;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
-@Entity
 public class Patient {
-    @Id
     private Long chatId;
     private String name;
     private String lastName;
