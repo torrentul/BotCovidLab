@@ -15,7 +15,7 @@ public class FirebaseInitializer {
     public void initialize() {
         try {
             FileInputStream serviceAccount =
-                    new FileInputStream("./botcovidlabAdminAccess.json");
+                    new FileInputStream("botcovidlabAdminAccess.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
