@@ -12,7 +12,8 @@ import static lv.team3.botcovidlab.utils.DateUtils.DateStructure;
 
 public class CovidStatsProcessor {
 
-    private CovidStatsProcessor() {}
+    private CovidStatsProcessor() { } // @auto:off
+    // @auto:on
 
     /**
      * Method used to get Covid-19 statistics data object.
@@ -149,4 +150,5 @@ public class CovidStatsProcessor {
         stats.setMissingData(object.getBoolean("missing"));
         return stats;
     }
+}
 
