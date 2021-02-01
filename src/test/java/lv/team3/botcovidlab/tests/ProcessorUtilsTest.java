@@ -9,12 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProcessorUtilsTest {
 
     @Test
-        // TODO Write test
-    void testStringFromURL() {
-    }
-
-    @Test
-        // Writen
     void testIValidDateString() {
         String date = "2020-01-20T00:00:00Z";
         assertTrue(isValidDateString(date), "Date string 1 is not valid");
