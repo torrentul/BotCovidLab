@@ -9,18 +9,26 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
+import java.util.List;
+
+/**
+ * Generates reply message for user
+ * @author Vladislavs Kraslavskis
+ */
 public class UpdatesProcessor {
+
     private static MainMenuService mainMenuService = new MainMenuService();
-
-
+    /**
+     * UpdatesProcessor constructor.
+     */
     public UpdatesProcessor() {
         this.mainMenuService = new MainMenuService();
     }
 
-
-
-
-
+    /**
+     * @param update - Current update, recieved from Telegram.
+     * @return true, if users application for Covid test is in progress.
+     */
     public static SendMessage handleUpdate(Update update) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(update.getMessage().getChatId()));
@@ -33,14 +41,14 @@ public class UpdatesProcessor {
         sendMessage.setText(res);
         }else if (update.getMessage().getText().equals("Get Worldwide Covid-19 statistics")){
             System.out.println("Test");
-            CovidStats covid = CovidStatsProcessor.getStatsForLastDay("World").get(0);
-            if (CovidStatsProcessor.getStatsForLastDay("world").size()>0) {
+            List<CovidStats> covidStatsList = CovidStatsProcessor.getStatsForLatest("world");
+            if (covidStatsList.size()>0) {
+                CovidStats covid = covidStatsList.get(0);
                 res = "Statistics for World on:" + covid.getDate() + " Infected:" + covid.getInfected() + " Recovered:" + covid.getRecovered() + " Deaths:" + covid.getDeaths();
             }else {
                 res="No Data";
-                System.out.println(covid.toString());
-            }
 
+            }
             sendMessage.setText(res);
         }else if (update.getMessage().getText().equals("Get Covid Stats For Latvia")){
             CovidStats covid = CovidStatsProcessor.getStatsForLastDay("Latvia").get(0);
@@ -53,21 +61,14 @@ public class UpdatesProcessor {
             else {
             PatientDataCache.setPatiensCurrentBotState(chatid, BotStates.QUESTION2);
             sendMessage.setText("Please, enter your firstname.");
-            QuestionarieProcessor.start(update);}
+            QuestionnarieProcessor.start(update);}
         }
             ReplyKeyboardMarkup replyKeyboardMarkup = mainMenuService.getMainMenuKeyboard();
             sendMessage.setReplyMarkup(replyKeyboardMarkup);
-
         }else {
-
-            sendMessage = QuestionarieProcessor.getMessageByStatus(update);
+            sendMessage = QuestionnarieProcessor.getMessageByStatus(update);
             System.out.println("Success");
-
-
-
         }
-
-
         return sendMessage;
     }
 }

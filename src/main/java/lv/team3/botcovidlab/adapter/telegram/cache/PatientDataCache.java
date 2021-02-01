@@ -22,15 +22,16 @@ public  class PatientDataCache  {
 
     /**
      * @param userId Requested users Telegram chat identifier
-     * @param botState New Patient Bot State
+     * @param botState Represents current users state. This param is used, to understand what text bot should show to user.
      */
+
     public static void setPatiensCurrentBotState(Long userId, BotStates botState) {
         patientsBotStates.put(userId, botState);
 
     }
     /**
      * @param userId Telegram users chat identifier
-     * @return Patients Bot State
+     * @return Patients Bot State. This param is used, to understand what text bot should show to user.
      */
     public static BotStates getPatientsCurrentBotState(Long userId) {
         BotStates botState = patientsBotStates.get(userId);
@@ -42,7 +43,7 @@ public  class PatientDataCache  {
     }
     /**
      * @param userId Telegram users chat identifier
-     * @return Patients with requested chat id
+     * @return Patient with requested chat id
      */
     public static Patient getPatientData(Long userId) {
         Patient patient = patientsData.get(userId);

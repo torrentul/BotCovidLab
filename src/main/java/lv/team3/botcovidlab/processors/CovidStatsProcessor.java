@@ -148,5 +148,5 @@ public class CovidStatsProcessor {
         stats.setRecovered(object.getInt("recoveries"));
         stats.setMissingData(object.getBoolean("missing"));
         return stats;
-    }
+    }}
 

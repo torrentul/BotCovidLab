@@ -6,12 +6,16 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
- * Defines message handlers for each state.
+ * Defines if users application form for Covid-19 test is filling.
+ * @author Vladislavs Kraslavskis
  */
 @Component
 public class BotStateContext {
 
-
+    /**
+     * @param update - Current update, recieved from Telegram.
+     * @return true, if users application for Covid test is in progress.
+     */
     public static boolean isFillingProfileState(Update update) {
 
         Long chat_id = update.getMessage().getChatId();

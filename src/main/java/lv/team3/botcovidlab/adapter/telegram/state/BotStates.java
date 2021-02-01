@@ -1,5 +1,10 @@
 package lv.team3.botcovidlab.adapter.telegram.state;
 
+
+/**
+ * Enum list of all users states
+ * @author Vladislavs Kraslavskis
+ */
 public enum BotStates {
 
     DEFAULT(""),
