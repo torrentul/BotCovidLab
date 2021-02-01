@@ -23,9 +23,7 @@ public  class TelegramBot extends TelegramLongPollingCommandBot {
     private String token="998565460:AAFCpgrGSRBh_EDeRZoD33zZxcrd7XHfmzw";
     private static final Logger log = Logger.getLogger(String.valueOf(TelegramBot.class));
 
-    public TelegramBot() {
-
-    }
+    public TelegramBot() {}
 
     @Override
     public String getBotUsername() {

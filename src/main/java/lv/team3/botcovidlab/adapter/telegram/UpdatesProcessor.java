@@ -47,7 +47,6 @@ public class UpdatesProcessor {
                 res = "Statistics for World on:" + covid.getDate() + " Infected:" + covid.getInfected() + " Recovered:" + covid.getRecovered() + " Deaths:" + covid.getDeaths();
             }else {
                 res="No Data";
-
             }
             sendMessage.setText(res);
         }else if (update.getMessage().getText().equals("Get Covid Stats For Latvia")){
