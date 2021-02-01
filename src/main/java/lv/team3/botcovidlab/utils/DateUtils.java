@@ -10,21 +10,28 @@ public class DateUtils {
 
         /**
          * @param date String in format "YYYY-MM-DDTHH:MM:SSZ"
+         * @author Janis Valentinovics
          */
         public DateStructure(String date) {
             this.calendar = new Calendar.Builder().build();
-            String[] split = date.split("-");
-            this.setYear(Integer.parseInt(split[0]));
-            this.setMonth(Integer.parseInt(split[1]));
-            this.setDay(Integer.parseInt(split[2].substring(0, 2)));
-            split = date.split(":");
-            this.setHour(Integer.parseInt(split[0].substring(split[0].length() - 2)));
-            this.setMinute(Integer.parseInt(split[1]));
-            this.setSecond(Integer.parseInt(split[2].substring(0, 2)));
+            try {
+                String[] split = date.split("-");
+                this.setYear(Integer.parseInt(split[0]));
+                this.setMonth(Integer.parseInt(split[1]));
+                this.setDay(Integer.parseInt(split[2].substring(0, 2)));
+                split = date.split(":");
+                this.setHour(Integer.parseInt(split[0].substring(split[0].length() - 2)));
+                this.setMinute(Integer.parseInt(split[1]));
+                this.setSecond(Integer.parseInt(split[2].substring(0, 2)));
+            } catch (Exception ignored) {
+                // TODO Implement logger
+                // Log error, passed string was invalid
+            }
         }
 
         /**
          * @param date java.util.Date to DateStructure
+         * @author Janis Valentinovics
          */
         public DateStructure(Date date) {
             this.calendar = new Calendar.Builder().build();
@@ -82,6 +89,7 @@ public class DateUtils {
         /**
          * Turns DateStructure into java.util.Date
          * @return java.util.Date object
+         * @author Janis Valentinovics
          */
         public Date toDate() {
             return this.calendar.getTime();
@@ -89,6 +97,7 @@ public class DateUtils {
 
         /**
          * @return String in format "YYYY-MM-DDTHH:MM:SSZ"
+         * @author Janis Valentinovics
          */
         @Override
         public String toString() {

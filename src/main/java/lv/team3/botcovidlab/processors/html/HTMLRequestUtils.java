@@ -15,7 +15,14 @@ import java.util.concurrent.TimeUnit;
 
 public class HTMLRequestUtils {
 
-    // TODO Documentation
+    /**
+     * Reads passed URL as string. Possible that returns null, causes might be - invalid URL or URL timeout
+     * connectivity issues.
+     *
+     * @param url Valid url that returns some data.
+     * @return String representing url. Returns null if fails to read URL.
+     * @author Janis Valentinovics
+     */
     private static String stringFromURL(URL url) {
         String ret = null;
         try {
@@ -34,7 +41,14 @@ public class HTMLRequestUtils {
         return ret;
     }
 
-    // TODO Documentation
+    /**
+     * Reads passed URL as string, than parses it into JsonObject if possible. Possible that returns null,
+     * causes might be - invalid URL or URL timeout, invalid string returned from URL and connectivity issues.
+     *
+     * @param url URL to read data from
+     * @return JsonObject representation from URL
+     * @author Janis Valentinovics
+     */
     private static JsonObject jsonObjectFromURL(URL url) {
         String ret, string = (ret = stringFromURL(url)) != null ? ret : "{}";
         JsonReader reader = Json.createReader(new StringReader(string));
@@ -43,7 +57,14 @@ public class HTMLRequestUtils {
         return array;
     }
 
-    // TODO Documentation
+    /**
+     * Reads passed URL as string, than parses it into JsonArray if possible. Possible that returns null,
+     * causes might be - invalid URL or URL timeout, invalid string returned from URL and connectivity issues.
+     *
+     * @param url URL to read data from
+     * @return JsonArray representation from URL
+     * @author Janis Valentinovics
+     */
     private static JsonArray jsonArrayFromURL(URL url) {
         String ret, string = (ret = stringFromURL(url)) != null ? ret : "[]";
         JsonReader reader = Json.createReader(new StringReader(string));
@@ -52,7 +73,15 @@ public class HTMLRequestUtils {
         return array;
     }
 
-    // TODO Documentation
+    /**
+     * Searches and returns historic Covid-19 statistics data from starting date to ending date, both [including].
+     *
+     * @param location <code>"world"</code> or any <code>"country"</code>. Pass string as all lowercase.
+     * @param from     Starting date [including].
+     * @param to       Ending date [including].
+     * @return JsonObject containing statistics data of defined period of time.
+     * @author Janis Valentinovics
+     */
     public static JsonObject getHistoricData(String location, DateStructure from, DateStructure to) {
         DataSource structure = DataSource.historicFromString(location);
         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
@@ -62,7 +91,7 @@ public class HTMLRequestUtils {
             long days = TimeUnit.DAYS.convert(mils, TimeUnit.MILLISECONDS) + 2;
             String request;
             JsonObject jsonObject;
-            if ("world".equals(location)) {
+            if ("world".equalsIgnoreCase(location)) {
                 request = String.format(structure.getTemplate(), days);
                 jsonObject = jsonObjectFromURL(new URL(request));
             } else {
@@ -92,6 +121,33 @@ public class HTMLRequestUtils {
         return objectBuilder.build();
     }
 
+    /**
+     * @param place       <code>"world"</code> or any <code>"country"</code>.
+     * @param obj         Object with structure <code>
+     *                    {
+     *                    "cases" : {
+     *                    date0 : 100,
+     *                    date1 : 100,
+     *                    ...
+     *                    },
+     *                    "recovered" : {
+     *                    date0 : 100,
+     *                    date1 : 100,
+     *                    ...
+     *                    }
+     *                    "deaths" : {
+     *                    date0 : 100,
+     *                    date1 : 100,
+     *                    ...
+     *                    }
+     *                    }
+     *                    </code>.
+     * @param key         In json structure mentioned as <code>dateX</code> as String "MM/DD/YYYY".
+     * @param previousKey In json structure mentioned as <code>dateX</code> as String "MM/DD/YYYY"
+     *                    but its day before <code>key</code>.
+     * @return Returns one of <code>obj</code> elements selected with <code>key</code> as JsonObject.
+     * @author Janis Valentinovics
+     */
     private static JsonObject parseHistoricData(String place, JsonObject obj, String key, String previousKey) {
         JsonObject cas = obj.getJsonObject("cases");
         JsonObject rec = obj.getJsonObject("recovered");
@@ -117,6 +173,13 @@ public class HTMLRequestUtils {
         return builder.build();
     }
 
+    /**
+     * Searches and returns Covid-19 current statistics. Current - today, latest data.
+     *
+     * @param location <code>"world"</code> or any <code>"country"</code>. Pass string as all lowercase.
+     * @return JsonObject containing last available statistics data.
+     * @author Janis Valentinovics
+     */
     public static JsonObject getLatestData(String location) {
         DataSource source = DataSource.latestFromString(location);
         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
@@ -139,6 +202,31 @@ public class HTMLRequestUtils {
         return objectBuilder.build();
     }
 
+    /**
+     * @param arr Array with structure <code>
+     *            [
+     *            "continent" : {
+     *              "cases" : {
+     *                  date0 : 100,
+     *                  date1 : 100,
+     *                  ...
+     *              },
+     *              "recovered" : {
+     *                  date0 : 100,
+     *                  date1 : 100,
+     *                  ...
+     *              }
+     *              "deaths" : {
+     *                  date0 : 100,
+     *                  date1 : 100,
+     *              ...
+     *              }
+     *            }
+     *            ]
+     *            </code>.
+     * @return Returns one of <code>obj</code> elements selected with <code>key</code> as JsonObject.
+     * @author Janis Valentinovics
+     */
     private static JsonObject parseContinentLatestData(JsonArray arr) {
         final String[] keys = {"totalCases", "totalDeaths", "totalRecoveries", "activeCases", "cases", "deaths", "recoveries"};
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -149,7 +237,7 @@ public class HTMLRequestUtils {
                 for (String key : keys) {
                     builder.add(key, ret.getInt(key) + current.getInt(key));
                 }
-                if(i != arr.size() - 1) {
+                if (i != arr.size() - 1) {
                     ret = builder.build();
                 }
             }
