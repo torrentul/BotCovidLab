@@ -150,7 +150,3 @@ public class CovidStatsProcessor {
         return stats;
     }
 
-    public static void main(String[] s) {
-        System.out.println(getStatsForLastDay("world"));
-    }
-}

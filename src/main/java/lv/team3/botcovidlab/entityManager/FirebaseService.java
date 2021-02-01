@@ -67,6 +67,7 @@ public class FirebaseService {
         }
     }
 
+
     public static Patient getPatientDetails(String personalCode) throws InterruptedException, ExecutionException {
         Patient patient = null;
         if (isPatientFound(personalCode)) {
