@@ -17,6 +17,10 @@ public class UpdatesProcessor {
         this.mainMenuService = new MainMenuService();
     }
 
+
+
+
+
     public static SendMessage handleUpdate(Update update) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(update.getMessage().getChatId()));
