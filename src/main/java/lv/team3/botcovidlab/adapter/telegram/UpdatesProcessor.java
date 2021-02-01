@@ -28,8 +28,15 @@ public class UpdatesProcessor {
         res="Welcome to Latvian Korona Tracker!";
         sendMessage.setText(res);
         }else if (update.getMessage().getText().equals("Get Worldwide Covid-19 statistics")){
+            System.out.println("Test");
             CovidStats covid = CovidStatsProcessor.getStatsForLastDay("World").get(0);
-            res= "Statistics for World on:"+covid.getDate()+" Infected:"+covid.getInfected()+" Recovered:"+covid.getRecovered()+" Deaths:"+covid.getDeaths();
+            if (CovidStatsProcessor.getStatsForLastDay("world").size()>0) {
+                res = "Statistics for World on:" + covid.getDate() + " Infected:" + covid.getInfected() + " Recovered:" + covid.getRecovered() + " Deaths:" + covid.getDeaths();
+            }else {
+                res="No Data";
+                System.out.println(covid.toString());
+            }
+
             sendMessage.setText(res);
         }else if (update.getMessage().getText().equals("Get Covid Stats For Latvia")){
             CovidStats covid = CovidStatsProcessor.getStatsForLastDay("Latvia").get(0);

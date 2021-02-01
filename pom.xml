@@ -50,7 +50,6 @@
             <version>${telegram.version}</version>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/com.vdurmont/emoji-java -->
         <dependency>
             <groupId>com.vdurmont</groupId>
@@ -76,11 +75,6 @@
         </dependency>
         <!-- Added by Janis Valentinovics -->
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -95,13 +89,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-
-        <!-- <dependency> -->
-        <!-- <groupId>org.postgresql</groupId> -->
-        <!-- <artifactId>postgresql</artifactId> -->
-        <!-- <scope>runtime</scope> -->
-        <!-- </dependency> -->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -128,18 +115,6 @@
             <version>1.1.0</version>
         </dependency>
 
-        <!-- <dependency>-->
-        <!-- <groupId>org.springframework.boot</groupId>-->
-        <!-- <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-        <!-- </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
