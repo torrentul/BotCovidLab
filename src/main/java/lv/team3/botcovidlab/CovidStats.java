@@ -23,22 +23,6 @@ public class CovidStats {
         this.missingData = missingData;
     }
 
-    @Deprecated
-    /**
-     * Use getActive()
-     */
-    public int getActiveTotal() {
-        return this.getActive();
-    }
-
-    @Deprecated
-    /**
-     * Use setActive()
-     */
-    public void setActiveTotal(int activeTotal) {
-        this.setActive(activeTotal);
-    }
-
     public int getActive() {
         return activeTotal;
     }

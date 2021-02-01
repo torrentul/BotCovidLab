@@ -24,12 +24,6 @@
 
         <!-- Added by Valters Melderis -->
         <dependency>
-            <groupId>org.twitter4j</groupId>
-            <artifactId>twitter4j-core</artifactId>
-            <version>[4.0,)</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
             <version>7.1.0</version>
@@ -108,7 +102,7 @@
             </exclusions>
         </dependency>
 
-        <!--         Added by Vladislavs Visnevskis -->
+        <!-- Added by Vladislavs Visnevskis -->
         <dependency>
             <groupId>com.github.messenger4j</groupId>
             <artifactId>messenger4j</artifactId>
