@@ -4,13 +4,16 @@ import com.github.messenger4j.Messenger;
 import lv.team3.botcovidlab.adapter.telegram.TelegramBot;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
 
 import java.util.Map;
 
@@ -19,6 +22,7 @@ import java.util.Map;
  * Entry point of SpringBoot application
  * Janis Valentinovics
  */
+
 @SpringBootApplication
 @EnableScheduling
 public class BotCovidLab {
