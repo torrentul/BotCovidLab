@@ -49,7 +49,7 @@ If bot will consider provided information invalid, it will ask to provide correc
 Data will be saved in a database and employee of the lab will contact you to agree on the time and date of the test.
 
 ## WebAplication for database management
-here be information about how to use webaplication.
+Application provides easy access to the list of registered patients. Employee of laboratory can view entries and delete them, if needed.
 
 # Covid-19 Data
 COVID-19 data is being provided by [**Disease.sh - Open Disease data**](https://corona.lmao.ninja/)
@@ -57,3 +57,4 @@ COVID-19 data is being provided by [**Disease.sh - Open Disease data**](https://
 # Future plans/potential for development
 - creating chat-bots on other social network platforms (Twitter, WhatsApp, Discord, Slack, etc.)
 - improving application process for tests by adding option to reserve time and date directly through the chat-bot.
+- increase functionality of webaplication - possibility to create separate lists of patients, based on urgency (or other factors).
