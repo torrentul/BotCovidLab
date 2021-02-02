@@ -1,4 +1,4 @@
-# WEEK 4 TODO:
+# WEEK 2 TODO:
 ### 1. Integration with Telegram and Facebook bot. <br/>
 > 1.1 Integration with Telegram. `(Kras)` <br/>
 > 1.2 Integration with Facebook. `(Vlad)` <br/>
