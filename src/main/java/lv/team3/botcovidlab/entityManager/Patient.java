@@ -1,6 +1,9 @@
 package lv.team3.botcovidlab.entityManager;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Patient {
     private Long chatId;
     private String name;
@@ -12,6 +15,7 @@ public class Patient {
     private boolean hasTroubleBreathing;
     private boolean hasHeadache;
     private String phoneNumber;
+
 
     public Patient() {
 
@@ -111,4 +115,5 @@ public class Patient {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
+
 }
