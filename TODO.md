@@ -1,7 +1,7 @@
-TODO for this week:
-1. Integration with Telegram and Facebook bot. :white_check_mark: <br/>
-    1.1 Integration with Telegram. (Kras) :white_check_mark: <br/>
-    1.2 Integration with Facebook. (Vlad) :white_check_mark: <br/>
+# TODO for this week:
+> 1. Integration with Telegram and Facebook bot. :white_check_mark: <br/>
+> > 1.1 Integration with Telegram. (Kras) :white_check_mark: <br/>
+> > 1.2 Integration with Facebook. (Vlad) :white_check_mark: <br/>
 2. Data are stored in Firebase database (Valters) :white_check_mark: <br/>
 3. Manage reservations for Covid-19 test visits (users can apply using bots, administrators can see details and list etc.)(Janis/Kras)<br/>
 4. Interaction with Firebase database is tested with JUnit tests. (Valters) :white_check_mark: <br/>
