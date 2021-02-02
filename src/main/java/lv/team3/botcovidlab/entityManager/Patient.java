@@ -24,6 +24,21 @@ public class Patient {
 
     }
 
+    public Patient(Long chatId, String name, String lastName,
+                   String personalCode, String temperature, boolean isContactPerson,
+                   boolean hasCough, boolean hasTroubleBreathing, boolean hasHeadache, String phoneNumber) {
+        this.chatId = chatId;
+        this.name = name;
+        this.lastName = lastName;
+        this.personalCode = personalCode;
+        this.temperature = temperature;
+        this.isContactPerson = isContactPerson;
+        this.hasCough = hasCough;
+        this.hasTroubleBreathing = hasTroubleBreathing;
+        this.hasHeadache = hasHeadache;
+        this.phoneNumber = phoneNumber;
+    }
+
     public Long getChatId() {
         return chatId;
     }
@@ -139,5 +154,5 @@ public class Patient {
                 hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);
     }
 
-
 }
+
