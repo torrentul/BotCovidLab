@@ -25,7 +25,12 @@
 > 7.1 Javadoc for Telegram `(Kras)` <br/>
 > 7.2 Javadoc for Facebook `(Vlad)` <br/>
 > 7.3 Javadoc for Firebase `(Valters)` <br/>
-> 7.4 Javadoc for CovidStatsProcessor `(Janis)` <br/>
+> 7.4.1 Javadoc for DataSource `(Janis)` :white_check_mark: <br/>
+> 7.4.2 Javadoc for HTMLRequestUtils `(Janis)` <br/>
+> 7.4.3 Javadoc for CovidStatsProcessor `(Janis)` <br/>
+> 7.4.4 Javadoc for ProcessorUtils `(Janis)` <br/>
+> 7.4.5 Javadoc for DateUtils `(Janis)` <br/>
+> 7.4.6 Javadoc for CovidStats `(Janis)` <br/>
 ### 8. Validate javadoc manually. <br/>
 > 7.1 Javadoc for Telegram `(Kras)` <br/>
 > 7.2 Javadoc for Facebook `(Vlad)` <br/>
