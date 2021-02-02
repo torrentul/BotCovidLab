@@ -3,6 +3,10 @@ package lv.team3.botcovidlab.entityManager;
 
 import java.util.Objects;
 
+/**
+ * Stores data about patients, who interact with chatbots and
+ * wish to apply for covid tests
+ */
 public class Patient {
     private Long chatId;
     private String name;
@@ -23,6 +27,7 @@ public class Patient {
     public Long getChatId() {
         return chatId;
     }
+
     public void setChatId(Long id) {
         this.chatId = id;
     }
@@ -124,10 +129,10 @@ public class Patient {
                 && hasTroubleBreathing == patient.hasTroubleBreathing && hasHeadache == patient.hasHeadache
                 && chatId.equals(patient.chatId) && name.equals(patient.name) && lastName.equals(patient.lastName)
                 && personalCode.equals(patient.personalCode) && temperature.equals(patient.temperature)
-                &&phoneNumber.equals(patient.phoneNumber);
+                && phoneNumber.equals(patient.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatId, name, lastName, personalCode, temperature, isContactPerson, hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);    }
+        return Objects.hash(chatId, name, lastName, personalCode, temperature, isContactPerson, hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);}
 }
