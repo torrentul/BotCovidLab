@@ -26,3 +26,8 @@
 > 7.2 Javadoc for Facebook `(Vlad)` <br/>
 > 7.3 Javadoc for Firebase `(Valters)` <br/>
 > 7.4 Javadoc for CovidStatsProcessor `(Janis)` :white_check_mark: <br/>
+### 8. Validate javadoc manually. <br/>
+> 7.1 Javadoc for Telegram `(Kras)` <br/>
+> 7.2 Javadoc for Facebook `(Vlad)` <br/>
+> 7.3 Javadoc for Firebase `(Valters)` <br/>
+> 7.4 Javadoc for CovidStatsProcessor `(Janis)` <br/>
