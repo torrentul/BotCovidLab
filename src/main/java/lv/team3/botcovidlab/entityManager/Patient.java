@@ -120,20 +120,14 @@ public class Patient {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Patient patient = (Patient) o;
-        return isContactPerson == patient.isContactPerson &&
-                hasCough == patient.hasCough &&
-                hasTroubleBreathing == patient.hasTroubleBreathing &&
-                hasHeadache == patient.hasHeadache &&
-                Objects.equals(chatId, patient.chatId) &&
-                Objects.equals(name, patient.name) &&
-                Objects.equals(lastName, patient.lastName) &&
-                Objects.equals(personalCode, patient.personalCode) &&
-                Objects.equals(temperature, patient.temperature) &&
-                Objects.equals(phoneNumber, patient.phoneNumber);
+        return isContactPerson == patient.isContactPerson && hasCough == patient.hasCough
+                && hasTroubleBreathing == patient.hasTroubleBreathing && hasHeadache == patient.hasHeadache
+                && chatId.equals(patient.chatId) && name.equals(patient.name) && lastName.equals(patient.lastName)
+                && personalCode.equals(patient.personalCode) && temperature.equals(patient.temperature)
+                &&phoneNumber.equals(patient.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatId, name, lastName, personalCode, temperature, isContactPerson, hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);
-    }
+        return Objects.hash(chatId, name, lastName, personalCode, temperature, isContactPerson, hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);    }
 }
