@@ -1,5 +1,6 @@
 package lv.team3.botcovidlab.entityManager;
 
+
 public class Patient {
     private Long chatId;
     private String name;

@@ -36,6 +36,7 @@
         </dependency>
         <!-- Added by Valters Melderis -->
 
+
         <!-- Added by Vladislavs Kras -->
         <dependency>
             <groupId>org.telegram</groupId>
