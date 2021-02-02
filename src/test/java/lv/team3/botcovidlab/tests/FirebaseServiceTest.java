@@ -3,91 +3,124 @@ package lv.team3.botcovidlab.tests;
 import lv.team3.botcovidlab.entityManager.FirebaseInitializer;
 import lv.team3.botcovidlab.entityManager.FirebaseService;
 import lv.team3.botcovidlab.entityManager.Patient;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Need to have a test patient always present in database (for isPatientFound method) - Test-Patient Dont-Delete
+ * Need to create a new patient (for createPatient method) - John Doe
+ * Need to add readymade Patient object (for addPatient method) - Mary Smith
+ * Use John Doe for positive getPatientDetails method test
+ * Update Mary Smith - name and phone number (to Alice)
+ * Use John Doe for searchByChatId method test
+ * Delete Mary (now Alice) Smith (with deletePatient method)
+ * AfterAll - delete John Doe
+ */
+
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 class FirebaseServiceTest {
-    private static FirebaseInitializer initializer;
-    private static FirebaseService service;
+    private final String NON_EXISTING_PERSONAL_CODE = "010180-11133";
+    private static final String EXISTING_PERSONAL_CODE = "010180-11122";
+    private static final String PERSONAL_CODE_JOHN_DOE = "121280-99900";
+    private static final String PERSONAL_CODE_MARY_SMITH = "060620-55566";
+    private static final Long CHAT_ID_MARY_SMITH = 555L;
+    private static final Long CHAT_ID_JOHN_DOE = 111L;
+    private static Patient patientToAdd;
+
+
 
     @BeforeAll
     static void setUp() {
-        initializer = new FirebaseInitializer();
+        FirebaseInitializer initializer = new FirebaseInitializer();
         initializer.initialize();
-        service = new FirebaseService();
+        patientToAdd = new Patient(CHAT_ID_MARY_SMITH, "Mary", "Smith", PERSONAL_CODE_MARY_SMITH,
+                "37.5",false, false,
+                false, false, "55566655");
     }
 
     @Test
-    void isPatientFound() throws ExecutionException, InterruptedException {
-        assertTrue(service.isPatientFound("114455-66778"));
-        assertFalse(service.isPatientFound("114455-66779"));
+    void testA_existingPatientFound()  {
+        assertTrue(FirebaseService.isPatientFound(EXISTING_PERSONAL_CODE));
     }
 
     @Test
-    void savePatientDetails() throws ExecutionException, InterruptedException {
-        Patient myPatient = new Patient(220l, "Mary", "Smith",
-                "111180-99887", "38.0",
-                true, true, true,
-                true, "99009900");
-        service.savePatientDetails(myPatient);
-        assertTrue(service.isPatientFound("111180-99887"));
+    void testB_nonExistingPatientNotFound() {
+        assertFalse(FirebaseService.isPatientFound(NON_EXISTING_PERSONAL_CODE));
     }
 
     @Test
-    void createPatient() throws ExecutionException, InterruptedException {
-        assertFalse(service.isPatientFound("121280-55555"));
-        service.createPatient(180L, "Adam", "Hunt",
-                "121280-55555", "36.7", true,
-                true, true, true, "22779900");
-        assertTrue(service.isPatientFound("121280-55555"));
+    void testC_createNewPatientIfDoesNotExist() {
+        assertFalse(FirebaseService.isPatientFound(PERSONAL_CODE_JOHN_DOE));
+        FirebaseService.createPatient(CHAT_ID_JOHN_DOE, "John", "Doe",
+                PERSONAL_CODE_JOHN_DOE, "38.7", false,
+                true, true, true, "99887700");
+        assertTrue(FirebaseService.isPatientFound(PERSONAL_CODE_JOHN_DOE));
     }
 
     @Test
-    void getPatientDetails() throws ExecutionException, InterruptedException {
-        Patient detailedPatient = new Patient(122l, "John", "Doe",
-                "114455-66778", "36.7", true,
-                true, true, false, "99887744");
-        Patient testPatient = service.getPatientDetails("114455-66778");
-        assertEquals(detailedPatient.getLastName(), testPatient.getLastName());
-        assertEquals(detailedPatient.getPersonalCode(), testPatient.getPersonalCode());
-        assertEquals(detailedPatient.getPhoneNumber(), testPatient.getPhoneNumber());
+    void testD_failToCreateNewPatientWhenItExists() {
+        Patient patientToFail = FirebaseService.createPatient(999L, "Test-Patient", "Dont-Delete",
+                EXISTING_PERSONAL_CODE, "36.7", true,
+                true, true, true, "11223344");
+        assertNull(patientToFail);
     }
 
     @Test
-    void updatePatientDetails() throws ExecutionException, InterruptedException {
-        Patient testPatient = service.getPatientDetails("114455-66778");
-        String oldPhoneNumber = "99887744";
-        String oldName = "John";
+    void testE_savePatientDetails() {
+        assertFalse(FirebaseService.isPatientFound(PERSONAL_CODE_MARY_SMITH));
+        FirebaseService.savePatientDetails(patientToAdd);
+        assertTrue(FirebaseService.isPatientFound(PERSONAL_CODE_MARY_SMITH));
+    }
+
+    @Test
+    void testF_getPatientDetails() {
+        Patient detailedPatient = new Patient(CHAT_ID_JOHN_DOE, "John", "Doe",
+                PERSONAL_CODE_JOHN_DOE, "38.7", false,
+                true, true, true, "99887700");
+        Patient testPatient = FirebaseService.getPatientDetails(PERSONAL_CODE_JOHN_DOE);
+        assertEquals(detailedPatient, testPatient);
+    }
+
+    @Test
+    void testG_updatePatientDetails() {
+        Patient patientToUpdate = FirebaseService.getPatientDetails(PERSONAL_CODE_MARY_SMITH);
+        String oldPhoneNumber = patientToUpdate.getPhoneNumber();
+        String oldName = patientToUpdate.getName();
         String newPhoneNumber = "11223344";
-        String newName = "David";
-        testPatient.setPhoneNumber(newPhoneNumber);
-        testPatient.setName(newName);
-        service.updatePatientDetails(testPatient);
-        assertNotEquals(oldPhoneNumber, testPatient.getPhoneNumber());
-        assertNotEquals(oldName, testPatient.getName());
-        assertEquals(newPhoneNumber, testPatient.getPhoneNumber());
-        assertEquals(newName, testPatient.getName());
+        String newName = "Alice";
+        patientToUpdate.setPhoneNumber(newPhoneNumber);
+        patientToUpdate.setName(newName);
+        FirebaseService.updatePatientDetails(patientToUpdate);
+        assertNotEquals(oldPhoneNumber, patientToUpdate.getPhoneNumber());
+        assertNotEquals(oldName, patientToUpdate.getName());
+        assertEquals(newPhoneNumber, patientToUpdate.getPhoneNumber());
+        assertEquals(newName, patientToUpdate.getName());
     }
 
     @Test
-    void deletePatient() throws ExecutionException, InterruptedException {
-        Patient myTestPatient = service.getPatientDetails("111180-99887");
-        service.deletePatient(myTestPatient.getPersonalCode());
-        Patient deletedPatient = service.getPatientDetails("111180-99887");
+    void testH_findByChatId() {
+        Patient testPatient = FirebaseService.findByChatId(CHAT_ID_JOHN_DOE);
+        assertEquals("John", testPatient.getName());
+        assertEquals("Doe", testPatient.getLastName());
+        assertEquals(PERSONAL_CODE_JOHN_DOE, testPatient.getPersonalCode());
+        assertEquals("99887700", testPatient.getPhoneNumber());
+    }
+
+    @Test
+    void testJ_deletePatient() {
+        Patient myTestPatient = FirebaseService.getPatientDetails(PERSONAL_CODE_MARY_SMITH);
+        assertNotNull(myTestPatient);
+        FirebaseService.deletePatient(myTestPatient.getPersonalCode());
+        Patient deletedPatient = FirebaseService.getPatientDetails(PERSONAL_CODE_MARY_SMITH);
         assertNull(deletedPatient);
     }
 
-    @Test
-    void findByChatId() throws ExecutionException, InterruptedException {
-        Patient testPatient = service.findByChatId(345l);
-        assertEquals("Ann", testPatient.getName());
-        assertEquals("Boil", testPatient.getLastName());
-        assertEquals("121212-34343", testPatient.getPersonalCode());
-        assertEquals("99887744", testPatient.getPhoneNumber());
+    @AfterAll
+    static void clearDatabase() {
+        FirebaseService.deletePatient(PERSONAL_CODE_JOHN_DOE);
     }
 
 }
