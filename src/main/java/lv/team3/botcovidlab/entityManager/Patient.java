@@ -129,10 +129,13 @@ public class Patient {
                 && hasTroubleBreathing == patient.hasTroubleBreathing && hasHeadache == patient.hasHeadache
                 && chatId.equals(patient.chatId) && name.equals(patient.name) && lastName.equals(patient.lastName)
                 && personalCode.equals(patient.personalCode) && temperature.equals(patient.temperature)
-                && phoneNumber.equals(patient.phoneNumber);
+                &&phoneNumber.equals(patient.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatId, name, lastName, personalCode, temperature, isContactPerson, hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);}
+        return Objects.hash(chatId, name, lastName,
+                personalCode, temperature, isContactPerson,
+                hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);
+    }
 }
