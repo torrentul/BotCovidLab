@@ -10,10 +10,14 @@
 ### 4. Interaction with Firebase database is tested with JUnit tests. `(Valters)` :white_check_mark: <br/>
 ---
 ### 5. Manual tests for remaining functionality/Bot and core BotCovidLab testing. <br/>
-> 5.1 Tests for Telegram`(Kras)` :white_check_mark: <br/>
-> 5.2 Tests for Facebook`(Vlad)` <br/>
-> 5.3 Tests for CovidStatsProcessor`(Janis)` :white_check_mark: <br/>
-> 5.3.1 Tests for 
+> 5.1 Tests for Telegram `(Kras)` :white_check_mark: <br/>
+> 5.2 Tests for Facebook `(Vlad)` <br/>
+> 5.3.1 Tests for DataSource `(Janis)` <br/>
+> 5.3.2 Tests for HTMLRequestUtils `(Janis)` <br/>
+> 5.3.3 Tests for CovidStatsProcessor `(Janis)` <br/>
+> 5.3.4 Tests for ProcessorUtils `(Janis)` :white_check_mark: <br/>
+> 5.3.5 Tests for DateUtils `(Janis)` <br/>
+> 5.3.6 Tests for CovidStats `(Janis)` <br/>
 ---
 ### 6. Documentation about BotCovidLab features. `(Valters)` :white_check_mark: <br/>
 ---
