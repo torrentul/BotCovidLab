@@ -38,6 +38,7 @@
             <version>${telegram.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.vdurmont/emoji-java -->
         <dependency>
             <groupId>com.vdurmont</groupId>
             <artifactId>emoji-java</artifactId>
