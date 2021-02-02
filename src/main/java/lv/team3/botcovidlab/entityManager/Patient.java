@@ -138,4 +138,6 @@ public class Patient {
                 personalCode, temperature, isContactPerson,
                 hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);
     }
+
+
 }
