@@ -1,4 +1,4 @@
-# TODO for this week:
+# WEEK 4 TODO:
 ### 1. Integration with Telegram and Facebook bot. :white_check_mark: <br/>
 > Integration with Telegram. (Kras) :white_check_mark: <br/>
 > Integration with Facebook. (Vlad) :white_check_mark: <br/>
