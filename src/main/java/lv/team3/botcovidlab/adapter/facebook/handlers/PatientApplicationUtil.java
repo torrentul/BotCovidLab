@@ -30,6 +30,11 @@ import static java.util.Optional.of;
 import static lv.team3.botcovidlab.adapter.inputValidation.PatientInputValidation.*;
 import static lv.team3.botcovidlab.entityManager.FirebaseService.savePatientDetails;
 
+/**
+ * Class that manages all the actions when user select the Apply for a test button
+ *
+ * @author Vladislavs Visnevskis
+ */
 @Service
 @Getter @Setter
 public class PatientApplicationUtil{
@@ -50,6 +55,13 @@ public class PatientApplicationUtil{
     private boolean patientHasHeadache;
     private final FacebookPatientDataCache facebookPatientDataCache;
 
+    /**
+     * Constructor that takes
+     * @param messenger
+     * @param sender
+     * @param eventHandler
+     * @param facebookPatientDataCache
+     */
     public PatientApplicationUtil(Messenger messenger, Sender sender, EventHandler eventHandler, FacebookPatientDataCache facebookPatientDataCache) {
         this.messenger = messenger;
         this.sender = sender;

@@ -3,6 +3,11 @@ package lv.team3.botcovidlab.adapter.facebook;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * Utility that counts the specified dates and return them in string format
+ *
+ * @author Vladislavs Visnevskis
+ */
 public class DateUtility {
 
     private DateUtility() {

@@ -1,8 +1,15 @@
 package lv.team3.botcovidlab.adapter.telegram.state;
 
+
+/**
+ * Enum list of all users states
+ * @author Vladislavs Kraslavskis
+ */
 public enum BotStates {
 
     DEFAULT(""),
+    FILLING_COUNTRY("Filling country"),
+    FILLING_PERIOD("fillPeriod"),
     IN_PROGRESS("Saving Profile"),
     QUESTION1("Please, enter your firstname."),
     QUESTION2("Please, enter your lastname."),
