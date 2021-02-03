@@ -76,7 +76,7 @@ public class Patient {
     }
 
     public void setTemperature(String temperature) {
-        this.temperature = temperature;
+        this.temperature = temperature.replace(',', '.');
     }
 
     public boolean isContactPerson() {
