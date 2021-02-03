@@ -11,10 +11,12 @@ import static lv.team3.botcovidlab.processors.CovidStatsProcessor.*;
 public class TotalStatUtil {
 
     /**
+     * Method that returns yesterdays stats for provided country
+     *
      * @param country Facebook messenger senders chosen country
      * @return String value with total stats for previous day period
      * or @return String "Stats are not provided" if data is not available
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public static String countTotalThirtyDays(String country) {
         List<CovidStats> stats = getStatsForLast30Days(country);
@@ -38,9 +40,11 @@ public class TotalStatUtil {
     }
 
     /**
+     * Method that counts and returns seven days stats for provided country
+     *
      * @param country Facebook messenger senders chosen country
      * @return String value with total stats for previous seven day period
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public static String countTotalSevenDays(String country) {
         List<CovidStats> stats = getStatsForLast7Days(country);
@@ -65,9 +69,11 @@ public class TotalStatUtil {
     }
 
     /**
+     * Method that counts and returns thirty days stats for provided country
+     *
      * @param country Facebook messenger senders chosen country
      * @return String value with total stats for previous thirty day period
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public static String countTotalYesterday(String country) {
         List<CovidStats> stats = getStatsForLastDay(country);

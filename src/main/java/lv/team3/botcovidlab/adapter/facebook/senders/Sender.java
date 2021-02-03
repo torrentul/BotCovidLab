@@ -7,19 +7,17 @@ import com.github.messenger4j.exception.MessengerIOException;
 import com.github.messenger4j.send.MessagePayload;
 import com.github.messenger4j.send.MessagingType;
 import com.github.messenger4j.send.NotificationType;
-import com.github.messenger4j.send.message.RichMediaMessage;
 import com.github.messenger4j.send.message.TemplateMessage;
 import com.github.messenger4j.send.message.TextMessage;
 import com.github.messenger4j.send.message.quickreply.QuickReply;
 import com.github.messenger4j.send.message.quickreply.TextQuickReply;
-import com.github.messenger4j.send.message.richmedia.UrlRichMediaAsset;
 import com.github.messenger4j.send.message.template.ButtonTemplate;
 import com.github.messenger4j.send.message.template.button.Button;
 import com.github.messenger4j.send.message.template.button.PostbackButton;
 import com.github.messenger4j.send.message.template.button.UrlButton;
 import com.github.messenger4j.send.recipient.IdRecipient;
 import lv.team3.botcovidlab.adapter.facebook.cache.UserStates;
-import lv.team3.botcovidlab.adapter.facebook.cache.PatientDataCache;
+import lv.team3.botcovidlab.adapter.facebook.cache.FacebookPatientDataCache;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -37,18 +35,20 @@ public class Sender {
 
     private final Messenger messenger;
     private UserStates countryButton;
-    private final PatientDataCache patientDataCache;
+    private final FacebookPatientDataCache facebookPatientDataCache;
 
-    public Sender(Messenger messenger,PatientDataCache patientDataCache) {
+    public Sender(Messenger messenger, FacebookPatientDataCache facebookPatientDataCache) {
         this.messenger = messenger;
-        this.patientDataCache = patientDataCache;
+        this.facebookPatientDataCache = facebookPatientDataCache;
     }
 
     /**
+     * Methods that sends the first choice buttons
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Sends the choice buttons
      * @throws MessengerApiException if message is null
-     * @Author Vladislavs Višņevskis
+     * @throws MessengerIOException
+     * @author Vladislavs Visnevskis
      */
     public void sendButtonMessage(String recipientId) throws MessengerApiException, MessengerIOException {
         final List<Button> buttons = Arrays.asList(
@@ -64,11 +64,13 @@ public class Sender {
     }
 
     /**
+     * Method that sends the second choice buttons
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Sends the choice buttons
      * @throws MessengerApiException if message is null
      * @throws MalformedURLException to indicate that a malformed URL has occurred
-     * @Author Vladislavs Višņevskis
+     * @throws MalformedURLException
+     * @author Vladislavs Visnevskis
      */
     public void sendSecondButtonMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
         final List<Button> buttons = Arrays.asList(
@@ -83,11 +85,12 @@ public class Sender {
     }
 
     /**
+     * Method that sends the quick reply buttons to choose the time period for Latvia
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Sends the quick reply buttons to choose the time period for Latvia
      * @throws MessengerApiException if message is null
-     * @throws MalformedURLException to indicate that a malformed URL has occurred
-     * @Author Vladislavs Višņevskis
+     * @throws MessengerIOException to indicate that a malformed URL has occurred
+     * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyLvButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -101,10 +104,12 @@ public class Sender {
     }
 
     /**
+     * Method that sends the quick reply buttons to choose the time period for the world
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Sends the quick reply buttons to choose the time period for the world
      * @throws MessengerApiException if message is null
-     * @Author Vladislavs Višņevskis
+     * @throws MessengerIOException
+     * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyWwButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -118,10 +123,12 @@ public class Sender {
     }
 
     /**
+     * Method that sends the quick reply buttons to choose the time period for specific country
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Sends the quick reply buttons to choose the time period for specific country
      * @throws MessengerApiException if message is null
-     * @Author Vladislavs Višņevskis
+     * @throws MessengerIOException
+     * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyCountryButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -135,10 +142,11 @@ public class Sender {
     }
 
     /**
+     * Method that sends the text message to recipient
+     *
      * @param recipientId Facebook messenger recipient identifier
      * @param text Facebook messenger recipient identifier
-     * Sends the text message to recipient
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public void sendTextMessage(String recipientId, String text) {
         try {

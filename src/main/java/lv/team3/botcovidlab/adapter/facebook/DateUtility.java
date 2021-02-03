@@ -6,8 +6,10 @@ import java.util.Calendar;
 public class DateUtility {
 
     /**
+     * Method that returns yesterdays date
+     *
      * @return previous day's date in specified format
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public static String getYesterdayDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -17,8 +19,10 @@ public class DateUtility {
     }
 
     /**
+     * Method that returns date of the day seven days ago
+     *
      * @return seven days ago date in specified format
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public static String getSevenDaysAgoDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -28,8 +32,10 @@ public class DateUtility {
     }
 
     /**
+     * Method that returns date of the day thirty days ago
+     *
      * @return thirty days ago date in specified format
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public static String getThirtyDaysAgoDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
