@@ -5,6 +5,9 @@ import java.util.Calendar;
 
 public class DateUtility {
 
+    private DateUtility() {
+    }
+
     /**
      * Method that returns yesterdays date
      *
