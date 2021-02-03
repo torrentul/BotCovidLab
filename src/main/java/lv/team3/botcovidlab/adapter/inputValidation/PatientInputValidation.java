@@ -10,7 +10,7 @@ public class PatientInputValidation {
      * @author Vladislavs Visnevskis
      */
     public static boolean validateFirstName(String name){
-        if (name.matches("[A-Za-z]+") && name.length() > 3 && name.length() < 32) {
+        if (name.matches("[A-Za-z]+") && name.length() >= 3 && name.length() <= 32) {
             return true;
         }
         else return false;
@@ -24,7 +24,7 @@ public class PatientInputValidation {
      * @author Vladislavs Visnevskis
      */
     public static boolean validateLastName(String lastName){
-        if (lastName.matches("[A-Za-z]+") && lastName.length() > 3 && lastName.length() < 32) {
+        if (lastName.matches("[A-Za-z]+") && lastName.length() >= 3 && lastName.length() <= 32) {
             return true;
         }
         else return false;
@@ -40,7 +40,7 @@ public class PatientInputValidation {
     public static boolean validateTemperature(String temperature){
         try{
             double parsedTemperature = Double.parseDouble(temperature);
-            if (parsedTemperature > 30.0d && parsedTemperature < 45.0d){
+            if (parsedTemperature >= 30.0d && parsedTemperature <= 45.0d){
                 return true;
             }
             else return false;
