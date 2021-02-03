@@ -35,3 +35,4 @@
 > 7.2 Javadoc for Facebook `(Vlad)` <br/>
 > 7.3 Javadoc for Firebase `(Valters)` <br/>
 > 7.4 Javadoc for CovidStatsProcessor `(Janis)` <br/>
+> 7.5 Javadoc for BotCovidLab <br/>
