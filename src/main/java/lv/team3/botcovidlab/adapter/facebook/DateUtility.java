@@ -5,24 +5,39 @@ import java.util.Calendar;
 
 public class DateUtility {
 
+    /**
+     * Method that returns yesterdays date
+     *
+     * @return previous day's date in specified format
+     * @author Vladislavs Visnevskis
+     */
     public static String getYesterdayDate() {
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         return dateFormat.format(cal.getTime());
     }
 
+    /**
+     * Method that returns date of the day seven days ago
+     *
+     * @return seven days ago date in specified format
+     * @author Vladislavs Visnevskis
+     */
     public static String getSevenDaysAgoDate() {
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -8);
+        cal.add(Calendar.DATE, -7);
         return dateFormat.format(cal.getTime());
     }
 
+    /**
+     * Method that returns date of the day thirty days ago
+     *
+     * @return thirty days ago date in specified format
+     * @author Vladislavs Visnevskis
+     */
     public static String getThirtyDaysAgoDate() {
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -31);
