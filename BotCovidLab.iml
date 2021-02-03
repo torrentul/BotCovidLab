@@ -6,6 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
+          <factory-entry name="BotCovidLab" />
           <factory-entry name="entityManagerFactory" />
         </datasource-mapping>
         <naming-strategy-map />
@@ -35,7 +36,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.twitter4j:twitter4j-core:4.0.7" level="project" />
     <orderEntry type="library" name="Maven: com.google.firebase:firebase-admin:7.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.api-client:google-api-client:1.30.10" level="project" />
     <orderEntry type="library" name="Maven: com.google.oauth-client:google-oauth-client:1.31.0" level="project" />
@@ -93,7 +93,6 @@
     <orderEntry type="library" name="Maven: org.conscrypt:conscrypt-openjdk-uber:2.2.1" level="project" />
     <orderEntry type="library" name="Maven: io.grpc:grpc-stub:1.30.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:29.0-android" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.52.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.52.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.52.Final" level="project" />
@@ -135,8 +134,8 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.12" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.5.12" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.8.0" level="project" />
-    <orderEntry type="library" name="Maven: org.telegram:telegrambotsextensions:5.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.vdurmont:emoji-java:5.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.telegram:telegrambotsextensions:5.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish:javax.json:1.1.4" level="project" />
     <orderEntry type="library" name="Maven: javax.json:javax.json-api:1.1.4" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.4" level="project" />
@@ -208,5 +207,6 @@
     <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.14.9" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.17.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.11" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
   </component>
 </module>

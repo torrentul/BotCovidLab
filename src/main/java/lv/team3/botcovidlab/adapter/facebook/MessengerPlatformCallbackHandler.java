@@ -25,6 +25,9 @@ import static java.util.Optional.*;
 @RequestMapping("/callback")
 public class MessengerPlatformCallbackHandler{
 
+    /**
+     * Application logger
+     */
     public static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
 
     private final Messenger messenger;
