@@ -94,7 +94,7 @@ import java.util.concurrent.ExecutionException;
 
         if (botState.equals(BotStates.QUESTION4)) {
             replyToUser.setText("What is your body temperature?");
-            patient.setPersonalCode(usersAnswer);
+            patient.setTemperature(usersAnswer);
             System.out.println(usersAnswer);
             PatientDataCache.setPatiensCurrentBotState(chatId, BotStates.QUESTION5);
         }

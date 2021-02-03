@@ -17,10 +17,10 @@ import java.util.logging.Logger;
  */
 @Component
 public  class TelegramBot extends TelegramLongPollingCommandBot {
-//    private String name="LvKoronaTrc_bot";
-//    private String token="1461376238:AAGLfBnjyZtk1MnB7WjZxSseeWYCqwRAzKc";
-    private String name="LettersInSpringBot";
-    private String token="998565460:AAFCpgrGSRBh_EDeRZoD33zZxcrd7XHfmzw";
+    private String name="LvKoronaTrc_bot";
+    private String token="1461376238:AAGLfBnjyZtk1MnB7WjZxSseeWYCqwRAzKc";
+//    private String name="LettersInSpringBot";
+//    private String token="998565460:AAFCpgrGSRBh_EDeRZoD33zZxcrd7XHfmzw";
     private static final Logger log = Logger.getLogger(String.valueOf(TelegramBot.class));
 
     public TelegramBot() {}

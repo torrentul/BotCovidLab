@@ -1,16 +1,12 @@
 package lv.team3.botcovidlab.adapter.telegram;
 
-import lv.team3.botcovidlab.CovidStats;
+import lv.team3.botcovidlab.adapter.facebook.TotalStatUtil;
 import lv.team3.botcovidlab.adapter.telegram.cache.PatientDataCache;
 import lv.team3.botcovidlab.adapter.telegram.state.BotStateContext;
 import lv.team3.botcovidlab.adapter.telegram.state.BotStates;
-import lv.team3.botcovidlab.processors.CovidStatsProcessor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Generates reply message for user
@@ -65,17 +61,17 @@ public class UpdatesProcessor {
             sendMessage = QuestionnarieProcessor.getMessageByStatus(update);
             System.out.println("Success");
         }else if(call_data.equals("today") || call_data.equals("7_Days") || call_data.equals("30_Days")){
-            List<CovidStats> covidStats = new ArrayList<>();
+            String result="";
+            String country = PatientDataCache.getPatientsCountry(chatid);
             if (call_data.equals("today") ){
-                covidStats = CovidStatsProcessor.getStatsForLastDay(PatientDataCache.getPatientsCountry(chatid));
+                result = TotalStatUtil.countTotalYesterday(country);
             }
             else if (call_data.equals("7_Days")){
-                covidStats = CovidStatsProcessor.getStatsForLast7Days(PatientDataCache.getPatientsCountry(chatid));
+                result = TotalStatUtil.countTotalSevenDays(country);
             }else if (call_data.equals("30_Days")){
-                covidStats = CovidStatsProcessor.getStatsForLast30Days(PatientDataCache.getPatientsCountry(chatid));
+                result=TotalStatUtil.countTotalThirtyDays(country);
             }
-            CovidStats covid = covidStats.get(0);
-            sendMessage.setText("Statistics for "+covid.getCountry()+" Infected:" + covid.getInfected() + " Recovered:" + covid.getRecovered() + " Deaths:" + covid.getDeaths());
+            sendMessage.setText(result);
             PatientDataCache.setPatiensCurrentBotState(chatid,PatientDataCache.getPreviousBotState(chatid));
 
         }else if(BotStateContext.isFillingCountry(update)){
@@ -87,15 +83,12 @@ public class UpdatesProcessor {
                 res="Welcome to Latvian Korona Tracker!";
                 sendMessage.setText(res);
             }else if (textMessage.equals("Get Worldwide Covid-19 statistics")){
-                System.out.println("Test");
-                List<CovidStats> covidStatsList = CovidStatsProcessor.getStatsForLatest("world");
-                if (covidStatsList.size()>0) {
-                    CovidStats covid = covidStatsList.get(0);
-                    res = "Statistics for World on:" + covid.getDate() + " Infected:" + covid.getInfected() + " Recovered:" + covid.getRecovered() + " Deaths:" + covid.getDeaths();
-                }else {
-                    res="No Data";
-                }
-                sendMessage.setText(res);
+                sendMessage.setText("Please, select data period:");
+                PatientDataCache.setPatiensCountry(chatid,"world");
+                PatientDataCache.setPatiensPreviousBotState(chatid,PatientDataCache.getPatientsCurrentBotState(chatid));
+                PatientDataCache.setPatiensCurrentBotState(chatid,BotStates.FILLING_PERIOD);
+
+
             }else if (textMessage.equals("Get Covid Stats For Specific Country")){
 
 
@@ -116,6 +109,11 @@ public class UpdatesProcessor {
 
             ReplyKeyboardMarkup replyKeyboardMarkup = mainMenuService.getMainMenuKeyboard();
             sendMessage.setReplyMarkup(replyKeyboardMarkup);
+            if (textMessage.equals("Get Worldwide Covid-19 statistics")){
+                PeriodMenuService periodMenuService = new PeriodMenuService();
+                sendMessage.setReplyMarkup(periodMenuService.getCountryPeriodKeyboard());
+
+            }
         }
         return sendMessage;
     }
