@@ -97,13 +97,14 @@ public class QuestionarieProcessor {
         if (botState.equals(BotStates.IN_PROGRESS)) {
             patient.setPhoneNumber(usersAnswer);
             System.out.println(usersAnswer);
-            //try {
+            try {
                 FirebaseService.savePatientDetails(patient);
-            //} catch (InterruptedException e) {
-            //    e.printStackTrace();
-            //} catch (ExecutionException e) {
-            //    e.printStackTrace();
-            //}
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             PatientDataCache.setPatiensCurrentBotState(chatId, BotStates.PROFILE_FILLED);
             replyToUser.setText("Thank you! We will call you back to confirm reservation!");
             System.out.println(patient.toString());

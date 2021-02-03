@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -264,14 +265,26 @@ public class PatientApplicationUtil{
                 facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setChatId(Long.parseLong(senderId));
                 sendTextMessage(senderId, "Thank you for applying, " + facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() + '\n' + "We will contact you soon for confirmation");
                 facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
-                savePatientDetails(facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())));
+                try {
+                    savePatientDetails(facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())));
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             if (payload.equals("headNo")) {
                 facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasHeadache(false);
                 facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setChatId(Long.parseLong(senderId));
                 sendTextMessage(senderId, "Thank you for applying, " + facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() + '\n' + "We will contact you soon for confirmation");
                 facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
-                savePatientDetails(facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())));
+                try {
+                    savePatientDetails(facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())));
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         catch (MessengerApiException | MessengerIOException e) {
