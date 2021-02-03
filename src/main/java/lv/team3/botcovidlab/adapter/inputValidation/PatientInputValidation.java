@@ -2,6 +2,9 @@ package lv.team3.botcovidlab.adapter.inputValidation;
 
 public class PatientInputValidation {
 
+    public PatientInputValidation() {
+    }
+
     /**
      * Method that validates the input name
      *

@@ -10,17 +10,26 @@ import java.util.List;
 
 import static lv.team3.botcovidlab.utils.DateUtils.DateStructure;
 
+/**
+ * Main API interface for getting Covid-19 statistics data. Has methods <br>
+ * {@link #getStatsForLatest(String)} <br>
+ * {@link #getStatsForLastDay(String)} <br>
+ * {@link #getStatsForLast7Days(String)} <br>
+ * {@link #getStatsForLast30Days(String)} <br>
+ * {@link #getStatsFromBeginning(String)} <br>
+ *
+ * @author Janis Valentinovics
+ */
 public class CovidStatsProcessor {
 
-    private CovidStatsProcessor() { } // @auto:off
-    // @auto:on
+    private CovidStatsProcessor() {
+    }
 
     /**
      * Method used to get Covid-19 statistics data object.
      * Returns latest statistics data.
-     *
      * @param location String <code>"world"</code> or any country
-     * @return List of CovidStats containing latest data
+     * @return List of {@link CovidStats} containing latest data
      * @author Janis Valentinovics
      */
     public static List<CovidStats> getStatsForLatest(String location) {
@@ -30,9 +39,8 @@ public class CovidStatsProcessor {
     /**
      * Method used to get Covid-19 statistics data object.
      * Returns yesterdays statistics data.
-     *
      * @param location String <code>"world"</code> or any country
-     * @return List of CovidStats containing data for yesterday
+     * @return List of {@link CovidStats} containing data for yesterday
      * @author Janis Valentinovics
      */
     public static List<CovidStats> getStatsForLastDay(String location) {
@@ -44,9 +52,8 @@ public class CovidStatsProcessor {
     /**
      * Method used to get Covid-19 statistics data object.
      * Returns list of last 7 days statistics data (excluding) today.
-     *
      * @param location String <code>"world"</code> or any country
-     * @return List of CovidStats containing data for last 7 days
+     * @return List of {@link CovidStats} containing data for last 7 days
      * @author Janis Valentinovics
      */
     public static List<CovidStats> getStatsForLast7Days(String location) {
@@ -60,9 +67,8 @@ public class CovidStatsProcessor {
     /**
      * Method used to get Covid-19 statistics data object.
      * Returns list of last 30 days statistics data (excluding) today.
-     *
      * @param location String <code>"world"</code> or any country
-     * @return List of CovidStats containing data for last 30 days
+     * @return List of {@link CovidStats} containing data for last 30 days
      * @author Janis Valentinovics
      */
     public static List<CovidStats> getStatsForLast30Days(String location) {
@@ -76,9 +82,8 @@ public class CovidStatsProcessor {
     /**
      * Method used to get Covid-19 statistics data object.
      * Returns statistics data starting from 22.01.2020 till [including] yesterday.
-     *
      * @param location String <code>"world"</code> or any country
-     * @return List of CovidStats containing data for all covid history
+     * @return List of {@link CovidStats} containing data for all covid history
      * @author Janis Valentinovics
      */
     public static List<CovidStats> getStatsFromBeginning(String location) {
@@ -88,15 +93,6 @@ public class CovidStatsProcessor {
         return getStats(location, from, to);
     }
 
-    /**
-     * Method used to get historical Covid-19 statistics data object.
-     *
-     * @param location Requested country
-     * @param from     Starting from date [including]
-     * @param to       Ending with [including]
-     * @return List of CovidStats objects, that are in range [including] fromDate and [including] toDate
-     * @author Janis Valentinovics
-     */
     private static List<CovidStats> getStats(String location, DateStructure from, DateStructure to) {
         from.setHour(0); from.setMinute(0); from.setSecond(0); //@auto:off
         to.setHour(23); to.setMinute(59); to.setSecond(59);
@@ -111,13 +107,6 @@ public class CovidStatsProcessor {
         return list;
     }
 
-    /**
-     * Method used to get latest Covid-19 statistics data object.
-     *
-     * @param location Requested country
-     * @return List of latest CovidStats objects
-     * @author Janis Valentinovics
-     */
     private static List<CovidStats> getLatestStats(String location) {
         JsonObject object = HTMLRequestUtils.getLatestData(location);
         List<CovidStats> list = new ArrayList<>();
@@ -129,14 +118,6 @@ public class CovidStatsProcessor {
         return list;
     }
 
-    /**
-     * Parses JsonObject into CovidStats object
-     *
-     * @param object JsonObject with keys <code>country totalDeaths totalCases totalRecoveries activeCases
-     *               deaths cases recoveries missing</code>
-     * @return CovidStats object with all fields from JsonObject <code>object</code> except date
-     * @author Janis Valentinovics
-     */
     private static CovidStats covidStatsFromJsonObject(JsonObject object) {
         CovidStats stats = new CovidStats();
         stats.setCountry(object.getString("country"));

@@ -120,8 +120,13 @@ public class EventHandler {
                 facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setPressedButton(true);
             }
             if (payload.equals("Apply")) {
-                sender.sendTextMessage(senderId,"Enter your first name");
-                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(true);
+                if (facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getTemperature() == null) {
+                    sender.sendTextMessage(senderId, "Enter your first name");
+                    facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(true);
+                }
+                else {
+                    sender.sendTextMessage(senderId, "We have received your request - wait for confirmation");
+                }
             }
 
         }
