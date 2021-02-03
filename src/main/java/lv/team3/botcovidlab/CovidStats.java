@@ -2,6 +2,9 @@ package lv.team3.botcovidlab;
 
 import java.util.Date;
 
+/**
+ * Base structure of Covid-19 statistics.
+ */
 public class CovidStats {
 
     private String country;
@@ -15,28 +18,22 @@ public class CovidStats {
     private Date date;
     private boolean missingData;
 
+    /**
+     * Method used to test if this statistics contains valid data.
+     * @return True if field values were missing at initialization.
+     */
     public boolean isMissingData() {
         return missingData;
     }
 
+
+    /**
+     * Setter to set that initialization process failed, so it means that there might be missing or invalid
+     * statistics data.
+     * @param missingData If true, some data might be missing or invalid. If false, initialization succeeded.
+     */
     public void setMissingData(boolean missingData) {
         this.missingData = missingData;
-    }
-
-    @Deprecated
-    /**
-     * Use getActive()
-     */
-    public int getActiveTotal() {
-        return this.getActive();
-    }
-
-    @Deprecated
-    /**
-     * Use setActive()
-     */
-    public void setActiveTotal(int activeTotal) {
-        this.setActive(activeTotal);
     }
 
     public int getActive() {

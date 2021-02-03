@@ -141,11 +141,12 @@ import java.util.concurrent.ExecutionException;
             System.out.println(usersAnswer);
             try {
                 FirebaseService.savePatientDetails(patient);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
             PatientDataCache.setPatiensCurrentBotState(chatId, BotStates.PROFILE_FILLED);
             replyToUser.setText("Thank you! We will call you back to confirm reservation!");
             System.out.println(patient.toString());
