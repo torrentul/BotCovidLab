@@ -54,7 +54,7 @@ Patient data are stored in CloudFirestore database provided by Firebase services
 In order to connect the application to Firebase and develop admin access, following steps have to be performed:
 - create a [Firebase account](https://console.firebase.google.com)
 - add the Firebase Admin SDK to your server. Read [detailed documentation](https://firebase.google.com/docs/admin/setup?authuser=0#java) for more information.
-- create a CloudFirestore project. In **Project settings** --> **Service accounts** press ***Generate new private key***. Save the generated JSON file in root folder of the project.
+- create a CloudFirestore project. In **Project settings** --> **Service accounts** press ***Generate new private key***. Save the generated JSON file in root folder of your Java project.
 - use private key JSON file and URL with name of your CloudFirestor to authenticate using [OAuth 2.0 refresh token](https://firebase.google.com/docs/admin/setup?authuser=0#use-oauth-2-0-refresh-token)
 
 
