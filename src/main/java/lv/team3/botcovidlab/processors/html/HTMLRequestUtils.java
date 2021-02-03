@@ -13,64 +13,14 @@ import java.net.URL;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Class that executes HTML requests to get statistics data. Has two methods <br>
+ * {@link #getHistoricData(String, DateStructure, DateStructure)}
+ * {@link #getLatestData(String)}
+ */
 public class HTMLRequestUtils {
 
-    /**
-     * Reads passed URL as string. Possible that returns null, causes might be - invalid URL or URL timeout
-     * connectivity issues.
-     *
-     * @param url Valid url that returns some data.
-     * @return String representing url. Returns null if fails to read URL.
-     * @author Janis Valentinovics
-     */
-    private static String stringFromURL(URL url) {
-        String ret = null;
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringWriter writer = new StringWriter();
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                writer.write(line);
-            }
-            reader.close();
-            ret = writer.toString();
-
-            writer.flush();
-            writer.close();
-        } catch (Exception e) { /* TODO Proper returns */ }
-        return ret;
-    }
-
-    /**
-     * Reads passed URL as string, than parses it into JsonObject if possible. Possible that returns null,
-     * causes might be - invalid URL or URL timeout, invalid string returned from URL and connectivity issues.
-     *
-     * @param url URL to read data from
-     * @return JsonObject representation from URL
-     * @author Janis Valentinovics
-     */
-    private static JsonObject jsonObjectFromURL(URL url) {
-        String ret, string = (ret = stringFromURL(url)) != null ? ret : "{}";
-        JsonReader reader = Json.createReader(new StringReader(string));
-        JsonObject array = reader.readObject();
-        reader.close();
-        return array;
-    }
-
-    /**
-     * Reads passed URL as string, than parses it into JsonArray if possible. Possible that returns null,
-     * causes might be - invalid URL or URL timeout, invalid string returned from URL and connectivity issues.
-     *
-     * @param url URL to read data from
-     * @return JsonArray representation from URL
-     * @author Janis Valentinovics
-     */
-    private static JsonArray jsonArrayFromURL(URL url) {
-        String ret, string = (ret = stringFromURL(url)) != null ? ret : "[]";
-        JsonReader reader = Json.createReader(new StringReader(string));
-        JsonArray array = reader.readArray();
-        reader.close();
-        return array;
+    private HTMLRequestUtils() {
     }
 
     /**
@@ -79,7 +29,16 @@ public class HTMLRequestUtils {
      * @param location <code>"world"</code> or any <code>"country"</code>. Pass string as all lowercase.
      * @param from     Starting date [including].
      * @param to       Ending date [including].
-     * @return JsonObject containing statistics data of defined period of time.
+     * @return JsonObject containing statistics data of defined period of time in format <br>
+     * { <br>
+     * "cases": val, <br>
+     * "deaths": val, <br>
+     * "recovered": val, <br>
+     * "active": val, <br>
+     * "todayCases": val, <br>
+     * "todayDeaths": val, <br>
+     * "todayRecovered": val <br>
+     * }
      * @author Janis Valentinovics
      */
     public static JsonObject getHistoricData(String location, DateStructure from, DateStructure to) {
@@ -122,32 +81,96 @@ public class HTMLRequestUtils {
     }
 
     /**
-     * @param place       <code>"world"</code> or any <code>"country"</code>.
-     * @param obj         Object with structure <code>
-     *                    {
-     *                    "cases" : {
-     *                    date0 : 100,
-     *                    date1 : 100,
-     *                    ...
-     *                    },
-     *                    "recovered" : {
-     *                    date0 : 100,
-     *                    date1 : 100,
-     *                    ...
-     *                    }
-     *                    "deaths" : {
-     *                    date0 : 100,
-     *                    date1 : 100,
-     *                    ...
-     *                    }
-     *                    }
-     *                    </code>.
-     * @param key         In json structure mentioned as <code>dateX</code> as String "MM/DD/YYYY".
-     * @param previousKey In json structure mentioned as <code>dateX</code> as String "MM/DD/YYYY"
-     *                    but its day before <code>key</code>.
-     * @return Returns one of <code>obj</code> elements selected with <code>key</code> as JsonObject.
+     * Searches and returns Covid-19 current statistics. Current - today, latest data.
+     *
+     * @param location <code>"world"</code> or any <code>"country"</code>. Pass string as all lowercase.
+     * @return JsonObject containing last available statistics data in format <br>
+     * { <br>
+     * "cases": val, <br>
+     * "deaths": val, <br>
+     * "recovered": val, <br>
+     * "active": val, <br>
+     * "todayCases": val, <br>
+     * "todayDeaths": val, <br>
+     * "todayRecovered": val <br>
+     * }
      * @author Janis Valentinovics
      */
+    public static JsonObject getLatestData(String location) {
+        DataSource source = DataSource.latestFromString(location);
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        DateStructure struct = new DateStructure(new Date());
+        if (source == DataSource.CORONA_SPECIFIC_TODAY) {
+            try {
+                String request = String.format(source.getTemplate(), location);
+                JsonObject nativeObject = jsonObjectFromURL(new URL(request));
+                objectBuilder.add(struct.toString(), parseLocationLatestData(location, nativeObject));
+            } catch (MalformedURLException ignored) {
+            }
+        } else {
+            try {
+                String request = source.getTemplate();
+                JsonArray nativeArray = jsonArrayFromURL(new URL(request));
+                objectBuilder.add(struct.toString(), parseContinentLatestData(nativeArray));
+            } catch (MalformedURLException ignored) {
+            }
+        }
+        return objectBuilder.build();
+    }
+
+    private static String stringFromURL(URL url) {
+        String ret = null;
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringWriter writer = new StringWriter();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+            }
+            reader.close();
+            ret = writer.toString();
+
+            writer.flush();
+            writer.close();
+        } catch (Exception ignore) {
+        }
+        return ret;
+    }
+
+    private static JsonObject jsonObjectFromURL(URL url) {
+        String ret, string = (ret = stringFromURL(url)) != null ? ret : "{}";
+        JsonReader reader = Json.createReader(new StringReader(string));
+        JsonObject array = reader.readObject();
+        reader.close();
+        return array;
+    }
+
+    private static JsonArray jsonArrayFromURL(URL url) {
+        String ret, string = (ret = stringFromURL(url)) != null ? ret : "[]";
+        JsonReader reader = Json.createReader(new StringReader(string));
+        JsonArray array = reader.readArray();
+        reader.close();
+        return array;
+    }
+
+    private static JsonObject parseLocationLatestData(String place, JsonObject obj) {
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        try {
+            builder.add("country", place);
+            builder.add("totalCases", obj.getInt("cases"));
+            builder.add("totalDeaths", obj.getInt("deaths"));
+            builder.add("totalRecoveries", obj.getInt("recovered"));
+            builder.add("activeCases", obj.getInt("active"));
+            builder.add("cases", obj.getInt("todayCases"));
+            builder.add("deaths", obj.getInt("todayDeaths"));
+            builder.add("recoveries", obj.getInt("todayRecovered"));
+            builder.add("missing", false);
+        } catch (Exception ignored) {
+            builder.add("missing", true);
+        }
+        return builder.build();
+    }
+
     private static JsonObject parseHistoricData(String place, JsonObject obj, String key, String previousKey) {
         JsonObject cas = obj.getJsonObject("cases");
         JsonObject rec = obj.getJsonObject("recovered");
@@ -173,60 +196,6 @@ public class HTMLRequestUtils {
         return builder.build();
     }
 
-    /**
-     * Searches and returns Covid-19 current statistics. Current - today, latest data.
-     *
-     * @param location <code>"world"</code> or any <code>"country"</code>. Pass string as all lowercase.
-     * @return JsonObject containing last available statistics data.
-     * @author Janis Valentinovics
-     */
-    public static JsonObject getLatestData(String location) {
-        DataSource source = DataSource.latestFromString(location);
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-        DateStructure struct = new DateStructure(new Date());
-        if (source == DataSource.CORONA_SPECIFIC_TODAY) {
-            try {
-                String request = String.format(source.getTemplate(), location);
-                JsonObject nativeObject = jsonObjectFromURL(new URL(request));
-                objectBuilder.add(struct.toString(), parseLocationLatestData(location, nativeObject));
-            } catch (MalformedURLException ignored) {
-            }
-        } else {
-            try {
-                String request = source.getTemplate();
-                JsonArray nativeArray = jsonArrayFromURL(new URL(request));
-                objectBuilder.add(struct.toString(), parseContinentLatestData(nativeArray));
-            } catch (MalformedURLException ignored) {
-            }
-        }
-        return objectBuilder.build();
-    }
-
-    /**
-     * @param arr Array with structure <code>
-     *            [
-     *            "continent" : {
-     *              "cases" : {
-     *                  date0 : 100,
-     *                  date1 : 100,
-     *                  ...
-     *              },
-     *              "recovered" : {
-     *                  date0 : 100,
-     *                  date1 : 100,
-     *                  ...
-     *              }
-     *              "deaths" : {
-     *                  date0 : 100,
-     *                  date1 : 100,
-     *              ...
-     *              }
-     *            }
-     *            ]
-     *            </code>.
-     * @return Returns one of <code>obj</code> elements selected with <code>key</code> as JsonObject.
-     * @author Janis Valentinovics
-     */
     private static JsonObject parseContinentLatestData(JsonArray arr) {
         final String[] keys = {"totalCases", "totalDeaths", "totalRecoveries", "activeCases", "cases", "deaths", "recoveries"};
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -246,25 +215,6 @@ public class HTMLRequestUtils {
             builder.add("missing", true);
         }
         builder.add("country", "world");
-        return builder.build();
-
-    }
-
-    private static JsonObject parseLocationLatestData(String place, JsonObject obj) {
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        try {
-            builder.add("country", place);
-            builder.add("totalCases", obj.getInt("cases"));
-            builder.add("totalDeaths", obj.getInt("deaths"));
-            builder.add("totalRecoveries", obj.getInt("recovered"));
-            builder.add("activeCases", obj.getInt("active"));
-            builder.add("cases", obj.getInt("todayCases"));
-            builder.add("deaths", obj.getInt("todayDeaths"));
-            builder.add("recoveries", obj.getInt("todayRecovered"));
-            builder.add("missing", false);
-        } catch (Exception ignored) {
-            builder.add("missing", true);
-        }
         return builder.build();
     }
 }
