@@ -30,16 +30,22 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static lv.team3.botcovidlab.adapter.facebook.handlers.EventHandler.handleSendException;
 
+/**
+ * Class that manages all the actions related to send responses to the user
+ *
+ * @author Vladislavs Visnevskis
+ */
 @Service
 public class Sender {
 
     private final Messenger messenger;
-    private UserStates countryButton;
-    private final FacebookPatientDataCache facebookPatientDataCache;
 
-    public Sender(Messenger messenger, FacebookPatientDataCache facebookPatientDataCache) {
+    /**
+     * Constructor that takes
+     * @param messenger
+     */
+    public Sender(Messenger messenger) {
         this.messenger = messenger;
-        this.facebookPatientDataCache = facebookPatientDataCache;
     }
 
     /**
