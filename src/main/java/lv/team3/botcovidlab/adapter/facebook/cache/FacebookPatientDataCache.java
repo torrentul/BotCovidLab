@@ -6,7 +6,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Utility that caches the test application and buttons state for each user
+ *
+ * @author Vladislavs Visnevskis
+ */
 @Component
 public  class FacebookPatientDataCache {
     private Map<Long, Patient> patientsData = new HashMap<>();

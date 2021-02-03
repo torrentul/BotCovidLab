@@ -20,7 +20,11 @@ import java.net.MalformedURLException;
 import static com.github.messenger4j.Messenger.*;
 import static java.util.Optional.*;
 
-
+/**
+ * Rest controller
+ *
+ * @author Vladislavs Visnevskis
+ */
 @RestController
 @RequestMapping("/callback")
 public class MessengerPlatformCallbackHandler{

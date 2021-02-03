@@ -1,7 +1,6 @@
 package lv.team3.botcovidlab.adapter.telegram;
 
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -9,18 +8,15 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Sets Up Main menu buttons and Keyboard Markup
+ * @author Vladislavs Kraslavskis
+ */
 @Service
 public class MainMenuService {
-
-    public SendMessage getMainMenuMessage(final long chatId, final String textMessage) {
-        final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard();
-        final SendMessage mainMenuMessage =
-                createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
-
-        return mainMenuMessage;
-    }
-
+    /**
+     * @return Keyboard Markup for Main menu with implemented buttons
+     */
     public ReplyKeyboardMarkup getMainMenuKeyboard() {
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -33,7 +29,7 @@ public class MainMenuService {
         KeyboardRow row1 = new KeyboardRow();
         KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
-        row1.add(new KeyboardButton("Get Covid Stats For Latvia"));
+        row1.add(new KeyboardButton("Get Covid Stats For Specific Country"));
         row2.add(new KeyboardButton("Get Worldwide Covid-19 statistics"));
         row3.add(new KeyboardButton("Apply For Covid-19 Test in Latvia"));
 
@@ -42,18 +38,5 @@ public class MainMenuService {
         keyboard.add(row3);
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
-    }
-
-    private SendMessage createMessageWithKeyboard(final long chatId,
-                                                  String textMessage,
-                                                  final ReplyKeyboardMarkup replyKeyboardMarkup) {
-        final SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
-        sendMessage.setChatId(String.valueOf(chatId));
-        sendMessage.setText(textMessage);
-        if (replyKeyboardMarkup != null) {
-            sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        }
-        return sendMessage;
     }
 }
