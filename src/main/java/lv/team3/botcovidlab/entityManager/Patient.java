@@ -1,6 +1,8 @@
 package lv.team3.botcovidlab.entityManager;
 
 
+import java.util.Objects;
+
 /**
  * Stores data about patients, who interact with chatbots and
  * wish to apply for covid tests
@@ -16,6 +18,7 @@ public class Patient {
     private boolean hasTroubleBreathing;
     private boolean hasHeadache;
     private String phoneNumber;
+
 
     public Patient() {
 
@@ -131,4 +134,24 @@ public class Patient {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Patient patient = (Patient) o;
+        return isContactPerson == patient.isContactPerson && hasCough == patient.hasCough
+                && hasTroubleBreathing == patient.hasTroubleBreathing && hasHeadache == patient.hasHeadache
+                && chatId.equals(patient.chatId) && name.equals(patient.name) && lastName.equals(patient.lastName)
+                && personalCode.equals(patient.personalCode) && temperature.equals(patient.temperature)
+                &&phoneNumber.equals(patient.phoneNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chatId, name, lastName,
+                personalCode, temperature, isContactPerson,
+                hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);
+    }
 }
+
