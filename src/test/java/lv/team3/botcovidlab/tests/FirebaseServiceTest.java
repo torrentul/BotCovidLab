@@ -29,30 +29,33 @@ class FirebaseServiceTest {
     private static final Long CHAT_ID_MARY_SMITH = 555L;
     private static final Long CHAT_ID_JOHN_DOE = 111L;
     private static Patient patientToAdd;
-
-
+    private static Patient testPatient;
 
     @BeforeAll
     static void setUp() {
         FirebaseInitializer initializer = new FirebaseInitializer();
         initializer.initialize();
         patientToAdd = new Patient(CHAT_ID_MARY_SMITH, "Mary", "Smith", PERSONAL_CODE_MARY_SMITH,
-                "37.5",false, false,
+                "37.5", false, false,
                 false, false, "55566655");
+        testPatient = new Patient(999L, "Test-Patient", "Dont-Delete",
+                EXISTING_PERSONAL_CODE, "36.7", true,
+                true, true, true, "11223344");
+
     }
 
     @Test
-    void testA_existingPatientFound()  throws ExecutionException, InterruptedException  {
+    void testA_existingPatientFound() throws ExecutionException, InterruptedException {
         assertTrue(FirebaseService.isPatientFound(EXISTING_PERSONAL_CODE));
     }
 
     @Test
-    void testB_nonExistingPatientNotFound()  throws ExecutionException, InterruptedException {
+    void testB_nonExistingPatientNotFound() throws ExecutionException, InterruptedException {
         assertFalse(FirebaseService.isPatientFound(NON_EXISTING_PERSONAL_CODE));
     }
 
     @Test
-    void testC_createNewPatientIfDoesNotExist()  throws ExecutionException, InterruptedException {
+    void testC_createNewPatientIfDoesNotExist() throws ExecutionException, InterruptedException {
         assertFalse(FirebaseService.isPatientFound(PERSONAL_CODE_JOHN_DOE));
         FirebaseService.createPatient(CHAT_ID_JOHN_DOE, "John", "Doe",
                 PERSONAL_CODE_JOHN_DOE, "38.7", false,
@@ -61,7 +64,7 @@ class FirebaseServiceTest {
     }
 
     @Test
-    void testD_failToCreateNewPatientWhenItExists()  throws ExecutionException, InterruptedException {
+    void testD_failToCreateNewPatientWhenItExists() throws ExecutionException, InterruptedException {
         Patient patientToFail = FirebaseService.createPatient(999L, "Test-Patient", "Dont-Delete",
                 EXISTING_PERSONAL_CODE, "36.7", true,
                 true, true, true, "11223344");
@@ -76,7 +79,14 @@ class FirebaseServiceTest {
     }
 
     @Test
-    void testF_getPatientDetails()  throws ExecutionException, InterruptedException {
+    void testF_doNotSavePatientIfExists() throws ExecutionException, InterruptedException {
+        String result = FirebaseService.savePatientDetails(testPatient);
+        assertEquals("Patient with personal code " + testPatient.getPersonalCode() +
+                " already exists in the database", result);
+    }
+
+    @Test
+    void testG_getPatientDetailsIfExists() throws ExecutionException, InterruptedException {
         Patient detailedPatient = new Patient(CHAT_ID_JOHN_DOE, "John", "Doe",
                 PERSONAL_CODE_JOHN_DOE, "38.7", false,
                 true, true, true, "99887700");
@@ -85,7 +95,13 @@ class FirebaseServiceTest {
     }
 
     @Test
-    void testG_updatePatientDetails()  throws ExecutionException, InterruptedException {
+    void testH_nonExistingPatientDetailsNull() throws ExecutionException, InterruptedException {
+        Patient testPatient = FirebaseService.getPatientDetails(NON_EXISTING_PERSONAL_CODE);
+        assertNull(testPatient);
+    }
+
+    @Test
+    void testI_updatePatientDetails() throws ExecutionException, InterruptedException {
         Patient patientToUpdate = FirebaseService.getPatientDetails(PERSONAL_CODE_MARY_SMITH);
         String oldPhoneNumber = patientToUpdate.getPhoneNumber();
         String oldName = patientToUpdate.getName();
@@ -101,7 +117,16 @@ class FirebaseServiceTest {
     }
 
     @Test
-    void testH_findByChatId()  throws ExecutionException, InterruptedException {
+    void testJ_doNotUpdateNonExistingPatient() throws ExecutionException, InterruptedException {
+        Patient nonExistingPatient = new Patient (440L, "Missing", "patient",
+                "000000-11111", "36.0", false,
+                false, false, false, "22222222");
+        String updateResult = FirebaseService.updatePatientDetails(nonExistingPatient);
+        assertNull(updateResult);
+    }
+
+    @Test
+    void testK_findByChatId() throws ExecutionException, InterruptedException {
         Patient testPatient = FirebaseService.findByChatId(CHAT_ID_JOHN_DOE);
         assert testPatient != null;
         assertEquals("John", testPatient.getName());
@@ -111,7 +136,13 @@ class FirebaseServiceTest {
     }
 
     @Test
-    void testJ_deletePatient()  throws ExecutionException, InterruptedException {
+    void testL_doNotFindNonExistingPatient() throws ExecutionException, InterruptedException {
+        Patient testPatient = FirebaseService.findByChatId(000L);
+        assertNull(testPatient);
+    }
+
+    @Test
+    void testM_deletePatient() throws ExecutionException, InterruptedException {
         Patient myTestPatient = FirebaseService.getPatientDetails(PERSONAL_CODE_MARY_SMITH);
         assertNotNull(myTestPatient);
         FirebaseService.deletePatient(myTestPatient.getPersonalCode());
