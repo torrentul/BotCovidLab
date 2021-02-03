@@ -5,6 +5,6 @@ import java.io.InputStream;
 
 public class HerokuUtils {
     public static InputStream getFirebaseSettings() {
-        return new ByteArrayInputStream(System.getProperty("firebaseSettings").getBytes());
+        return new ByteArrayInputStream(System.getenv("firebaseSettings").getBytes());
     }
 }
