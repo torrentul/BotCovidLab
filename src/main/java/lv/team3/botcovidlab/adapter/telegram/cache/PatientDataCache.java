@@ -104,6 +104,7 @@ public  class PatientDataCache  {
     /**
      * Saves patient in patientsData hashMap
      * @param userId Telegram users chat identifier
+     * @param patient Patient object, which needs to be saved to the Cache
      */
     public static void savePatientsProfileData(Long userId, Patient patient) {
         patientsData.put(userId,patient);

@@ -47,23 +47,5 @@ public class PeriodMenuService {
         return keyboardMarkup;
     }
 
-    public InlineKeyboardMarkup getWorldPeriodKeyboard() {
-        InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
 
-        List<InlineKeyboardButton> row1 = new ArrayList<>();
-        List<InlineKeyboardButton> row2 = new ArrayList<>();
-        List<InlineKeyboardButton> row3 = new ArrayList<>();
-
-        InlineKeyboardButton btnT = new InlineKeyboardButton(" Today ");
-        InlineKeyboardButton btn7 = new InlineKeyboardButton(" 7 Days ");
-        InlineKeyboardButton btn30 = new InlineKeyboardButton(" 30 Days ");
-
-        row1.add(btnT);
-        row2.add(btn7);
-        row3.add(btn30);
-
-
-
-        return keyboardMarkup;
-    }
 }

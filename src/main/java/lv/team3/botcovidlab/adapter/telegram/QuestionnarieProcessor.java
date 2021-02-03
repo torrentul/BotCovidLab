@@ -101,7 +101,7 @@ import java.util.concurrent.ExecutionException;
 
         if (botState.equals(BotStates.QUESTION5)) {
             replyToUser.setText("Do you have a cough?(Yes/No)");
-            patient.setPersonalCode(usersAnswer);
+            patient.setTemperature(usersAnswer);
             System.out.println(usersAnswer);
             PatientDataCache.setPatiensCurrentBotState(chatId, BotStates.QUESTION6);
         }
