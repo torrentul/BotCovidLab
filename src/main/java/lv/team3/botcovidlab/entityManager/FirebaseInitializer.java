@@ -9,13 +9,18 @@ import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 
 
+/**
+ * Creates connection with Firebase database
+ * For FileInputStream path valid access .json document needs to be provided
+ * For FirebaseOptions URL with the name of the Firebase database needs to be provided
+ */
 @Service
 public class FirebaseInitializer {
     @PostConstruct
     public void initialize() {
         try {
             FileInputStream serviceAccount =
-                    new FileInputStream("botcovidlabAdminAccess.json");
+                    new FileInputStream("./botcovidlabAdminAccess.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
