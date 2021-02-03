@@ -15,16 +15,14 @@ import com.github.messenger4j.webhook.event.TextMessageEvent;
 import lombok.Getter;
 import lombok.Setter;
 import lv.team3.botcovidlab.adapter.facebook.MessengerPlatformCallbackHandler;
-import lv.team3.botcovidlab.adapter.facebook.cache.PatientDataCache;
+import lv.team3.botcovidlab.adapter.facebook.cache.FacebookPatientDataCache;
 import lv.team3.botcovidlab.adapter.facebook.senders.Sender;
-import lv.team3.botcovidlab.entityManager.Patient;
 import org.springframework.stereotype.Service;
 
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -49,19 +47,20 @@ public class PatientApplicationUtil{
     private boolean patientHasCough;
     private boolean patientHasTroubleBreathing;
     private boolean patientHasHeadache;
-    private final PatientDataCache patientDataCache;
+    private final FacebookPatientDataCache facebookPatientDataCache;
 
-    public PatientApplicationUtil(Messenger messenger, Sender sender, EventHandler eventHandler, PatientDataCache patientDataCache) {
+    public PatientApplicationUtil(Messenger messenger, Sender sender, EventHandler eventHandler, FacebookPatientDataCache facebookPatientDataCache) {
         this.messenger = messenger;
         this.sender = sender;
         this.eventHandler = eventHandler;
-        this.patientDataCache = patientDataCache;
+        this.facebookPatientDataCache = facebookPatientDataCache;
     }
 
     /**
+     * Method that handles the "TextMessageEvent" from Facebook messenger sender after "Apply for test" button is pressed
+     *
      * @param event Facebook messenger event
-     * Handles the "TextMessageEvent" from Facebook messenger sender after "Apply for test" button is pressed
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public void handleTestApplicationEvent(TextMessageEvent event) {
 
@@ -73,53 +72,53 @@ public class PatientApplicationUtil{
 
         MessengerPlatformCallbackHandler.logger.info("Received message '{}' with text '{}' from user '{}' at '{}'", messageId, messageText, senderId, timestamp);
         try {
-            if (patientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() != null) {
+            if (facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() != null) {
                 if (validateTemperature(messageText)) {
-                    patientDataCache.getPatientData(Long.parseLong(event.senderId())).setTemperature(messageText);
+                    facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setTemperature(messageText);
                     sendTextMessage(senderId, "Choose the appropriate answer");
                     sendQuickReplyContactButtons(senderId);
                 }
                 else sendTextMessage(senderId, "Incorrect input - temperature should be a number, separated with dot, within range 30.0°C and 45.0°C " + '\n' + "Try again");
             }
-            if (patientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() == null) {
+            if (facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() == null) {
                 if (validatePhoneNumber(messageText)) {
-                    patientDataCache.getPatientData(Long.parseLong(event.senderId())).setPhoneNumber(messageText);
+                    facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setPhoneNumber(messageText);
                     sendTextMessage(senderId, "Enter your temperature");
                 }
                 else sendTextMessage(senderId, "Incorrect input - phone number should consist of 8 digits started with \"2\" or \"6\" " + '\n' + "Try again");
             }
-            if (patientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() == null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() == null) {
+            if (facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() == null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() == null) {
                 if (validatePersonalCode(messageText)) {
-                    patientDataCache.getPatientData(Long.parseLong(event.senderId())).setPersonalCode(messageText);
+                    facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setPersonalCode(messageText);
                     sendTextMessage(senderId, "Enter your phone number");
                 }
                 else sendTextMessage(senderId, "Incorrect input - personal code should contain 11 digits or 6 and 5 digits separated with \"-\" " + '\n' + "Try again");
             }
-            if (patientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() != null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() == null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() == null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() == null) {
+            if (facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() != null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() == null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() == null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() == null) {
                 if(validateLastName(messageText)) {
-                    patientDataCache.getPatientData(Long.parseLong(event.senderId())).setLastName(messageText);
+                    facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setLastName(messageText);
                     sendTextMessage(senderId, "Enter your personal code");
                 }
                 else sendTextMessage(senderId, "Incorrect input - last name should contain only letters" + '\n' + "Try again");
             }
-            if (patientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() == null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() == null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() == null
-                    && patientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() == null) {
+            if (facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() == null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getLastName() == null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPersonalCode() == null
+                    && facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getPhoneNumber() == null) {
                 if(validateFirstName(messageText)) {
-                    patientDataCache.getPatientData(Long.parseLong(event.senderId())).setName(messageText);
+                    facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setName(messageText);
                     sendTextMessage(senderId, "Enter your last name");
                 }
                 else sendTextMessage(senderId, "Incorrect input - name should contain only letters and at least 3 of them"  + '\n' + "Try again");
@@ -131,10 +130,11 @@ public class PatientApplicationUtil{
     }
 
     /**
+     * Method that sends the text message to Facebook messenger user
+     *
      * @param recipientId Facebook messenger recipient identifier
      * @param text text, which will send to Facebook messenger recipient
-     * Send the text message to Facebook messenger user
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public void sendTextMessage(String recipientId, String text) {
         try {
@@ -152,9 +152,12 @@ public class PatientApplicationUtil{
     }
 
     /**
+     * Method that sends the quick reply buttons to user, to answer question "Are you contact person?"
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Send the quick reply buttons to user, to answer question "Are you contact person?"
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
+     * @throws MessengerApiException if message is null
+     * @throws MessengerIOException
      */
     public void sendQuickReplyContactButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -167,9 +170,12 @@ public class PatientApplicationUtil{
     }
 
     /**
+     * Method that sends the quick reply buttons to user, to answer question "Do you have a cough?"
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Send the quick reply buttons to user, to answer question "Do you have a cough?"
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
+     * @throws MessengerApiException if message is null
+     * @throws MessengerIOException
      */
     public void sendQuickReplyCoughButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -182,9 +188,12 @@ public class PatientApplicationUtil{
     }
 
     /**
+     * Method that sends the quick reply buttons to user, to answer question "Do you have trouble breathing?"
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Send the quick reply buttons to user, to answer question "Do you have trouble breathing?"
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
+     * @throws MessengerApiException if message is null
+     * @throws MessengerIOException
      */
     public void sendQuickReplyBreathButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -197,10 +206,11 @@ public class PatientApplicationUtil{
     }
 
     /**
+     * Method that sends the quick reply buttons to user, to answer question "Do you have a headache?"
+     *
      * @param recipientId Facebook messenger recipient identifier
-     * Send the quick reply buttons to user, to answer question "Do you have a headache?"
      * @throws MessengerApiException if message is null
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyHeadacheButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -213,9 +223,10 @@ public class PatientApplicationUtil{
     }
 
     /**
+     * Methods that handles the user's choice of quick reply buttons
+     *
      * @param event Facebook messenger QuickReplyMessageEvent, after pressing quick reply button
-     * Handles the user's choice of quick reply buttons
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public void handleQuickReplyMessageApplyEvent(QuickReplyMessageEvent event) {
 
@@ -225,50 +236,42 @@ public class PatientApplicationUtil{
 
         try {
             if (payload.equals("contactYes")) {
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setContactPerson(true);
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setContactPerson(true);
                 sendQuickReplyCoughButtons(senderId);
             }
             if (payload.equals("contactNo")) {
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setContactPerson(false);
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setContactPerson(false);
                 sendQuickReplyCoughButtons(senderId);
             }
             if (payload.equals("coughYes")) {
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasCough(true);
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasCough(true);
                 sendQuickReplyBreathButtons(senderId);
             }
             if (payload.equals("coughNo")) {
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasCough(false);
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasCough(false);
                 sendQuickReplyBreathButtons(senderId);
             }
             if (payload.equals("breathYes")) {
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasTroubleBreathing(true);
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasTroubleBreathing(true);
                 sendQuickReplyHeadacheButtons(senderId);
             }
             if (payload.equals("breathNo")) {
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasTroubleBreathing(false);
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasTroubleBreathing(false);
                 sendQuickReplyHeadacheButtons(senderId);
             }
             if (payload.equals("headYes")) {
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasHeadache(true);
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setChatId(Long.parseLong(senderId));
-                sendTextMessage(senderId, "Thank you for applying, " + patientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() + '\n' + "We will contact you soon for confirmation");
-                patientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
-                try {
-                    savePatientDetails(patientDataCache.getPatientData(Long.parseLong(event.senderId())));
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasHeadache(true);
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setChatId(Long.parseLong(senderId));
+                sendTextMessage(senderId, "Thank you for applying, " + facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() + '\n' + "We will contact you soon for confirmation");
+                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
+                savePatientDetails(facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())));
             }
             if (payload.equals("headNo")) {
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasHeadache(false);
-                patientDataCache.getPatientData(Long.parseLong(event.senderId())).setChatId(Long.parseLong(senderId));
-                sendTextMessage(senderId, "Thank you for applying, " + patientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() + '\n' + "We will contact you soon for confirmation");
-                patientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
-                try {
-                    savePatientDetails(patientDataCache.getPatientData(Long.parseLong(event.senderId())));
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setHasHeadache(false);
+                facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).setChatId(Long.parseLong(senderId));
+                sendTextMessage(senderId, "Thank you for applying, " + facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())).getName() + '\n' + "We will contact you soon for confirmation");
+                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
+                savePatientDetails(facebookPatientDataCache.getPatientData(Long.parseLong(event.senderId())));
             }
         }
         catch (MessengerApiException | MessengerIOException e) {

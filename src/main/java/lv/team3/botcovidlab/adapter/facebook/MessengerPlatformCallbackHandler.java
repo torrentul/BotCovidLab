@@ -4,11 +4,10 @@ import com.github.messenger4j.Messenger;
 import com.github.messenger4j.exception.MessengerApiException;
 import com.github.messenger4j.exception.MessengerIOException;
 import com.github.messenger4j.exception.MessengerVerificationException;
-import lv.team3.botcovidlab.adapter.facebook.cache.PatientDataCache;
+import lv.team3.botcovidlab.adapter.facebook.cache.FacebookPatientDataCache;
 import lv.team3.botcovidlab.adapter.facebook.handlers.EventHandler;
 import lv.team3.botcovidlab.adapter.facebook.handlers.PatientApplicationUtil;
 import lv.team3.botcovidlab.adapter.facebook.senders.Sender;
-import lv.team3.botcovidlab.entityManager.Patient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +31,27 @@ public class MessengerPlatformCallbackHandler{
     private final PatientApplicationUtil patientApplicationUtil;
     private final EventHandler eventHandler;
     private final Sender sender;
-    private final PatientDataCache patientDataCache;
+    private final FacebookPatientDataCache facebookPatientDataCache;
 
 
     @Autowired
-    public MessengerPlatformCallbackHandler(final Messenger messenger, final PatientApplicationUtil patientApplicationUtil, final EventHandler eventHandler, final Sender sender, PatientDataCache patientDataCache) {
+    public MessengerPlatformCallbackHandler(final Messenger messenger, final PatientApplicationUtil patientApplicationUtil, final EventHandler eventHandler, final Sender sender, FacebookPatientDataCache facebookPatientDataCache) {
         this.messenger = messenger;
         this.patientApplicationUtil = patientApplicationUtil;
         this.eventHandler = eventHandler;
         this.sender = sender;
-        this.patientDataCache = patientDataCache;
+        this.facebookPatientDataCache = facebookPatientDataCache;
     }
 
-
+    /**
+     * Method that verifies Facebook webhook
+     *
+     * @param mode
+     * @param verifyToken verification token
+     * @param mode
+     * @return corresponding response
+     * @author Vladislavs Visnevskis
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<String> verifyWebhook(@RequestParam(MODE_REQUEST_PARAM_NAME) final String mode,
                                                 @RequestParam(VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken, @RequestParam(CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
@@ -59,22 +66,26 @@ public class MessengerPlatformCallbackHandler{
     }
 
     /**
-     * Callback endpoint responsible for processing the inbound messages and events.
+     * Method that handles the user event in the messenger
+     *
+     * @param payload
+     * @param signature
+     * @author Vladislavs Visnevskis
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> handleCallback(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) throws MessengerApiException, MessengerIOException, MalformedURLException {
         logger.debug("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
         try {
             this.messenger.onReceiveEvents(payload, of(signature), event -> {
-                if (event.isTextMessageEvent() && !patientDataCache.getUserStates(Long.parseLong(event.senderId())).isApplyButton()) {
+                if (event.isTextMessageEvent() && !facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).isApplyButton()) {
                     eventHandler.handleTextMessageEvent(event.asTextMessageEvent());
-                } else if (event.isTextMessageEvent() && patientDataCache.getUserStates(Long.parseLong(event.senderId())).isApplyButton()) {
+                } else if (event.isTextMessageEvent() && facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).isApplyButton()) {
                     patientApplicationUtil.handleTestApplicationEvent(event.asTextMessageEvent());
                 } else if (event.isPostbackEvent()) {
                     eventHandler.handlePostbackEvent(event.asPostbackEvent());
-                } else if (event.isQuickReplyMessageEvent()  && !patientDataCache.getUserStates(Long.parseLong(event.senderId())).isApplyButton()) {
+                } else if (event.isQuickReplyMessageEvent()  && !facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).isApplyButton()) {
                     eventHandler.handleQuickReplyMessageEvent(event.asQuickReplyMessageEvent());
-                } else if (event.isQuickReplyMessageEvent()  && patientDataCache.getUserStates(Long.parseLong(event.senderId())).isApplyButton()) {
+                } else if (event.isQuickReplyMessageEvent()  && facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).isApplyButton()) {
                     patientApplicationUtil.handleQuickReplyMessageApplyEvent(event.asQuickReplyMessageEvent());
                 } else {
                     eventHandler.handleFallbackEvent(event);

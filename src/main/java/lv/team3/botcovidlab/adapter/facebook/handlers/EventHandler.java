@@ -9,7 +9,7 @@ import com.github.messenger4j.webhook.event.TextMessageEvent;
 import lv.team3.botcovidlab.adapter.facebook.MessengerPlatformCallbackHandler;
 import lv.team3.botcovidlab.adapter.facebook.ValidCountryList;
 import lv.team3.botcovidlab.adapter.facebook.cache.UserStates;
-import lv.team3.botcovidlab.adapter.facebook.cache.PatientDataCache;
+import lv.team3.botcovidlab.adapter.facebook.cache.FacebookPatientDataCache;
 import lv.team3.botcovidlab.adapter.facebook.senders.Sender;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +23,22 @@ import static lv.team3.botcovidlab.adapter.facebook.TotalStatUtil.*;
 public class EventHandler {
 
     private final Sender sender;
-    private final PatientDataCache patientDataCache;
+    private final FacebookPatientDataCache facebookPatientDataCache;
     private UserStates userStates;
 
-    public EventHandler(Sender sender, PatientDataCache patientDataCache, UserStates userStates) {
+    public EventHandler(Sender sender, FacebookPatientDataCache facebookPatientDataCache, UserStates userStates) {
         this.sender = sender;
-        this.patientDataCache = patientDataCache;
+        this.facebookPatientDataCache = facebookPatientDataCache;
         this.userStates = userStates;
     }
 
     /**
-     * @param event Facebook messenger event
      * Handles the "TextMessageEvent" from Facebook messenger sender
-     * @Author Vladislavs Višņevskis
+     * If "Country" button pressed method checks for input validity
+     * Else for any input shows main selection buttons
+     *
+     * @param event Facebook messenger text message event
+     * @author Vladislavs Visnevskis
      */
     public void handleTextMessageEvent(TextMessageEvent event) {
         MessengerPlatformCallbackHandler.logger.debug("Received TextMessageEvent: {}", event);
@@ -47,18 +50,18 @@ public class EventHandler {
 
         MessengerPlatformCallbackHandler.logger.info("Received message '{}' with text '{}' from user '{}' at '{}'", messageId, messageText, senderId, timestamp);
 
-        if (patientDataCache.getUserStates(Long.parseLong(event.senderId())).isPressedButton()) {
+        if (facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).isPressedButton()) {
             boolean isValidInput = false;
             for(String list : ValidCountryList.countries){
                 if (list.toLowerCase().equals(event.text().toLowerCase())){
-                    patientDataCache.getUserStates(Long.parseLong(event.senderId())).setInput(event.text().toLowerCase());
+                    facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setInput(event.text().toLowerCase());
                     isValidInput = true;
                     break;
                 }
             }
             if (isValidInput) {
                 try {
-                    patientDataCache.getUserStates(Long.parseLong(event.senderId())).setPressedButton(false);
+                    facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setPressedButton(false);
                     sender.sendQuickReplyCountryButtons(senderId);
                 } catch (MessengerApiException | MessengerIOException e) {
                     handleSendException(e);
@@ -66,7 +69,7 @@ public class EventHandler {
             }
             else{
                 sender.sendTextMessage(senderId, "Incorrect input");
-                patientDataCache.getUserStates(Long.parseLong(event.senderId())).setPressedButton(false);
+                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setPressedButton(false);
             }
         }
 
@@ -86,9 +89,11 @@ public class EventHandler {
     }
 
     /**
+     * Method that handles user tap of buttons
+     *
      * @param event Facebook messenger event
      * Handles the "PostBackEvent" from Facebook messenger sender, after pressing the button
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public void handlePostbackEvent(PostbackEvent event) {
         MessengerPlatformCallbackHandler.logger.debug("Handling PostbackEvent");
@@ -101,22 +106,22 @@ public class EventHandler {
         MessengerPlatformCallbackHandler.logger.info("Received postback for user '{}' and page '{}' with payload '{}' at '{}'", senderId, senderId, payload, timestamp);
         try {
             if (payload.equals("Latvia")) {
-                patientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
+                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
                 sender.sendQuickReplyLvButtons(senderId);
             }
             if (payload.equals("Worldwide")) {
-                patientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
+                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
                 sender.sendQuickReplyWwButtons(senderId);
             }
             if (payload.equals("Country")) {
-                patientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
+                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
                 sender.sendTextMessage(senderId,"Type the country");
-                userStates = patientDataCache.getUserStates(Long.parseLong(event.senderId()));
-                patientDataCache.getUserStates(Long.parseLong(event.senderId())).setPressedButton(true);
+                userStates = facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId()));
+                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setPressedButton(true);
             }
             if (payload.equals("Apply")) {
                 sender.sendTextMessage(senderId,"Enter your first name");
-                patientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(true);
+                facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(true);
             }
 
         }
@@ -126,10 +131,12 @@ public class EventHandler {
     }
 
     /**
+     * Methods that handles users tap of quick reply button of period choice
+     *
      * @param event Facebook messenger event
      * Handles the "QuickReplyMessageEvent" from Facebook messenger sender, after pressing the
      *             quick reply button
-     * @Author Vladislavs Višņevskis
+     * @author Vladislavs Visnevskis
      */
     public void handleQuickReplyMessageEvent(QuickReplyMessageEvent event) {
         MessengerPlatformCallbackHandler.logger.debug("Handling QuickReplyMessageEvent");
@@ -162,20 +169,21 @@ public class EventHandler {
         }
 
         if (payload.equals("countryYesterday")) {
-            sender.sendTextMessage(senderId, countTotalYesterday(patientDataCache.getUserStates(Long.parseLong(event.senderId())).getInput()));
+            sender.sendTextMessage(senderId, countTotalYesterday(facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).getInput()));
         }
         if (payload.equals("countrySevenDays")) {
-            sender.sendTextMessage(senderId, countTotalSevenDays(patientDataCache.getUserStates(Long.parseLong(event.senderId())).getInput()));
+            sender.sendTextMessage(senderId, countTotalSevenDays(facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).getInput()));
         }
         if (payload.equals("countryThirtyDays")) {
-            sender.sendTextMessage(senderId, countTotalThirtyDays(patientDataCache.getUserStates(Long.parseLong(event.senderId())).getInput()));
+            sender.sendTextMessage(senderId, countTotalThirtyDays(facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).getInput()));
         }
     }
 
     /**
-     * @param event Facebook messenger event
      * Handles the "handleFallbackEvent", unsupported messages from Facebook messenger sender
-     * @Author Vladislavs Višņevskis
+     *
+     * @param event Facebook messenger event
+     * @author Vladislavs Visnevskis
      */
     public void handleFallbackEvent(Event event) {
         MessengerPlatformCallbackHandler.logger.debug("Handling FallbackEvent");
@@ -186,9 +194,9 @@ public class EventHandler {
     }
 
     /**
-     * @param exception Facebook messenger event
      * Handles and logging the send exception from Facebook messenger sender
-     * @Author Vladislavs Višņevskis
+     * @param exception Facebook messenger event
+     * @author Vladislavs Visnevskis
      */
     public static void handleSendException(Exception exception) {
         MessengerPlatformCallbackHandler.logger.error("Message could not be sent. An unexpected error occurred.", exception);

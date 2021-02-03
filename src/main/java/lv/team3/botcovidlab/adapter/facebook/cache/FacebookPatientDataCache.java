@@ -8,14 +8,17 @@ import java.util.Map;
 
 
 @Component
-public  class PatientDataCache {
+public  class FacebookPatientDataCache {
     private Map<Long, Patient> patientsData = new HashMap<>();
     private Map<Long, UserStates> countryButtonData = new HashMap<>();
 
     /**
+     * Method that return patient from map relating to user identifier
+     * Or creates new patient in the map, if it does not exist
+     *
      * @param senderId Facebook messenger sender identifier
      * @return Patients with requested sender id
-     * @Author Vladislavs Višņevskis
+     * @Author Vladislavs Visnevskis
      */
     public Patient getPatientData(Long senderId) {
         Patient patient = patientsData.get(senderId);
@@ -32,7 +35,7 @@ public  class PatientDataCache {
      * Saves patient in patientsData hashMap
      * @param senderId Facebook messenger sender identifier
      * @param patient Facebook messenger sender's created user
-     * @Author Vladislavs Višņevskis
+     * @Author Vladislavs Visnevskis
      */
     public void savePatientsProfileData(Long senderId, Patient patient) {
         patientsData.put(senderId, patient);
@@ -40,25 +43,27 @@ public  class PatientDataCache {
 
 
     /**
+     * Method that return the current state of senders buttons
+     *
      * @param senderId Facebook messenger sender identifier
      * @return state of sender "Country" button
-     * @Author Vladislavs Višņevskis
+     * @Author Vladislavs Visnevskis
      */
     public UserStates getUserStates(Long senderId) {
-        UserStates countryButton = countryButtonData.get(senderId);
-        if (countryButton == null) {
-            countryButton = new UserStates();
-            countryButton.setChatId((long) senderId);
-            saveUserStates(senderId, countryButton);
+        UserStates userStates = countryButtonData.get(senderId);
+        if (userStates == null) {
+            userStates = new UserStates();
+            userStates.setChatId((long) senderId);
+            saveUserStates(senderId, userStates);
         }
-        return countryButton;
+        return userStates;
     }
 
     /**
      * Saves user state in hashMap
      * @param senderId Facebook messenger sender identifier
      * @param userStates Facebook messenger sender state
-     * @Author Vladislavs Višņevskis
+     * @Author Vladislavs Visnevskis
      */
     public void saveUserStates(Long senderId, UserStates userStates) {
         countryButtonData.put(senderId, userStates);
