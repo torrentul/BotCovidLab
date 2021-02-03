@@ -44,20 +44,18 @@ public class BotCovidLab {
         return Messenger.create(settings.getString("access"), settings.getString("secret"), settings.getString("token"));
     }
 
-    private static final Map<String, String> getenv = System.getenv();
-
     public static void main(String[] args) {
         SpringApplication.run(BotCovidLab.class, args);
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             TelegramBot telegramBot = new TelegramBot();
-            botsApi.registerBot((LongPollingBot) telegramBot);
+            botsApi.registerBot(telegramBot);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
 
         Random r = new Random();
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < 27; i++) {
             generateRandomOuhBoy(r);
         }
     }
