@@ -29,7 +29,7 @@ public class MainMenuService {
         KeyboardRow row1 = new KeyboardRow();
         KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
-        row1.add(new KeyboardButton("Get Covid Stats For Latvia"));
+        row1.add(new KeyboardButton("Get Covid Stats For Specific Country"));
         row2.add(new KeyboardButton("Get Worldwide Covid-19 statistics"));
         row3.add(new KeyboardButton("Apply For Covid-19 Test in Latvia"));
 

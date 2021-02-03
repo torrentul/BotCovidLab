@@ -17,7 +17,31 @@ import java.util.Map;
 @Component
 public  class PatientDataCache  {
     private static Map<Long, BotStates> patientsBotStates = new HashMap<>();
+    private static Map<Long, BotStates> previousBotStates = new HashMap<>();
+    private static Map<Long, String> countrySelected = new HashMap<>();
     private static Map<Long, Patient> patientsData = new HashMap<>();
+
+    /**
+     * @param userId Requested users Telegram chat identifier
+     * @param country Represents country, which user selected to get data about.
+     */
+
+    public static void setPatiensCountry(Long userId, String country) {
+        countrySelected.put(userId, country);
+
+    }
+    /**
+     * @param userId Telegram users chat identifier
+     * @return Name of the country. This param is used, to understand for which country stats, user is asking for.
+     */
+    public static String getPatientsCountry(Long userId) {
+        String s = countrySelected.get(userId);
+        if (s == null) {
+            s = "Latvia";
+        }
+
+        return s;
+    }
 
 
     /**
@@ -31,7 +55,29 @@ public  class PatientDataCache  {
     }
     /**
      * @param userId Telegram users chat identifier
-     * @return Patients Bot State. This param is used, to understand what text bot should show to user.
+     * @return Patients Bot State. This param is used, to understand in which state bot was before questionnarie started.
+     */
+    public static BotStates getPreviousBotState(Long userId) {
+        BotStates botState = previousBotStates.get(userId);
+        if (botState == null) {
+            botState = BotStates.DEFAULT;
+        }
+
+        return botState;
+    }
+    /**
+     * @param userId Requested users Telegram chat identifier
+     * @param botState Represents current users state. This param is used, to understand what text bot should show to user.
+     */
+
+    public static void setPatiensPreviousBotState(Long userId, BotStates botState) {
+        previousBotStates.put(userId, botState);
+
+    }
+
+    /**
+     * @param userId Telegram users chat identifier
+     * @return Patients Bot State. This param is used, to understand in which state is bot now.
      */
     public static BotStates getPatientsCurrentBotState(Long userId) {
         BotStates botState = patientsBotStates.get(userId);
@@ -41,6 +87,7 @@ public  class PatientDataCache  {
 
         return botState;
     }
+
     /**
      * @param userId Telegram users chat identifier
      * @return Patient with requested chat id

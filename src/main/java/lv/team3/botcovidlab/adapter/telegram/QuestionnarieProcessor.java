@@ -1,10 +1,15 @@
 package lv.team3.botcovidlab.adapter.telegram;
+
+import lv.team3.botcovidlab.CovidStats;
 import lv.team3.botcovidlab.adapter.telegram.cache.PatientDataCache;
 import lv.team3.botcovidlab.adapter.telegram.state.BotStates;
 import lv.team3.botcovidlab.entityManager.FirebaseService;
 import lv.team3.botcovidlab.entityManager.Patient;
+import lv.team3.botcovidlab.processors.CovidStatsProcessor;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -40,7 +45,33 @@ import java.util.concurrent.ExecutionException;
         Patient patient = PatientDataCache.getPatientData(chatId);
         BotStates botState = PatientDataCache.getPatientsCurrentBotState(chatId);
         String usersAnswer = update.getMessage().getText();
+        PeriodMenuService periodMenuService = new PeriodMenuService();
 
+
+
+        if (botState.equals(BotStates.FILLING_COUNTRY)) {
+
+            List<CovidStats> covidStats = CovidStatsProcessor.getStatsForLastDay(usersAnswer);
+            CovidStats covid = covidStats.get(0);
+
+//            replyToUser.setText("Statistics for "+covid.getCountry()+" on:" + covid.getDate() + " Infected:" + covid.getInfected() + " Recovered:" + covid.getRecovered() + " Deaths:" + covid.getDeaths());
+            PatientDataCache.setPatiensCountry(chatId,usersAnswer);
+            replyToUser.setText("Please, select data period:");
+            replyToUser.setReplyMarkup(periodMenuService.getCountryPeriodKeyboard());
+            PatientDataCache.setPatiensCurrentBotState(chatId,BotStates.FILLING_PERIOD);
+        }
+
+        if (botState.equals(BotStates.FILLING_PERIOD)) {
+
+            System.out.println(usersAnswer);
+            List<CovidStats> covidStats = CovidStatsProcessor.getStatsForLastDay("Latvia");
+            CovidStats covid = covidStats.get(0);
+
+            replyToUser.setText("Statistics for "+covid.getCountry()+" on:" + covid.getDate() + " Infected:" + covid.getInfected() + " Recovered:" + covid.getRecovered() + " Deaths:" + covid.getDeaths());
+
+
+            PatientDataCache.setPatiensCurrentBotState(chatId,PatientDataCache.getPreviousBotState(chatId));
+        }
 
         if (botState.equals(BotStates.QUESTION1)) {
             replyToUser.setText("Please, enter your firstname.");

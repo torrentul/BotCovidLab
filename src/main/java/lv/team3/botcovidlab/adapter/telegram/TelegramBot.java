@@ -42,8 +42,13 @@ public  class TelegramBot extends TelegramLongPollingCommandBot {
     @Override
     public void onUpdatesReceived(List<Update> updates) {
         System.out.println("1");
+        SendMessage sendMessage = new SendMessage();
         for (Update update: updates){
-            SendMessage sendMessage = UpdatesProcessor.handleUpdate(update);
+            if (update!=null){
+             sendMessage = UpdatesProcessor.handleUpdate(update);}
+            else {
+                System.out.println("Update is null");
+            }
             try {
                 execute(sendMessage);
             } catch (TelegramApiException e) {
