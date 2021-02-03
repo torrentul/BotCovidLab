@@ -10,6 +10,10 @@ import static lv.team3.botcovidlab.processors.CovidStatsProcessor.*;
 
 public class TotalStatUtil {
 
+
+    private TotalStatUtil() {
+    }
+
     /**
      * Method that returns yesterdays stats for provided country
      *
