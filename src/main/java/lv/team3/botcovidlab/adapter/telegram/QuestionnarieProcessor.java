@@ -94,14 +94,14 @@ import java.util.concurrent.ExecutionException;
 
         if (botState.equals(BotStates.QUESTION4)) {
             replyToUser.setText("What is your body temperature?");
-            patient.setTemperature(usersAnswer);
+            patient.setPersonalCode(usersAnswer);
             System.out.println(usersAnswer);
             PatientDataCache.setPatiensCurrentBotState(chatId, BotStates.QUESTION5);
         }
 
         if (botState.equals(BotStates.QUESTION5)) {
             replyToUser.setText("Do you have a cough?(Yes/No)");
-            patient.setPersonalCode(usersAnswer);
+            patient.setTemperature(usersAnswer);
             System.out.println(usersAnswer);
             PatientDataCache.setPatiensCurrentBotState(chatId, BotStates.QUESTION6);
         }
