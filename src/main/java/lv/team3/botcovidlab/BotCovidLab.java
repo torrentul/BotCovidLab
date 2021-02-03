@@ -37,15 +37,13 @@ public class BotCovidLab {
     private static final Map<String, String> getenv = System.getenv();
     public static void main(String[] args) {
     SpringApplication.run(BotCovidLab.class, args);
-//        try {
-//            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-//            TelegramBot telegramBot = new TelegramBot();
-//            botsApi.registerBot((LongPollingBot) telegramBot);
-//            System.out.println("start");
-//        } catch (TelegramApiException e) {
-//            System.out.println("Destoyed");
-//            e.printStackTrace();
-//        }
-
-
+       try {
+           TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+           TelegramBot telegramBot = new TelegramBot();
+           botsApi.registerBot((LongPollingBot) telegramBot);
+           System.out.println("start");
+       } catch (TelegramApiException e) {
+           System.out.println("Destoyed");
+           e.printStackTrace();
+       }
 }}
