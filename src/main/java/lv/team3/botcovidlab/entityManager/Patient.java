@@ -19,6 +19,7 @@ public class Patient {
     private boolean hasHeadache;
     private String phoneNumber;
 
+
     public Patient() {
 
     }
@@ -153,3 +154,4 @@ public class Patient {
                 hasCough, hasTroubleBreathing, hasHeadache, phoneNumber);
     }
 }
+
