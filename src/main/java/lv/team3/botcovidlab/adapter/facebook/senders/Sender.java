@@ -42,7 +42,7 @@ public class Sender {
 
     /**
      * Constructor that takes
-     * @param messenger
+     * @param messenger main messenger object
      */
     public Sender(Messenger messenger) {
         this.messenger = messenger;
@@ -53,7 +53,7 @@ public class Sender {
      *
      * @param recipientId Facebook messenger recipient identifier
      * @throws MessengerApiException if message is null
-     * @throws MessengerIOException
+     * @throws MessengerIOException input-output exception
      * @author Vladislavs Visnevskis
      */
     public void sendButtonMessage(String recipientId) throws MessengerApiException, MessengerIOException {
@@ -75,7 +75,7 @@ public class Sender {
      * @param recipientId Facebook messenger recipient identifier
      * @throws MessengerApiException if message is null
      * @throws MalformedURLException to indicate that a malformed URL has occurred
-     * @throws MalformedURLException
+     * @throws MessengerIOException input-output exception
      * @author Vladislavs Visnevskis
      */
     public void sendSecondButtonMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
@@ -95,7 +95,7 @@ public class Sender {
      *
      * @param recipientId Facebook messenger recipient identifier
      * @throws MessengerApiException if message is null
-     * @throws MessengerIOException to indicate that a malformed URL has occurred
+     * @throws MessengerIOException input-output exception
      * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyLvButtons(String recipientId) throws MessengerApiException, MessengerIOException {
@@ -114,7 +114,7 @@ public class Sender {
      *
      * @param recipientId Facebook messenger recipient identifier
      * @throws MessengerApiException if message is null
-     * @throws MessengerIOException
+     * @throws MessengerIOException input-output exception
      * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyWwButtons(String recipientId) throws MessengerApiException, MessengerIOException {
@@ -133,7 +133,7 @@ public class Sender {
      *
      * @param recipientId Facebook messenger recipient identifier
      * @throws MessengerApiException if message is null
-     * @throws MessengerIOException
+     * @throws MessengerIOException input-output exception
      * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyCountryButtons(String recipientId) throws MessengerApiException, MessengerIOException {

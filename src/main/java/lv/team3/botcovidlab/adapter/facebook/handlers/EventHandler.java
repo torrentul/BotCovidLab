@@ -28,9 +28,9 @@ public class EventHandler {
     private final FacebookPatientDataCache facebookPatientDataCache;
 
     /**
-     * Event handler's constructor that takes
-     * @param sender
-     * @param facebookPatientDataCache
+     * Event handler's constructor
+     * @param sender object that sending responses
+     * @param facebookPatientDataCache object that safe states
      */
     public EventHandler(Sender sender, FacebookPatientDataCache facebookPatientDataCache) {
         this.sender = sender;
