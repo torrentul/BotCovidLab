@@ -4,8 +4,7 @@
 - Makes procedure of applying for a COVID test easier. Data of patients who apply for COVID-19 tests are stored on Firebase Cloud Firestore database.
 
 # Prerequisites
-*Here will be technical information about tools used and how to use the application*
-SpringBoot framework, Maven, Java, Firebase
+SpringBoot framework, SpringSecurity, Lombok, Maven, Java, Firebase database
 
 # Functionality
 ## Telegram - "LvKoronaTrc"
