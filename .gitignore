@@ -12,3 +12,7 @@ botcovidlabAdminAccess.json
 
 # Twitter bot
 **/twitter/settings.json
+
+#Log4j
+
+**/logs
