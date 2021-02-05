@@ -8,28 +8,33 @@ import com.github.messenger4j.webhook.event.QuickReplyMessageEvent;
 import com.github.messenger4j.webhook.event.TextMessageEvent;
 import lv.team3.botcovidlab.adapter.facebook.MessengerPlatformCallbackHandler;
 import lv.team3.botcovidlab.adapter.facebook.ValidCountryList;
-import lv.team3.botcovidlab.adapter.facebook.cache.UserStates;
 import lv.team3.botcovidlab.adapter.facebook.cache.FacebookPatientDataCache;
 import lv.team3.botcovidlab.adapter.facebook.senders.Sender;
 import org.springframework.stereotype.Service;
-
-
 import java.net.MalformedURLException;
 import java.time.Instant;
 
 import static lv.team3.botcovidlab.adapter.facebook.TotalStatUtil.*;
 
+/**
+ * Class that handles all the incoming events
+ *
+ * @author Vladislavs Visnevskis
+ */
 @Service
 public class EventHandler {
 
     private final Sender sender;
     private final FacebookPatientDataCache facebookPatientDataCache;
-    private UserStates userStates;
 
-    public EventHandler(Sender sender, FacebookPatientDataCache facebookPatientDataCache, UserStates userStates) {
+    /**
+     * Event handler's constructor
+     * @param sender object that sending responses
+     * @param facebookPatientDataCache object that safe states
+     */
+    public EventHandler(Sender sender, FacebookPatientDataCache facebookPatientDataCache) {
         this.sender = sender;
         this.facebookPatientDataCache = facebookPatientDataCache;
-        this.userStates = userStates;
     }
 
     /**
@@ -116,7 +121,6 @@ public class EventHandler {
             if (payload.equals("Country")) {
                 facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setApplyButton(false);
                 sender.sendTextMessage(senderId,"Type the country");
-                userStates = facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId()));
                 facebookPatientDataCache.getUserStates(Long.parseLong(event.senderId())).setPressedButton(true);
             }
             if (payload.equals("Apply")) {

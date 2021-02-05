@@ -1,8 +1,13 @@
 package lv.team3.botcovidlab.adapter.inputValidation;
 
+/**
+ * Utility that validates the users input
+ *
+ * @author Vladislavs Visnevskis
+ */
 public class PatientInputValidation {
 
-    public PatientInputValidation() {
+    private PatientInputValidation() {
     }
 
     /**
@@ -43,7 +48,7 @@ public class PatientInputValidation {
     public static boolean validateTemperature(String temperature){
         try{
             double parsedTemperature = Double.parseDouble(temperature);
-            if (parsedTemperature >= 30.0d && parsedTemperature <= 45.0d){
+            if (parsedTemperature >= 33.0d && parsedTemperature <= 43.0d){
                 return true;
             }
             else return false;
