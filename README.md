@@ -4,20 +4,19 @@
 - Makes procedure of applying for a COVID test easier. Data of patients who apply for COVID-19 tests are stored on Firebase Cloud Firestore database.
 
 # Prerequisites
-*Here will be technical information about tools used and how to use the application*
-SpringBoot framework, Maven, Java, Firebase
+SpringBoot framework, SpringSecurity, Lombok, Maven, Java, Firebase database
 
 # Functionality
 ## Telegram - "LvKoronaTrc"
 To start interaction with the chat-bot press ***"start"*** or type "***/start***" in the chat window.
 
 **Getting COVID-19 stats**
-- "Get Covid Stats For Latvia" - provides latest statistics about infected, recovered and deceased patients in Latvia.
-- "Get Worldwide Covid-19 statistics" - provides latest statistics about infected, recovered and deceased patients globaly.
+- "*Get Covid Stats For Specific Country*" - provides latest statistics about infected, recovered and deceased patients in Latvia.
+- "*Get Worldwide Covid-19 statistics*" - provides latest statistics about infected, recovered and deceased patients globaly.
 
 **Applying for COVID-19 test**
 
-Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the required information:
+Choose option "*Apply for Covid-19 test in Latvia*". Provide chatbot with the required information:
 - your name and surname
 - personal code
 - symptoms and temperature
@@ -35,6 +34,10 @@ Further interaction happens by pressing buttons accordingly to needed informatio
 - "Covid Latvia" - provides latest statistics about infected, recovered and deceased patients in Latvia.
 - "Covid worldwide" - provides latest statistics about infected, recovered and deceased patients globaly.
 - "Covid by country" - provides latest statistics about infected, recovered and deceased patients about the country of your choice. To choose the country, type it's name in the chat window. Use country names in English (e.g. "***Lithuania***")
+
+**Covid Symptoms**
+
+- user can get information about [Covid-19 symptoms](#covid-19-data)
 
 **Applying for COVID-19 test**
 
@@ -63,6 +66,8 @@ Application provides easy access to the list of registered patients. Employee of
 
 # Covid-19 Data
 COVID-19 data is being provided by [**Disease.sh - Open Disease data**](https://corona.lmao.ninja/)
+
+Information about Covid-19 symptoms provided by [**covid19.gov.lv**](https://covid19.gov.lv/en/covid-19/about-covid-19/symptoms?fbclid=IwAR2Ugug4qbw0wmmxrjTxbTE5xdmDvNAs0nMVpVUqFT-kHpGpXZqwXHdpM2M)
 
 # Future plans/potential for development
 - creating chat-bots on other social network platforms (Twitter, WhatsApp, Discord, Slack, etc.)

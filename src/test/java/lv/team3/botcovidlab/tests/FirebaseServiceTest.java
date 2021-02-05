@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 class FirebaseServiceTest {
     private final String NON_EXISTING_PERSONAL_CODE = "010180-11133";
-    private static final String EXISTING_PERSONAL_CODE = "010180-11122";
+    private static final String EXISTING_PERSONAL_CODE = "000000-00000";
     private static final String PERSONAL_CODE_JOHN_DOE = "121280-99900";
     private static final String PERSONAL_CODE_MARY_SMITH = "060620-55566";
     private static final Long CHAT_ID_MARY_SMITH = 555L;
