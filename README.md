@@ -66,7 +66,8 @@ Application provides easy access to the list of registered patients. Employee of
 
 # Covid-19 Data
 COVID-19 data is being provided by [**Disease.sh - Open Disease data**](https://corona.lmao.ninja/)
-Information about Covid-19 symptoms provided by [covid19.gov](https://covid19.gov.lv/en/covid-19/about-covid-19/symptoms?fbclid=IwAR2Ugug4qbw0wmmxrjTxbTE5xdmDvNAs0nMVpVUqFT-kHpGpXZqwXHdpM2M)
+
+Information about Covid-19 symptoms provided by [**covid19.gov**](https://covid19.gov.lv/en/covid-19/about-covid-19/symptoms?fbclid=IwAR2Ugug4qbw0wmmxrjTxbTE5xdmDvNAs0nMVpVUqFT-kHpGpXZqwXHdpM2M)
 
 # Future plans/potential for development
 - creating chat-bots on other social network platforms (Twitter, WhatsApp, Discord, Slack, etc.)
