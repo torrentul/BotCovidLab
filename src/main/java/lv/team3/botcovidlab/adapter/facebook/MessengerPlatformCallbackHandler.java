@@ -41,6 +41,15 @@ public class MessengerPlatformCallbackHandler{
     private final FacebookPatientDataCache facebookPatientDataCache;
 
 
+    /**
+     * Class constructor
+     *
+     * @param messenger main messenger object
+     * @param patientApplicationUtil handles the the occasions when Apply button pressed
+     * @param eventHandler handles the incoming events
+     * @param sender handles the outgoing events
+     * @param facebookPatientDataCache saves the user states
+     */
     @Autowired
     public MessengerPlatformCallbackHandler(final Messenger messenger, final PatientApplicationUtil patientApplicationUtil, final EventHandler eventHandler, final Sender sender, FacebookPatientDataCache facebookPatientDataCache) {
         this.messenger = messenger;
@@ -53,9 +62,9 @@ public class MessengerPlatformCallbackHandler{
     /**
      * Method that verifies Facebook webhook
      *
-     * @param mode
-     * @param verifyToken verification token
-     * @param mode
+     * @param mode mode of requested parameter name
+     * @param verifyToken verification token for connection
+     * @param challenge challenge of requested parameter name
      * @return corresponding response
      * @author Vladislavs Visnevskis
      */
@@ -75,8 +84,12 @@ public class MessengerPlatformCallbackHandler{
     /**
      * Method that handles the user event in the messenger
      *
-     * @param payload
-     * @param signature
+     * @param payload the actual user message
+     * @param signature the signature of the message
+     * @throws MessengerApiException if message is null
+     * @throws MalformedURLException to indicate that a malformed URL has occurred
+     * @throws MessengerIOException input-output exception
+     * @return the response for the request
      * @author Vladislavs Visnevskis
      */
     @RequestMapping(method = RequestMethod.POST)

@@ -22,7 +22,7 @@ public  class FacebookPatientDataCache {
      *
      * @param senderId Facebook messenger sender identifier
      * @return Patients with requested sender id
-     * @Author Vladislavs Visnevskis
+     * @author Vladislavs Visnevskis
      */
     public Patient getPatientData(Long senderId) {
         Patient patient = patientsData.get(senderId);
@@ -39,7 +39,7 @@ public  class FacebookPatientDataCache {
      * Saves patient in patientsData hashMap
      * @param senderId Facebook messenger sender identifier
      * @param patient Facebook messenger sender's created user
-     * @Author Vladislavs Visnevskis
+     * @author Vladislavs Visnevskis
      */
     public void savePatientsProfileData(Long senderId, Patient patient) {
         patientsData.put(senderId, patient);
@@ -51,7 +51,7 @@ public  class FacebookPatientDataCache {
      *
      * @param senderId Facebook messenger sender identifier
      * @return state of sender "Country" button
-     * @Author Vladislavs Visnevskis
+     * @author Vladislavs Visnevskis
      */
     public UserStates getUserStates(Long senderId) {
         UserStates userStates = countryButtonData.get(senderId);
@@ -67,7 +67,7 @@ public  class FacebookPatientDataCache {
      * Saves user state in hashMap
      * @param senderId Facebook messenger sender identifier
      * @param userStates Facebook messenger sender state
-     * @Author Vladislavs Visnevskis
+     * @author Vladislavs Visnevskis
      */
     public void saveUserStates(Long senderId, UserStates userStates) {
         countryButtonData.put(senderId, userStates);
