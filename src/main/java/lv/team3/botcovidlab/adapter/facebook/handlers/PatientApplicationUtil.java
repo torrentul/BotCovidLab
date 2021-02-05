@@ -30,6 +30,11 @@ import static java.util.Optional.of;
 import static lv.team3.botcovidlab.adapter.inputValidation.PatientInputValidation.*;
 import static lv.team3.botcovidlab.entityManager.FirebaseService.savePatientDetails;
 
+/**
+ * Class that manages all the actions when user select the Apply for a test button
+ *
+ * @author Vladislavs Visnevskis
+ */
 @Service
 @Getter @Setter
 public class PatientApplicationUtil{
@@ -50,6 +55,13 @@ public class PatientApplicationUtil{
     private boolean patientHasHeadache;
     private final FacebookPatientDataCache facebookPatientDataCache;
 
+    /**
+     * Constructor that takes
+     * @param messenger main messenger object
+     * @param sender handles the outgoing events
+     * @param eventHandler handles the incoming events
+     * @param facebookPatientDataCache saves the user states
+     */
     public PatientApplicationUtil(Messenger messenger, Sender sender, EventHandler eventHandler, FacebookPatientDataCache facebookPatientDataCache) {
         this.messenger = messenger;
         this.sender = sender;
@@ -158,7 +170,7 @@ public class PatientApplicationUtil{
      * @param recipientId Facebook messenger recipient identifier
      * @author Vladislavs Visnevskis
      * @throws MessengerApiException if message is null
-     * @throws MessengerIOException
+     * @throws MessengerIOException input-output exception
      */
     public void sendQuickReplyContactButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -174,9 +186,9 @@ public class PatientApplicationUtil{
      * Method that sends the quick reply buttons to user, to answer question "Do you have a cough?"
      *
      * @param recipientId Facebook messenger recipient identifier
-     * @author Vladislavs Visnevskis
      * @throws MessengerApiException if message is null
-     * @throws MessengerIOException
+     * @throws MessengerIOException input-output exception
+     * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyCoughButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -194,7 +206,7 @@ public class PatientApplicationUtil{
      * @param recipientId Facebook messenger recipient identifier
      * @author Vladislavs Visnevskis
      * @throws MessengerApiException if message is null
-     * @throws MessengerIOException
+     * @throws MessengerIOException input-output exception
      */
     public void sendQuickReplyBreathButtons(String recipientId) throws MessengerApiException, MessengerIOException {
         List<QuickReply> quickReplies = new ArrayList<>();
@@ -211,6 +223,7 @@ public class PatientApplicationUtil{
      *
      * @param recipientId Facebook messenger recipient identifier
      * @throws MessengerApiException if message is null
+     * @throws MessengerIOException input-output exception
      * @author Vladislavs Visnevskis
      */
     public void sendQuickReplyHeadacheButtons(String recipientId) throws MessengerApiException, MessengerIOException {

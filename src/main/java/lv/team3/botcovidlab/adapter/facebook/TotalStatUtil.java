@@ -8,8 +8,12 @@ import java.util.List;
 import static lv.team3.botcovidlab.adapter.facebook.DateUtility.getYesterdayDate;
 import static lv.team3.botcovidlab.processors.CovidStatsProcessor.*;
 
+/**
+ * Utility that counts and converts list of stats for specified period and return as string format
+ *
+ * @author Vladislavs Visnevskis
+ */
 public class TotalStatUtil {
-
 
     private TotalStatUtil() {
     }
@@ -40,7 +44,7 @@ public class TotalStatUtil {
                     "Recovered: " + stats.get(0).getRecoveredTotal() + "\n" +
                     "Died: " + stats.get(0).getDeathsTotal());
         }
-        else return "Stats are not provided";
+        else return "Stats are not provided yet";
     }
 
     /**
@@ -54,7 +58,6 @@ public class TotalStatUtil {
         List<CovidStats> stats = getStatsForLast7Days(country);
         if (stats.size() > 0) {
             int deathTotal = stats.stream().reduce(0, (deaths, stat) -> deaths + stat.getDeaths(), Integer::sum);
-            int activeTotal = stats.stream().reduce(0, (active, stat) -> active + stat.getActive(), Integer::sum);
             int recoveredTotal = stats.stream().reduce(0, (recovered, stat) -> recovered + stat.getRecovered(), Integer::sum);
             int casesTotal = stats.stream().reduce(0, (cases, stat) -> cases + stat.getInfected(), Integer::sum);
 
@@ -69,7 +72,7 @@ public class TotalStatUtil {
                     "Recovered: " + stats.get(0).getRecoveredTotal() + "\n" +
                     "Died: " + stats.get(0).getDeathsTotal());
         }
-        else return "Stats are not provided";
+        else return "Stats are not provided yet";
     }
 
     /**
@@ -93,6 +96,6 @@ public class TotalStatUtil {
                     "Recovered: " + stats.get(0).getRecoveredTotal() + "\n" +
                     "Died: " + stats.get(0).getDeathsTotal());
         }
-        else return "Stats are not provided";
+        else return "Stats are not provided yet";
     }
 }
