@@ -11,12 +11,12 @@ SpringBoot framework, SpringSecurity, Lombok, Maven, Java, Firebase database
 To start interaction with the chat-bot press ***"start"*** or type "***/start***" in the chat window.
 
 **Getting COVID-19 stats**
-- "Get Covid Stats For Latvia" - provides latest statistics about infected, recovered and deceased patients in Latvia.
-- "Get Worldwide Covid-19 statistics" - provides latest statistics about infected, recovered and deceased patients globaly.
+- "*Get Covid Stats For Specific Country*" - provides latest statistics about infected, recovered and deceased patients in Latvia.
+- "*Get Worldwide Covid-19 statistics*" - provides latest statistics about infected, recovered and deceased patients globaly.
 
 **Applying for COVID-19 test**
 
-Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the required information:
+Choose option "*Apply for Covid-19 test in Latvia*". Provide chatbot with the required information:
 - your name and surname
 - personal code
 - symptoms and temperature
