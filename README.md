@@ -35,6 +35,10 @@ Further interaction happens by pressing buttons accordingly to needed informatio
 - "Covid worldwide" - provides latest statistics about infected, recovered and deceased patients globaly.
 - "Covid by country" - provides latest statistics about infected, recovered and deceased patients about the country of your choice. To choose the country, type it's name in the chat window. Use country names in English (e.g. "***Lithuania***")
 
+**Covid Symptoms**
+
+- user can get information about [Covid-19 symptoms](#covid-19-data)
+
 **Applying for COVID-19 test**
 
 Choose option *Apply for Covid-19 test in Latvia*. Provide chatbot with the required information:
@@ -62,6 +66,7 @@ Application provides easy access to the list of registered patients. Employee of
 
 # Covid-19 Data
 COVID-19 data is being provided by [**Disease.sh - Open Disease data**](https://corona.lmao.ninja/)
+Information about Covid-19 symptoms provided by [covid19.gov](https://covid19.gov.lv/en/covid-19/about-covid-19/symptoms?fbclid=IwAR2Ugug4qbw0wmmxrjTxbTE5xdmDvNAs0nMVpVUqFT-kHpGpXZqwXHdpM2M)
 
 # Future plans/potential for development
 - creating chat-bots on other social network platforms (Twitter, WhatsApp, Discord, Slack, etc.)
